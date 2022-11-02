@@ -1,9 +1,10 @@
 {
     "manifest_version": 3,
-    "name": "Template extension",
+    "name": "Youtube no russian",
+    "description": "Clears out russian content from Youtube",
     "version": "0.0.1",
     "background": {
-        "service_worker": "background.js",
+        "service_worker": "background/index.js",
         "type": "module"
     },
     "options_ui": {
@@ -19,7 +20,7 @@
                 "<all_urls>"
             ],
             "js": [
-                "content-script.js"
+                "content/index.js"
             ]
         }
     ],

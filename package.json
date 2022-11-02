@@ -10,8 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@parcel/config-webextension": "^2.6.2",
-    "@types/chrome": "^0.0.190",
-    "parcel": "^2.6.2"
+    "@parcel/config-webextension": "^2.7.0",
+    "@types/chrome": "^0.0.200",
+    "parcel": "^2.7.0",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
