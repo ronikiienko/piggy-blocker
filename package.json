@@ -1,0 +1,17 @@
+{
+  "name": "mv3-parcel-template",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel watch src/manifest.json --host localhost --config @parcel/config-webextension",
+    "build": "parcel build src/manifest.json --config @parcel/config-webextension"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.6.2",
+    "@types/chrome": "^0.0.190",
+    "parcel": "^2.6.2"
+  }
+}
