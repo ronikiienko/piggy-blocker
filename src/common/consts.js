@@ -1,0 +1,1 @@
+export const CMD_GET_CURRENT_TAB = 'CMD_GET_CURRENT_TAB'

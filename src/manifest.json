@@ -17,7 +17,7 @@
     "content_scripts": [
         {
             "matches": [
-                "<all_urls>"
+                "*://www.youtube.com/*"
             ],
             "js": [
                 "content/index.js"
@@ -25,6 +25,8 @@
         }
     ],
     "permissions": [
-        "storage"
+        "storage",
+        "tabs",
+        "activeTab"
     ]
 }

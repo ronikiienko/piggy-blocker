@@ -1,0 +1,1 @@
+export const CHECKED_VIDEO_ITEM_CLASSNAME = 'noRuChecked'
