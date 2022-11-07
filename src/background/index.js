@@ -17,6 +17,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // popstate in content script not fires
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
+    if (!details.url.includes('https://www.youtube.com/')) return
     chrome.tabs.sendMessage(details.tabId, details)
         .catch(e => console.log(e));
 });

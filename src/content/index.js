@@ -1,8 +1,6 @@
 import {CMD_GET_CURRENT_TAB} from '../common/consts';
-import {checkIsVideoDataRu} from '../utils/containsRussian';
-import {CHECKED_VIDEO_ITEM_CLASSNAME} from './consts';
 import {handleHomePage} from './home';
-
+import {handleShortsPage} from './shorts';
 
 
 // TODO possibly handle hashtag pages
@@ -18,7 +16,7 @@ const handlePage = async (url) => {
         await handleHomePage()
     }
     if (pathname.startsWith('/shorts')) {
-        console.log('shorts page');
+        await handleShortsPage()
     }
 }
 
