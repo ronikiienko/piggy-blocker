@@ -1,9 +1,22 @@
-console.log('BACKGROUND SCRIPT');
+import {CMD_GET_CURRENT_TAB} from '../common/consts';
 
-chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, details)
-            .catch(err => console.log(err))
-    })
-    console.log(details);
-})
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    switch (message.cmd) {
+        case CMD_GET_CURRENT_TAB:
+            chrome.tabs.query({active: true, currentWindow: true})
+                .then(tabs => sendResponse(tabs[0]))
+                .catch(e => console.log(e));
+    }
+    return true;
+});
+
+
+// tabs.onUpdated not work because YouTube is SPA,
+// different content scripts for different urls for same reason (need to update page to change script)
+// popstate in content script not fires
+
+chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
+    chrome.tabs.sendMessage(details.tabId, details)
+        .catch(e => console.log(e));
+});
