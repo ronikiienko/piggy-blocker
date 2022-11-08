@@ -18,10 +18,14 @@ export const waitForContainerLoad = (containerSelector) => {
 /**
  *
  * @param {HTMLElement} node
+ * @param {string} context
  */
-export const blurNode = (node) => {
+export const handleRussianVideoItem = (node, context) => {
+    // if (context === 'watch') {
+    //     node.style.display = 'none'
+    // }
     node.style.filter = 'blur(10px) opacity(20%)'
-    // node.style.display = 'none'
+
     // TODO try to find way to hide videos
     // node.style.visibility = 'hidden',
     //     node.style.borderCollapse = 'collapse'

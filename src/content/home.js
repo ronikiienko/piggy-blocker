@@ -1,48 +1,50 @@
 import {checkIsVideoDataRu} from '../utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {blurNode, waitForContainerLoad} from './utils';
+import {handleRussianVideoItem, waitForContainerLoad} from './utils';
 
 
-const handleVideoRows = async (container) => {
-    console.log('HANDLING HOME PAGE', Math.random());
-    for (let videoItemsRow of container.children) {
-        for (let videoItem of videoItemsRow.children[0].children) {
-            if (videoItem === null) continue;
-            const videoTitle = videoItem.querySelector('#video-title-link');
-            if (videoTitle === null) continue;
-            if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) continue;
-            const videoLink = videoTitle.href;
-            // const videoId = videoLink.split('watch?v=')[1]
-            const titleText = videoTitle.title;
-            const checkResult = await checkIsVideoDataRu({title: titleText});
-            if (checkResult) blurNode(videoItem);
-            videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
-        }
-    }
+const handleVideoItem = async (videoItem) => {
+    if (videoItem === null) return;
+    const videoTitle = videoItem.querySelector('#video-title-link');
+    if (videoTitle === null) return;
+    if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return;
+    const videoLink = videoTitle.href;
+    // const videoId = videoLink.split('watch?v=')[1]
+    const titleText = videoTitle.title;
+    const checkResult = await checkIsVideoDataRu({title: titleText});
+    if (checkResult) handleRussianVideoItem(videoItem);
+    videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
 };
 
+const handleRows = (rows) => {
+    for (const addedRow of rows) {
+        if (!(addedRow.tagName === 'YTD-RICH-GRID-ROW')) continue;
+        for (const videoItem of addedRow.children[0].children) {
+            handleVideoItem(videoItem)
+                .then(result => {
+                    if (result) {
+                        handleRussianVideoItem(videoItem, 'home');
+                    }
+                });
+        }
+
+    }
+}
+
 export const handleHomePage = async () => {
-    console.log('handle home page');
     await waitForContainerLoad(SELECTOR.CONTAINER_HOME);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
-    await handleVideoRows(videoItemsContainer);
+    setTimeout(() => {
+        handleRows(videoItemsContainer.children)
+    }, 50)
     const videoItemsObserver = new MutationObserver(async function (mutations) {
-        // TODO sometimes this fires two times and next line fix this but....
-        // TODO review this
-        let areNodesAdded = false;
         for (const mutation of mutations) {
-            if (mutation.addedNodes.length > 0) {
-                areNodesAdded = true;
-                break;
-            }
+            handleRows(mutation.addedNodes)
         }
-        if (!areNodesAdded) return
-        console.log(mutations);
-        await handleVideoRows(videoItemsContainer);
     });
     setTimeout(() => {
         videoItemsObserver.observe(videoItemsContainer, {childList: true});
-    }, 500)
+    }, 500);
 };
 
 // const waitForVideoTitleLoad = (videoItemNode) => {
