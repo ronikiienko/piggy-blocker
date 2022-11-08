@@ -1,39 +1,33 @@
 import {checkIsVideoDataRu} from '../utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {waitForContainerLoad} from './utils';
+import {blurNode, waitForContainerLoad} from './utils';
 
 
-const handleVideoRows = async (container) => {
-    console.log('HANDLING WATCH PAGE', Math.random());
+const handleVideoItem = async (container) => {
+    // console.log('HANDLING WATCH PAGE', Math.random());
     for (let videoItem of container.children) {
         if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) continue;
         const titleSpan = videoItem.querySelector('h3 > span')
         const titleText = titleSpan?.innerText
         if (await checkIsVideoDataRu({title: titleText})) {
-            videoItem.style.filter = 'blur(10px) opacity(20%)'
-            // videoItem.style.display = 'none'
+            blurNode(videoItem)
         }
         videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
     }
 };
-// TODO make wait function universal and add node selector consts
-// const waitForContainerLoad = () => {
-//     return new Promise((resolve) => {
-//         new MutationObserver(function (mutations) {
-//             if (Boolean(document.querySelector(SELECTOR.CONTAINER_WATCH))) {
-//                 this.disconnect();
-//                 resolve();
-//             }
-//         }).observe(document.body, {childList: true, subtree: true});
-//     });
-// };
 
 export const handleWatchPage = async () => {
     console.log('handle watch page');
     await waitForContainerLoad(SELECTOR.CONTAINER_WATCH);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_WATCH);
-    await handleVideoRows(videoItemsContainer);
+    await handleVideoItem(videoItemsContainer);
     const videoItemsObserver = new MutationObserver(async function (mutations) {
+        // console.log(mutations[0].addedNodes);
+        for (let addedVideo of mutations[0].addedNodes) {
+            // if (addedVideo.)
+            console.log(addedVideo.tagName);
+        }
+        // console.log(videoItemsContainer);
         let areNodesAdded = false;
         for (const mutation of mutations) {
             if (mutation.addedNodes.length > 0) {
@@ -42,10 +36,9 @@ export const handleWatchPage = async () => {
             }
         }
         if (!areNodesAdded) return
-        console.log(mutations);
-        await handleVideoRows(videoItemsContainer);
+        await handleVideoItem(videoItemsContainer);
     });
     setTimeout(() => {
-        videoItemsObserver.observe(videoItemsContainer, {childList: true});
+        videoItemsObserver.observe(videoItemsContainer, {childList: true, attributes: true});
     }, 500)
 };

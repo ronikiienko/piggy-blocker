@@ -1,6 +1,6 @@
 import {checkIsVideoDataRu} from '../utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {waitForContainerLoad} from './utils';
+import {blurNode, waitForContainerLoad} from './utils';
 
 
 const handleVideoRows = async (container) => {
@@ -11,7 +11,7 @@ const handleVideoRows = async (container) => {
         if (!titleHeader) continue;
         const titleText = titleHeader.innerText
         if (await checkIsVideoDataRu({title: titleText})) {
-            shortVideo.style.filter = 'blur(10px) opacity(20%)'
+            blurNode(shortVideo)
         }
         shortVideo.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
     }
