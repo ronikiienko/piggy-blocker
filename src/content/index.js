@@ -1,38 +1,59 @@
 import {CMD_GET_CURRENT_TAB} from '../common/consts';
 import {handleHomePage} from './home';
 import {handleShortsPage} from './shorts';
+import {handleWatchPage} from './watch';
 
-
+// TODO sometimes videos arent being analyzed
 // TODO possibly handle hashtag pages
 
-let prevUrl;
-const checkIfPageChanged = (url) => {
+let isObservingShorts = false;
+let isObservingHome = false;
+let isObservingWatch = false;
 
-}
-const handlePage = async (url) => {
-    const pathname = new URL(url).pathname
-    checkIfPageChanged(url)
-    if (pathname === '/') {
-        await handleHomePage()
-    }
+let prevPathname;
+const checkIfPageChanged = (pathname) => {
+    // console.log('prev:', prevPathname, 'current:', pathname);
+    if (!prevPathname) return true;
+    // shorts have id like /shorts/id which changes on every scrolled video
     if (pathname.startsWith('/shorts')) {
-        await handleShortsPage()
+        if (prevPathname.startsWith('/shorts') && pathname.startsWith('/shorts')) return false;
     }
-}
+    if (prevPathname === '/' || pathname === '/') return prevPathname !== pathname
+    if (prevPathname.startsWith(pathname) || pathname.startsWith(prevPathname)) return false;
+
+    return true;
+};
+const handlePage = async (url) => {
+    const pathname = new URL(url).pathname;
+    if (!checkIfPageChanged(pathname)) return;
+    prevPathname = pathname;
+    if (pathname === '/' && !isObservingHome) {
+        isObservingHome = true;
+        await handleHomePage();
+    }
+    if (pathname.startsWith('/shorts') && !isObservingShorts) {
+        isObservingShorts = true;
+        await handleShortsPage();
+    }
+    if (pathname.startsWith('/watch') && !isObservingWatch) {
+        isObservingWatch = true
+        await handleWatchPage()
+    }
+};
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message?.url) {
         handlePage(message.url)
-            .catch(e => console.log(e))
+            .catch(e => console.log(e));
     }
 });
 
 chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
     if (tab.url) {
         handlePage(tab.url)
-            .catch(e => console.log(e))
+            .catch(e => console.log(e));
     }
-})
+});
 
 
 

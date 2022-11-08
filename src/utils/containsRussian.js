@@ -39,7 +39,7 @@ const checkStringForRuGoogle = async (stringToCheck) => {
 
 /**
  * Checks video title and description for ru
- * @param {{title: string, description: string}} videoData
+ * @param {{title: string, description: (string|undefined)}} videoData
  * @returns {Promise<boolean>}
  */
 export const checkIsVideoDataRu = async (videoData) => {
@@ -76,7 +76,9 @@ export const checkIsVideoDataRu = async (videoData) => {
 //     }
 //     try {
 //         console.warn('GOOGLE CHECK');
-//         return await checkStringForRuGoogle(videoData.title)
+//         const googleCheckResult = await checkStringForRuGoogle(videoData.title)
+//         console.error('GOGLA', googleCheckResult);
+//         return googleCheckResult
 //     } catch (e) {
 //         console.log(e.message);
 //         return false

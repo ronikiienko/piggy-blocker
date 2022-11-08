@@ -1,8 +1,10 @@
 import {checkIsVideoDataRu} from '../utils/containsRussian';
-import {CHECKED_VIDEO_ITEM_CLASSNAME} from './consts';
+import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
+import {waitForContainerLoad} from './utils';
 
 
 const handleVideoRows = async (container) => {
+    console.log('HANDLING HOME PAGE', Math.random());
     for (let videoItemsRow of container.children) {
         for (let videoItem of videoItemsRow.children[0].children) {
             if (videoItem === null) continue;
@@ -19,25 +21,28 @@ const handleVideoRows = async (container) => {
     }
 };
 
-const waitForContainerLoad = () => {
-    return new Promise((resolve) => {
-        new MutationObserver(function (mutations) {
-            if (Boolean(document.querySelector('#contents.ytd-rich-grid-renderer'))) {
-                this.disconnect();
-                resolve();
-            }
-        }).observe(document.body, {childList: true, subtree: true});
-    });
-};
-
 export const handleHomePage = async () => {
-    await waitForContainerLoad();
-    const videoItemsContainer = document.querySelector('#contents.ytd-rich-grid-renderer');
+    console.log('handle home page');
+    await waitForContainerLoad(SELECTOR.CONTAINER_HOME);
+    const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     await handleVideoRows(videoItemsContainer);
-    const videoItemsObserver = new MutationObserver(async (mutations) => {
+    const videoItemsObserver = new MutationObserver(async function (mutations) {
+        // TODO sometimes this fires two times and next line fix this but....
+        // TODO review this
+        let areNodesAdded = false;
+        for (const mutation of mutations) {
+            if (mutation.addedNodes.length > 0) {
+                areNodesAdded = true;
+                break;
+            }
+        }
+        if (!areNodesAdded) return
+        console.log(mutations);
         await handleVideoRows(videoItemsContainer);
     });
-    videoItemsObserver.observe(videoItemsContainer, {childList: true});
+    setTimeout(() => {
+        videoItemsObserver.observe(videoItemsContainer, {childList: true});
+    }, 500)
 };
 
 // const waitForVideoTitleLoad = (videoItemNode) => {
