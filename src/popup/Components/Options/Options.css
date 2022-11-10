@@ -1,0 +1,12 @@
+.where-to-block {
+    border-block: 1px solid var(--splitters-gray);
+}
+.how-to-block {
+    border-bottom: 1px solid var(--splitters-gray);
+}
+.options-part {
+    padding-block: 0.5rem;
+}
+h2 {
+    vertical-align: middle;
+}

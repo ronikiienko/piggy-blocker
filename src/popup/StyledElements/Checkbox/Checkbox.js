@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import React, {useContext} from 'react';
-import {ThemeContext} from '../../Main';
-import './Checkbox.css'
+import React from 'react';
+import './Checkbox.css';
+
 
 const getInputStyle = (theme) => {
     return {
@@ -10,7 +10,6 @@ const getInputStyle = (theme) => {
 }
 
 export const Checkbox = ({onChange, id, checked}) => {
-    const theme = useContext(ThemeContext)
     return (
         <input className={`checkbox`} type="checkbox" id={id} onChange={onChange} checked={checked}/>
     );

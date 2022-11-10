@@ -1,0 +1,12 @@
+.main-container {
+    width: 500px;
+    height: 500px;
+    background-color: var(--bg-color);
+    color: var(--main-text);
+    margin: 0;
+    padding: 10px;
+    font-size: 1rem;
+}
+h1, h2 {
+    margin: 0.3rem
+}

@@ -7,6 +7,7 @@ export const SETTINGS_KEYS = {
     blockOnWatch: 'blockOnWatch',
     blockOnShorts: 'blockOnShorts',
     whatToDo: 'whatToDo',
+    theme: 'theme'
 };
 
 export const WHAT_TO_DO_MAP = {
@@ -14,7 +15,18 @@ export const WHAT_TO_DO_MAP = {
     notInterested: 'notInterested',
     blockChannel: 'blockChannel',
 };
+export const THEME_MAP = {
+    light: 'light',
+    dark: 'dark'
+}
 
+export const DEFAULT_SETTINGS = {
+    blockOnHome: true,
+    blockOnWatch: true,
+    blockOnShorts: true,
+    whatToDo: 'blur',
+    theme: 'light',
+};
 export const COLORS_LIGHT = {
     // background: '#5BB3A1',
     background: '#c3ffe9',
