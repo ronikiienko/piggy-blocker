@@ -1,31 +1,48 @@
 import React, {useState} from 'react';
-import {checkIsVideoDataRu} from '../utils/containsRussian';
+import {COLORS_DARK, COLORS_LIGHT} from '../common/consts';
+import {Options} from './Options';
+import {Stats} from './Stats';
 
 
+const buttonStyle = {
+    '&::after': {
+        content: `''`,
+        position: 'absolute',
+        left: '-50px',
+        top: '50px',
+        width: '0',
+        height: '0',
+        border: '50px solid transparent',
+        borderTopColor: 'red',
+    }
+}
+const getContainerStyle = (theme) => {
+    return {
+        padding: 10,
+        height: 500,
+        width: 700,
+        backgroundColor: theme.background,
+        color: theme.mainText
+    }
+};
+export const ThemeContext = React.createContext('light')
 export const Main = () => {
-    const [formState, setFormState] = useState({title: '', description: ''})
-    const [isRussian, setIsRussian] = useState(false)
-    const handleChange = (event) => {
-        setFormState(prevFormState => {
-            return {
-                ...prevFormState,
-                [event.target.id]: event.target.value
-            }
+    const [theme, setTheme] = useState('light')
+    const mainCont = React.useRef(null);
+    const toggleTheme = () => {
+        setTheme(prevTheme => {
+            if (prevTheme === 'dark') return 'light';
+            return 'dark'
         })
     }
-    const detectLanguage = async () => {
-        const result = await checkIsVideoDataRu({title: formState.title, description: formState.description})
-        console.log('RESULT', result);
-        setIsRussian(result)
-    }
+
     return (
-        <React.Fragment>
-            <div>
-                <input id="title" placeholder="title" value={formState.title} onInput={handleChange}/>
-                <input id="description" placeholder="description"  onInput={handleChange} value={formState.description}/>
+        <ThemeContext.Provider value={theme}>
+            <div data-theme={theme} style={getContainerStyle(theme)} ref={mainCont}>
+                <button onClick={toggleTheme}>toggle theme</button>
+                <Options />
+                <Stats />
             </div>
-            <p>Language: {isRussian ? 'russian' : 'no russian'}</p>
-            <button onClick={detectLanguage}>Detect language</button>
-        </React.Fragment>
+        </ThemeContext.Provider>
     );
 };

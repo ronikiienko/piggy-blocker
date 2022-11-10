@@ -15,6 +15,7 @@ const handleVideoItem = async (videoItem) => {
 };
 
 export const handleShortsPage = async () => {
+    console.log('handling Shorts!~!!!!')
     await waitForContainerLoad(SELECTOR.CONTAINER_SHORTS);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_SHORTS);
     for (const videoItem of videoItemsContainer.children) {
@@ -25,7 +26,7 @@ export const handleShortsPage = async () => {
         for (const mutation of mutations) {
             const videoItem = mutation.addedNodes[1]
             console.log('hihi', videoItem);
-            if (videoItem.tagName !== 'ytd-reel-video-renderer') continue
+            if (videoItem.tagName !== 'YTD-REEL-VIDEO-RENDERER') continue
             await handleVideoItem(videoItem)
         }
     });
