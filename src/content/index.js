@@ -55,6 +55,12 @@ chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
     }
 });
 
+// setInterval(() => {
+//     const keydown = new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true});
+//     document.dispatchEvent(keydown);
+//     document.body.scroll(0, 2000);
+// }, 3000);
+
 
 
 

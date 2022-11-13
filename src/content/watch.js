@@ -1,4 +1,4 @@
-import {checkIsVideoDataRu} from '../utils/containsRussian';
+import {checkIsVideoDataRu} from '../common/utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
 import {handleRussianVideoItem, waitForContainerLoad} from './utils';
 

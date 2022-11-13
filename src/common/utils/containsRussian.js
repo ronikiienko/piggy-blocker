@@ -153,7 +153,7 @@ export const checkIsVideoDataRu = async (videoData) => {
         return isStringRu;
     }
     isStringRu = checkStringForMarkerWords(concatenatedString)
-    // console.log('marker check:',concatenatedString, isStringRu);
+    // console.log('marker word check:',concatenatedString, isStringRu);
     if (isStringRu !== null) {
         stats.markerWords = stats.markerWords + 1
         return isStringRu;

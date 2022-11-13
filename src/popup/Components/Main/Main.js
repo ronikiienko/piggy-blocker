@@ -30,9 +30,13 @@ export const Main = () => {
     };
     return (
         <div data-theme={theme} className="main-container">
-            <Button onClick={toggleTheme}>Змінити тему</Button>
-            <Options />
-            {/*<Stats/>*/}
+            <div className="sub-main-container options-container">
+                <Options />
+                <Button style={{width: '100%', margin: 'auto', marginTop: '10px'}} onClick={toggleTheme}>Темна/Світла тема</Button>
+            </div>
+            <div className="sub-main-container options-container">
+                <Stats/>
+            </div>
         </div>
     );
 };

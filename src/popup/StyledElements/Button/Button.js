@@ -4,7 +4,7 @@ import './Button.css'
 
 export const Button = ({onClick, children, style}) => {
     return (
-        <button onClick={onClick}>{children}</button>
+        <button style={style} onClick={onClick}>{children}</button>
     );
 };
 

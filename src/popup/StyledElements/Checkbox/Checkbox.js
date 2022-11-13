@@ -9,9 +9,12 @@ const getInputStyle = (theme) => {
     }
 }
 
-export const Checkbox = ({onChange, id, checked}) => {
+export const Checkbox = ({onChange, id, checked, label}) => {
     return (
-        <input className={`checkbox`} type="checkbox" id={id} onChange={onChange} checked={checked}/>
+        <div className="checkbox-container">
+            <input id={id} className="checkbox-input" type="checkbox" checked={checked} onChange={onChange} />
+            <label className="checkbox-label" htmlFor={id}>{label}</label>
+        </div>
     );
 };
 
@@ -19,4 +22,5 @@ Checkbox.propTypes = {
     onChange: PropTypes.func,
     id: PropTypes.string,
     checked: PropTypes.bool,
+    label: PropTypes.string
 };

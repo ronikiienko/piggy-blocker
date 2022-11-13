@@ -1,18 +1,41 @@
-import {checkIsVideoDataRu} from '../utils/containsRussian';
+import {checkIsVideoDataRu} from '../common/utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {handleRussianVideoItem, waitForContainerLoad} from './utils';
-
+import {handleRussianVideoItem, wait, waitForContainerLoad} from './utils';
 
 const handleVideoItem = async (videoItem) => {
-    if (videoItem === null) return;
+    for (let child of videoItem.children) {
+        child.click()
+        console.log('child0', child)
+        for (let child1 of child.children) {
+            child1.click()
+            console.log('child1', child1)
+            for (let child2 of child1.children) {
+                child2.click()
+                console.log('child2', child2);
+                for (let child3 of child2.children) {
+                    child3.click()
+                    console.log('child3', child3)
+                    for (let child4 of child3.children) {
+                        child4.click()
+                        console.log('child4', child4)
+                        for (let child5 of child4.children) {
+                            child5.click()
+                            console.log('child5', child5)
+                        }
+                    }
+                }
+            }
+        }
+    }
     const videoTitle = videoItem.querySelector('#video-title-link');
     if (videoTitle === null) return;
+    videoItem.click()
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return;
     const videoLink = videoTitle.href;
     // const videoId = videoLink.split('watch?v=')[1]
     const titleText = videoTitle.title;
     const checkResult = await checkIsVideoDataRu({title: titleText});
-    if (checkResult) handleRussianVideoItem(videoItem);
+    if (checkResult) handleRussianVideoItem(videoItem, 'home');
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
 };
 
@@ -29,22 +52,20 @@ const handleRows = (rows) => {
         }
 
     }
-}
+};
 
 export const handleHomePage = async () => {
     await waitForContainerLoad(SELECTOR.CONTAINER_HOME);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
-    setTimeout(() => {
-        handleRows(videoItemsContainer.children)
-    }, 50)
-    const videoItemsObserver = new MutationObserver(async function (mutations) {
-        for (const mutation of mutations) {
-            handleRows(mutation.addedNodes)
-        }
-    });
-    setTimeout(() => {
-        videoItemsObserver.observe(videoItemsContainer, {childList: true});
-    }, 500);
+    await wait(50);
+    handleRows(videoItemsContainer.children);
+    // const videoItemsObserver = new MutationObserver(async function (mutations) {
+    //     for (const mutation of mutations) {
+    //         handleRows(mutation.addedNodes);
+    //     }
+    // });
+    // // await wait(500);
+    // videoItemsObserver.observe(videoItemsContainer, {childList: true});
 };
 
 // const waitForVideoTitleLoad = (videoItemNode) => {

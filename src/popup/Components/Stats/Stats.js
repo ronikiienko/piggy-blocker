@@ -4,7 +4,7 @@ import React from 'react';
 export const Stats = () => {
     return (
         <div>
-            <p>Stats</p>
+            <h1>Статистика:</h1>
         </div>
     );
 };
