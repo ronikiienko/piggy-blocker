@@ -2,55 +2,84 @@ import {checkIsVideoDataRu} from '../common/utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
 import {handleRussianVideoItem, wait, waitForContainerLoad} from './utils';
 
+const blockVideoItem = (videoItem, blockChannel) => {
+    setTimeout(async () => {
+        const button = videoItem.querySelector('#details #button')
+        console.log(button);
+        // #details #button
+        // console.log(container);
+        const clickEvent = new Event('click', {bubbles: false})
+        button.dispatchEvent(clickEvent)
+        // let popups = document.getElementsByTagName("tp-yt-iron-dropdown");
+        // popups[0].style.opacity = 0
+        // let menuItems = popups[0].querySelectorAll("ytd-menu-service-item-renderer");
+        // menuItems[4].click()
+        // popups[0].style.opacity = 1
+        // console.log('menuItems', menuItems);
+        // const notInterested = popupContainer.querySelector('.style-scope ytd-menu-popup-renderer')
+        // console.log('popupContainer', popupContainer);
+    }, 6000)
+}
+//
+// const blockVideoItems = async (rows, checkResults) => {
+//     let handled = 0;
+//     for (const row of rows) {
+//         if (!(row.tagName === 'YTD-RICH-GRID-ROW')) continue;
+//         for (const videoItem of row.children[0].children) {
+//             handled++
+//             if (checkResults[handled] === true) {
+//                 blockVideoItem(videoItem, false)
+//             }
+//         }
+//     }
+// };
+
 const handleVideoItem = async (videoItem) => {
-    for (let child of videoItem.children) {
-        child.click()
-        console.log('child0', child)
-        for (let child1 of child.children) {
-            child1.click()
-            console.log('child1', child1)
-            for (let child2 of child1.children) {
-                child2.click()
-                console.log('child2', child2);
-                for (let child3 of child2.children) {
-                    child3.click()
-                    console.log('child3', child3)
-                    for (let child4 of child3.children) {
-                        child4.click()
-                        console.log('child4', child4)
-                        for (let child5 of child4.children) {
-                            child5.click()
-                            console.log('child5', child5)
-                        }
-                    }
-                }
-            }
-        }
-    }
     const videoTitle = videoItem.querySelector('#video-title-link');
-    if (videoTitle === null) return;
-    videoItem.click()
-    if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return;
-    const videoLink = videoTitle.href;
-    // const videoId = videoLink.split('watch?v=')[1]
+    console.log(videoTitle);
+    if (!videoTitle) return false;
+    // blockVideoItem(videoItem)
+
+    // new MutationObserver(function (mutations) {
+    //     for (const mutation of mutations) {
+    //         for (const addedNode of mutation.addedNodes) {
+    //             console.log(addedNode);
+    //         }
+    //     }
+    // }).observe(videoItem, {childList: true, subtree: true})
+    // setTimeout(() => {
+    //     const container = videoItem.querySelector('#details').children[2].children[0]
+    //     // const button = container.querySelector('#button')
+    //     console.log(container);
+    //     // const clickEvent = new Event('click', {bubbles: false})
+    //     // button.dispatchEvent(clickEvent)
+    // }, 5000)
+    if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return false;
     const titleText = videoTitle.title;
-    const checkResult = await checkIsVideoDataRu({title: titleText});
-    if (checkResult) handleRussianVideoItem(videoItem, 'home');
+    if (!titleText) return false
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
+    return checkIsVideoDataRu({title: titleText})
 };
 
-const handleRows = (rows) => {
-    for (const addedRow of rows) {
-        if (!(addedRow.tagName === 'YTD-RICH-GRID-ROW')) continue;
-        for (const videoItem of addedRow.children[0].children) {
+const handleRows = async (rows) => {
+    for (const row of rows) {
+        if (!(row.tagName === 'YTD-RICH-GRID-ROW')) continue;
+        for (const videoItem of row.children[0].children) {
+            if (!videoItem) continue
+            if (getComputedStyle(videoItem).display === 'none') continue
+            // TODO sometimes handleVideoItem is not a func error (probably when ad item appears)
             handleVideoItem(videoItem)
                 .then(result => {
+                    console.log('Result is ', result);
                     if (result) {
                         handleRussianVideoItem(videoItem, 'home');
                     }
-                });
+                    return result
+                })
+                .catch(e => console.log(e))
+            // break;
         }
-
+        // break;
     }
 };
 
@@ -58,14 +87,14 @@ export const handleHomePage = async () => {
     await waitForContainerLoad(SELECTOR.CONTAINER_HOME);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     await wait(50);
-    handleRows(videoItemsContainer.children);
-    // const videoItemsObserver = new MutationObserver(async function (mutations) {
-    //     for (const mutation of mutations) {
-    //         handleRows(mutation.addedNodes);
-    //     }
-    // });
-    // // await wait(500);
-    // videoItemsObserver.observe(videoItemsContainer, {childList: true});
+    await handleRows(videoItemsContainer.children);
+    const videoItemsObserver = new MutationObserver(async function (mutations) {
+        console.log(mutations);
+        for (const mutation of mutations) {
+            await handleRows(mutation.addedNodes);
+        }
+    });
+    videoItemsObserver.observe(videoItemsContainer, {childList: true});
 };
 
 // const waitForVideoTitleLoad = (videoItemNode) => {

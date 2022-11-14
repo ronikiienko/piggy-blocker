@@ -26,7 +26,6 @@ const handleVideoItem = async (videoItem) => {
 };
 
 export const handleShortsPage = async () => {
-
     console.log('handling Shorts!~!!!!');
     await waitForContainerLoad(SELECTOR.CONTAINER_SHORTS);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_SHORTS);
