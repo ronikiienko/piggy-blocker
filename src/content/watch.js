@@ -1,6 +1,6 @@
 import {checkIsVideoDataRu} from '../common/utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {handleRussianVideoItem, waitForContainerLoad} from './utils';
+import {handleRussianVideoItem, waitForNodeLoad} from './utils';
 
 const handleVideoItem = async (videoItem) => {
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return
@@ -16,7 +16,7 @@ const handleVideoItem = async (videoItem) => {
 };
 
 export const handleWatchPage = async () => {
-    await waitForContainerLoad(SELECTOR.CONTAINER_WATCH);
+    await waitForNodeLoad(SELECTOR.CONTAINER_WATCH);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_WATCH);
     for (let videoItem of videoItemsContainer.children) {
         await handleVideoItem(videoItem)

@@ -1,17 +1,21 @@
-/**
- *
- * @param {string} containerSelector
- * @returns {Promise<unknown>}
- */
 
-export const waitForContainerLoad = (containerSelector) => {
+export const waitForNodeLoad = (nodeSelector, containerToSearchIn) => {
+    // TODO stop if could not find anything for a long time
+    const whereToSearch = containerToSearchIn ? containerToSearchIn : document.body
+
     return new Promise((resolve) => {
-        new MutationObserver(function () {
-            if (Boolean(document.querySelector(containerSelector))) {
+        const observer = new MutationObserver(function (mutation, observer) {
+            console.log(mutation, 'MUTATION MUTATION', nodeSelector, whereToSearch);
+            if (Boolean(whereToSearch.querySelector(nodeSelector))) {
                 this.disconnect();
                 resolve();
             }
-        }).observe(document.body, {childList: true, subtree: true});
+        })
+        if (Boolean(whereToSearch.querySelector(nodeSelector))) {
+            resolve()
+        } else {
+            observer.observe(whereToSearch, {childList: true, subtree: true});
+        }
     });
 }
 

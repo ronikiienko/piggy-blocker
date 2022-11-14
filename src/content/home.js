@@ -1,25 +1,30 @@
 import {checkIsVideoDataRu} from '../common/utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {handleRussianVideoItem, wait, waitForContainerLoad} from './utils';
+import {handleRussianVideoItem, wait, waitForNodeLoad} from './utils';
 
-const blockVideoItem = (videoItem, blockChannel) => {
-    setTimeout(async () => {
-        const button = videoItem.querySelector('#details #button')
-        console.log(button);
-        // #details #button
-        // console.log(container);
-        const clickEvent = new Event('click', {bubbles: false})
-        button.dispatchEvent(clickEvent)
-        // let popups = document.getElementsByTagName("tp-yt-iron-dropdown");
-        // popups[0].style.opacity = 0
-        // let menuItems = popups[0].querySelectorAll("ytd-menu-service-item-renderer");
-        // menuItems[4].click()
-        // popups[0].style.opacity = 1
-        // console.log('menuItems', menuItems);
-        // const notInterested = popupContainer.querySelector('.style-scope ytd-menu-popup-renderer')
-        // console.log('popupContainer', popupContainer);
-    }, 6000)
-}
+
+const openPopup = async (videoItem) => {
+    /*if (!button) */await waitForNodeLoad('#details #button', videoItem);
+    const button = videoItem.querySelector('#details #button');
+    const clickEvent = new Event('click', {bubbles: false});
+    button.dispatchEvent(clickEvent);
+};
+
+const clickPopupOption = async () => {
+    let popups = document.getElementsByTagName('tp-yt-iron-dropdown');
+    /*if (!menuItems)*/ await waitForNodeLoad('ytd-menu-service-item-renderer', popups[0])
+    let menuItems = popups[0].querySelectorAll('ytd-menu-service-item-renderer');
+    // if (menuItems.length === 0) {
+    //     await clickPopupOption();
+    //     return;
+    // }
+    menuItems[4].click();
+};
+
+const blockVideoItem = async (videoItem, blockChannel) => {
+    await openPopup(videoItem);
+    await clickPopupOption(blockChannel);
+};
 //
 // const blockVideoItems = async (rows, checkResults) => {
 //     let handled = 0;
@@ -36,11 +41,9 @@ const blockVideoItem = (videoItem, blockChannel) => {
 
 const handleVideoItem = async (videoItem) => {
     const videoTitle = videoItem.querySelector('#video-title-link');
-    console.log(videoTitle);
     if (!videoTitle) return false;
-    // blockVideoItem(videoItem)
-
     // new MutationObserver(function (mutations) {
+
     //     for (const mutation of mutations) {
     //         for (const addedNode of mutation.addedNodes) {
     //             console.log(addedNode);
@@ -56,27 +59,27 @@ const handleVideoItem = async (videoItem) => {
     // }, 5000)
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return false;
     const titleText = videoTitle.title;
-    if (!titleText) return false
+    if (!titleText) return false;
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
-    return checkIsVideoDataRu({title: titleText})
+    return checkIsVideoDataRu({title: titleText});
 };
 
 const handleRows = async (rows) => {
     for (const row of rows) {
         if (!(row.tagName === 'YTD-RICH-GRID-ROW')) continue;
         for (const videoItem of row.children[0].children) {
-            if (!videoItem) continue
-            if (getComputedStyle(videoItem).display === 'none') continue
+            if (!videoItem) continue;
+            if (getComputedStyle(videoItem).display === 'none') continue;
             // TODO sometimes handleVideoItem is not a func error (probably when ad item appears)
             handleVideoItem(videoItem)
                 .then(result => {
-                    console.log('Result is ', result);
                     if (result) {
                         handleRussianVideoItem(videoItem, 'home');
+                        // blockVideoItem(videoItem);
                     }
-                    return result
+                    return result;
                 })
-                .catch(e => console.log(e))
+                .catch(e => console.log(e));
             // break;
         }
         // break;
@@ -84,7 +87,7 @@ const handleRows = async (rows) => {
 };
 
 export const handleHomePage = async () => {
-    await waitForContainerLoad(SELECTOR.CONTAINER_HOME);
+    await waitForNodeLoad(SELECTOR.CONTAINER_HOME);
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     await wait(50);
     await handleRows(videoItemsContainer.children);
