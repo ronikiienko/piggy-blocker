@@ -1,67 +1,49 @@
+import {queue} from 'async-es';
 import {checkIsVideoDataRu} from '../common/utils/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {handleRussianVideoItem, wait, waitForNodeLoad} from './utils';
+import {handleRussianVideoItem, removeFilter, wait, waitForNodeLoad} from './utils';
 
+
+const blockVideoQueue = queue(async (videoItem) => {
+    await blockVideoItem(videoItem);
+}, 1);
 
 const openPopup = async (videoItem) => {
-    /*if (!button) */await waitForNodeLoad('#details #button', videoItem);
+    await waitForNodeLoad('#details #button', videoItem);
     const button = videoItem.querySelector('#details #button');
+    if (!button) {
+        await openPopup(videoItem);
+        return;
+    }
     const clickEvent = new Event('click', {bubbles: false});
     button.dispatchEvent(clickEvent);
 };
 
-const clickPopupOption = async () => {
-    let popups = document.getElementsByTagName('tp-yt-iron-dropdown');
-    /*if (!menuItems)*/ await waitForNodeLoad('ytd-menu-service-item-renderer', popups[0])
-    let menuItems = popups[0].querySelectorAll('ytd-menu-service-item-renderer');
-    // if (menuItems.length === 0) {
-    //     await clickPopupOption();
-    //     return;
-    // }
-    menuItems[4].click();
+const clickPopupOption = async (videoItem) => {
+    let popup = document.getElementsByTagName('tp-yt-iron-dropdown')[0];
+    // with timeout popup will be visible
+    await waitForNodeLoad('ytd-menu-service-item-renderer', popup);
+    let menuItems = popup.querySelectorAll('ytd-menu-service-item-renderer');
+    const clickEvent = new Event('click', {bubbles: false});
+    menuItems[4].dispatchEvent(clickEvent);
+    // menuItems[4].click();
+    removeFilter(videoItem);
 };
 
-const blockVideoItem = async (videoItem, blockChannel) => {
+const blockVideoItem = async (videoItem) => {
     await openPopup(videoItem);
-    await clickPopupOption(blockChannel);
+    await clickPopupOption(videoItem);
 };
-//
-// const blockVideoItems = async (rows, checkResults) => {
-//     let handled = 0;
-//     for (const row of rows) {
-//         if (!(row.tagName === 'YTD-RICH-GRID-ROW')) continue;
-//         for (const videoItem of row.children[0].children) {
-//             handled++
-//             if (checkResults[handled] === true) {
-//                 blockVideoItem(videoItem, false)
-//             }
-//         }
-//     }
-// };
 
-const handleVideoItem = async (videoItem) => {
+const checkVideoItem = async (videoItem) => {
     const videoTitle = videoItem.querySelector('#video-title-link');
     if (!videoTitle) return false;
-    // new MutationObserver(function (mutations) {
-
-    //     for (const mutation of mutations) {
-    //         for (const addedNode of mutation.addedNodes) {
-    //             console.log(addedNode);
-    //         }
-    //     }
-    // }).observe(videoItem, {childList: true, subtree: true})
-    // setTimeout(() => {
-    //     const container = videoItem.querySelector('#details').children[2].children[0]
-    //     // const button = container.querySelector('#button')
-    //     console.log(container);
-    //     // const clickEvent = new Event('click', {bubbles: false})
-    //     // button.dispatchEvent(clickEvent)
-    // }, 5000)
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return false;
     const titleText = videoTitle.title;
     if (!titleText) return false;
+    const channelNameNode = videoItem.querySelector('#channel-name');
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
-    return checkIsVideoDataRu({title: titleText});
+    return checkIsVideoDataRu(titleText, channelNameNode?.innerText);
 };
 
 const handleRows = async (rows) => {
@@ -70,12 +52,11 @@ const handleRows = async (rows) => {
         for (const videoItem of row.children[0].children) {
             if (!videoItem) continue;
             if (getComputedStyle(videoItem).display === 'none') continue;
-            // TODO sometimes handleVideoItem is not a func error (probably when ad item appears)
-            handleVideoItem(videoItem)
+            checkVideoItem(videoItem)
                 .then(result => {
                     if (result) {
                         handleRussianVideoItem(videoItem, 'home');
-                        // blockVideoItem(videoItem);
+                        // blockVideoQueue.push(videoItem)
                     }
                     return result;
                 })
@@ -92,7 +73,6 @@ export const handleHomePage = async () => {
     await wait(50);
     await handleRows(videoItemsContainer.children);
     const videoItemsObserver = new MutationObserver(async function (mutations) {
-        console.log(mutations);
         for (const mutation of mutations) {
             await handleRows(mutation.addedNodes);
         }

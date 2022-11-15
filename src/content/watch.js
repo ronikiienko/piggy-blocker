@@ -6,7 +6,7 @@ const handleVideoItem = async (videoItem) => {
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return
     const titleSpan = videoItem.querySelector('h3 > span');
     const titleText = titleSpan?.innerText;
-    checkIsVideoDataRu({title: titleText})
+    checkIsVideoDataRu(titleText)
         .then(result => {
             if (result) {
                 handleRussianVideoItem(videoItem, 'watch');

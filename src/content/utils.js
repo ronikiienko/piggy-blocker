@@ -1,11 +1,12 @@
 
-export const waitForNodeLoad = (nodeSelector, containerToSearchIn) => {
+export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTime) => {
     // TODO stop if could not find anything for a long time
+    const waitTime = maxWaitingTime ? maxWaitingTime : 10000
     const whereToSearch = containerToSearchIn ? containerToSearchIn : document.body
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const observer = new MutationObserver(function (mutation, observer) {
-            console.log(mutation, 'MUTATION MUTATION', nodeSelector, whereToSearch);
+            // console.log(mutation, 'MUTATION MUTATION', nodeSelector, whereToSearch);
             if (Boolean(whereToSearch.querySelector(nodeSelector))) {
                 this.disconnect();
                 resolve();
@@ -15,6 +16,10 @@ export const waitForNodeLoad = (nodeSelector, containerToSearchIn) => {
             resolve()
         } else {
             observer.observe(whereToSearch, {childList: true, subtree: true});
+            setTimeout(() => {
+                observer.disconnect()
+                reject('could not wait for node (did not find)')
+            }, waitTime)
         }
     });
 }
@@ -52,6 +57,9 @@ export const handleRussianVideoItem = (node, context) => {
     // TODO try to find way to hide videos
     // node.style.visibility = 'hidden',
     //     node.style.borderCollapse = 'collapse'
+}
+export const removeFilter = (node) => {
+    node.style.filter = 'blur(0px) opacity(100%)'
 }
 export const wait = (msec) => {
     return new Promise(resolve => setTimeout(() => resolve(), msec));

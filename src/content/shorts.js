@@ -6,7 +6,7 @@ const handleTitleHeader = async (titleHeader, videoItem) => {
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return;
     if (!titleHeader) return;
     const titleText = titleHeader.innerText;
-    if (await checkIsVideoDataRu({title: titleText})) {
+    if (await checkIsVideoDataRu(titleText)) {
         handleRussianVideoItem(videoItem, 'shorts');
     }
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);

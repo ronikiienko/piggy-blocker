@@ -51,24 +51,26 @@ const ruWordsPattern = /\sи\s/i;
 // };
 //
 // /**
-//  * Checks video title and description for ru
-//  * @param {{title: string, description: (string|undefined)}} videoData
+//  *
+//  * @param title {string}
+//  * @param [channelName] {string}
+//  * @param [description] {string}
 //  * @returns {Promise<boolean>}
 //  */
-// export const checkIsVideoDataRu = async (videoData) => {
-//     if (!videoData?.title) return false
+// export const checkIsVideoDataRu = async (title, channelName, description) => {
+//     if (!title) return false
 //
 //     let isStringRu;
 //
-//     isStringRu = checkStringForRuChars(videoData.title)
+//     isStringRu = checkStringForRuChars(title)
 //     if (isStringRu !== null) return isStringRu
 //
-//     if (videoData?.description) {
-//         isStringRu = checkStringForRuChars(videoData.description)
+//     if (description) {
+//         isStringRu = checkStringForRuChars(description)
 //         if (isStringRu !== null) return isStringRu
 //     }
 //
-//     const concatenatedString = videoData?.description ? videoData.title + ' ' + videoData.description : videoData.title
+//     const concatenatedString = description ? title + ' ' + description : title
 //
 //     isStringRu = checkStringForCyrillic(concatenatedString)
 //     if (isStringRu !== null) return isStringRu
@@ -86,36 +88,31 @@ const ruWordsPattern = /\sи\s/i;
 
 // --------------------------------------------------
 
-const stats = {
-    byChars: 0,
-    noCyrillic: 0,
-    markerWords: 0,
-    google: 0
-}
+
 const checkStringForRuChars = (stringToCheck) => {
     if (ruCharsPattern.test(stringToCheck)) return true;
     if (ukrCharsPattern.test(stringToCheck)) return false;
-    return null
+    return null;
 
 };
 const checkStringForCyrillic = (stringToCheck) => {
     if (!cyrillicPattern.test(stringToCheck)) return false;
-    return null
+    return null;
 
-}
+};
 const checkStringForMarkerWords = (stringToCheck) => {
-    const words = stringToCheck.split(' ')
+    const words = stringToCheck.split(' ');
     let foundMarker = false;
     for (let word of words) {
         if (markers.has(word)) {
             // console.error('FOUND', stringToCheck,'7777777777777', word);
-            foundMarker = true
+            foundMarker = true;
             break;
         }
     }
-    return foundMarker ? true : null
+    return foundMarker ? true : null;
 
-}
+};
 const checkStringForRuGoogle = async (stringToCheck) => {
     const uriEncodedString = encodeURIComponent(stringToCheck);
     const googleResp = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=uk&hl=en-US&dt=t&dt=bd&dj=1&source=input&tk=466611.466611&q=${uriEncodedString}`);
@@ -125,46 +122,177 @@ const checkStringForRuGoogle = async (stringToCheck) => {
 
 };
 setTimeout(() => {
+    for (let key in stats.percentages) {
+        let numberOfPercent
+        if (!stats[key].number) {
+            numberOfPercent = 0
+        } else {
+            numberOfPercent = ((stats[key].number / stats.total.total) * 100).toFixed(1)
+        }
+        stats.percentages[key] = numberOfPercent + '%'
+    }
     console.log(stats);
-}, 60 * 1000)
+}, 20 * 1000);
 
-export const checkIsVideoDataRu = async (videoData) => {
-    if (!videoData?.title) return false
+const stats = {
+    total: {
+        total: 0,
+        russian: 0,
+        notRussian: 0
+    },
+    byCharsTitle: {
+        number: 0,
+        texts: []
+    },
+    byCharsChannelName: {
+        number: 0,
+        texts: []
+    },
+    byCharsDescription: {
+        number: 0,
+        texts: []
+    },
+    noCyrillic: {
+        number: 0,
+        texts: []
+    },
+    markerWords: {
+        number: 0,
+        texts: []
+    },
+    google: {
+        number: 0,
+        texts: []
+    },
+    percentages: {
+        byCharsTitle: 0,
+        byCharsChannelName: 0,
+        byCharsDescription: 0,
+        noCyrillic: 0,
+        markerWords: 0,
+        google: 0,
+    }
+};
+
+/**
+ *
+ * @param title
+ * @param [channelName]
+ * @param [description]
+ * @returns {Promise<boolean>}
+ */
+export const checkIsVideoDataRu = async (title, channelName, description) => {
+    stats.total.total = stats.total.total + 1
+    if (!title) return false;
     let isStringRu;
-    isStringRu = checkStringForRuChars(videoData.title)
-    // console.log('ru chars check title:', videoData.title, isStringRu);
+
+    isStringRu = checkStringForRuChars(title);
+    // console.log('ru chars check title:', title, isStringRu);
     if (isStringRu !== null) {
-        stats.byChars = stats.byChars + 1
+        stats.byCharsTitle.number = stats.byCharsTitle.number + 1;
+        stats.byCharsTitle.texts.push({
+            title: title,
+            channelName: channelName,
+            description: description
+        })
+        if (isStringRu) {
+            stats.total.russian = stats.total.russian + 1;
+        } else {
+            stats.total.notRussian = stats.total.notRussian +1
+        }
         return isStringRu;
     }
-    if (videoData?.description) {
-        isStringRu = checkStringForRuChars(videoData.description)
-        // console.log('ru chars check description:', videoData.description, isStringRu);
+
+    if (description) {
+        isStringRu = checkStringForRuChars(description);
+        // console.log('ru chars check description:', description, isStringRu);
         if (isStringRu !== null) {
-            stats.byChars = stats.byChars + 1
+            stats.byCharsDescription.number = stats.byCharsDescription.number + 1;
+            stats.byCharsDescription.texts.push({
+                title: title,
+                channelName: channelName,
+                description: description
+            })
+            if (isStringRu) {
+                stats.total.russian = stats.total.russian + 1;
+            } else {
+                stats.total.notRussian = stats.total.notRussian + 1
+            }
             return isStringRu;
         }
     }
-    const concatenatedString = videoData?.description ? videoData.title + ' ' + videoData.description : videoData.title
-    isStringRu = checkStringForCyrillic(concatenatedString)
-    // console.log('cyrrilic check:', videoData.title, isStringRu);
+
+    if (channelName) {
+        isStringRu = checkStringForRuChars(channelName);
+        if (isStringRu !== null) {
+            stats.byCharsChannelName.number = stats.byCharsChannelName.number + 1;
+            stats.byCharsChannelName.texts.push({
+                title: title,
+                channelName: channelName,
+                description: description
+            })
+            if (isStringRu) {
+                stats.total.russian = stats.total.russian +1 ;
+            } else {
+                stats.total.notRussian = stats.total.notRussian + 1
+            }
+            return isStringRu
+        }
+    }
+
+    const concatenatedString = description ? title + ' ' + description : title;
+
+    isStringRu = checkStringForCyrillic(concatenatedString);
+    // console.log('cyrrilic check:', title, isStringRu);
     if (isStringRu !== null) {
-        stats.noCyrillic = stats.noCyrillic + 1
+        stats.noCyrillic.number = stats.noCyrillic.number + 1;
+        stats.noCyrillic.texts.push({
+            title: title,
+            channelName: channelName,
+            description: description
+        })
+        if (isStringRu) {
+            stats.total.russian = stats.total.russian + 1;
+        } else {
+            stats.total.notRussian = stats.total.notRussian+ 1
+        }
         return isStringRu;
     }
-    isStringRu = checkStringForMarkerWords(concatenatedString)
+
+    isStringRu = checkStringForMarkerWords(concatenatedString);
     // console.log('marker word check:',concatenatedString, isStringRu);
     if (isStringRu !== null) {
-        stats.markerWords = stats.markerWords + 1
+        stats.markerWords.number = stats.markerWords.number + 1;
+        stats.markerWords.texts.push({
+            title: title,
+            channelName: channelName,
+            description: description
+        })
+        if (isStringRu) {
+            stats.total.russian = stats.total.russian + 1;
+        } else {
+            stats.total.notRussian = stats.total.notRussian + 1
+        }
         return isStringRu;
     }
+
     try {
-        const googleCheckResult = await checkStringForRuGoogle(concatenatedString)
-        stats.google = stats.google + 1
-        return googleCheckResult
+        const googleCheckResult = await checkStringForRuGoogle(concatenatedString);
+        stats.google.number = stats.google.number + 1;
+        stats.google.texts.push({
+            title: title,
+            channelName: channelName,
+            description: description
+        })
+        if (googleCheckResult) {
+            stats.total.russian = stats.total.russian + 1;
+        } else {
+            stats.total.notRussian = stats.total.notRussian + 1
+        }
+        return googleCheckResult;
     } catch (e) {
         console.log(e.message);
-        return false
+        return false;
     }
 };
 
