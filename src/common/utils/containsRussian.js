@@ -115,6 +115,9 @@ const stats = {
  * @param reasonDetails
  */
 const addToStats = (allDataObject = {}, ru, reasonName, reasonDetails) => {
+    if (reasonName === 'byCharsTitle') {
+        console.log('hihi', allDataObject);
+    }
     console.log(reasonName, ':', '\n',
         'title: ',allDataObject.title, '\n',
         'channelName: ', allDataObject.channelName, '\n',
@@ -165,8 +168,8 @@ export const checkIsVideoDataRu = async (title, channelName, description) => {
 
     isStringRu = checkStringForRuChars(title);
     // console.log('ru chars check title:', title, isStringRu);
+    addToStats(allDataObject, isStringRu, 'byCharsTitle', null)
     if (isStringRu !== null) {
-        addToStats(allDataObject, isStringRu, 'byCharsTitle', null)
         return isStringRu;
     }
 
