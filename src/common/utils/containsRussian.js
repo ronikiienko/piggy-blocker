@@ -4,94 +4,11 @@ const cyrillicPattern = /[\u0400-\u04FF]+/i;
 const markers = new Set(['больше', 'будет', 'будут', 'во', 'вообще', 'вот', 'время', 'всего', 'всем', 'всех', 'где', 'его', 'если', 'есть', 'еще', 'и', 'из', 'или', 'им', 'именно', 'интересно', 'их', 'к', 'как', 'какие', 'какой', 'когда', 'конечно', 'кто', 'лет', 'ли', 'либо', 'лучше', 'меня', 'мне', 'много', 'может', 'можно', 'надо', 'налоги', 'например', 'нет', 'ни', 'но', 'нужно', 'они', 'отвечаю', 'очень', 'под', 'после', 'почему', 'работать', 'с', 'сейчас', 'со', 'стоит', 'такое', 'такой', 'теперь', 'только', 'украине', 'чем', 'что']);
 const ruWordsPattern = /\sи\s/i;
 
-// /**
-//  * Check if contains special ru or ukr chars
-//  * @param {string} stringToCheck
-//  * @returns {boolean|null} - returns null if nothing specific found
-//  */
-// const checkStringForRuChars = (stringToCheck) => {
-//     if (ruCharsPattern.test(stringToCheck)) return true;
-//     if (ukrCharsPattern.test(stringToCheck)) return false;
-//     return null
-// };
-//
-//
-// /**
-//  * Check if contains cyrillic at all
-//  * @param {string} stringToCheck
-//  * @returns {null|boolean} - returns null if nothing specific found
-//  */
-// const checkStringForCyrillic = (stringToCheck) => {
-//     if (!cyrillicPattern.test(stringToCheck)) return false;
-//     return null
-// }
-//
-// const checkStringForMarkerWords = (stringToCheck) => {
-//     const words = stringToCheck.split(' ')
-//     let foundMarker = false;
-//     for (let word of words) {
-//         if (markers.has(word)) {
-//             foundMarker = true
-//             break;
-//         }
-//     }
-//     return foundMarker ? true : null
-// }
-//
-// /**
-//  * If basic check couldn't find anything, use Google Translate
-//  * @param {string} stringToCheck
-//  * @returns {Promise<boolean>}
-//  */
-// const checkStringForRuGoogle = async (stringToCheck) => {
-//     const uriEncodedString = encodeURIComponent(stringToCheck);
-//     const googleResp = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=uk&hl=en-US&dt=t&dt=bd&dj=1&source=input&tk=466611.466611&q=${uriEncodedString}`);
-//     const googleRespJson = await googleResp.json();
-//     return googleRespJson.src === 'ru';
-// };
-//
-// /**
-//  *
-//  * @param title {string}
-//  * @param [channelName] {string}
-//  * @param [description] {string}
-//  * @returns {Promise<boolean>}
-//  */
-// export const checkIsVideoDataRu = async (title, channelName, description) => {
-//     if (!title) return false
-//
-//     let isStringRu;
-//
-//     isStringRu = checkStringForRuChars(title)
-//     if (isStringRu !== null) return isStringRu
-//
-//     if (description) {
-//         isStringRu = checkStringForRuChars(description)
-//         if (isStringRu !== null) return isStringRu
-//     }
-//
-//     const concatenatedString = description ? title + ' ' + description : title
-//
-//     isStringRu = checkStringForCyrillic(concatenatedString)
-//     if (isStringRu !== null) return isStringRu
-//
-//     isStringRu = checkStringForMarkerWords(concatenatedString)
-//     if (isStringRu !== null) return isStringRu
-//
-//     try {
-//         return await checkStringForRuGoogle(concatenatedString)
-//     } catch (e) {
-//         console.log(e.message);
-//         return false
-//     }
-// };
-
-// --------------------------------------------------
-
-
-const checkStringForRuChars = (stringToCheck) => {
+const checkStringForRuChars = (stringToCheck, searchForUkr = true) => {
     if (ruCharsPattern.test(stringToCheck)) return true;
-    if (ukrCharsPattern.test(stringToCheck)) return false;
+    if (searchForUkr) {
+        if (ukrCharsPattern.test(stringToCheck)) return false;
+    }
     return null;
 
 };
@@ -103,14 +20,20 @@ const checkStringForCyrillic = (stringToCheck) => {
 const checkStringForMarkerWords = (stringToCheck) => {
     const words = stringToCheck.split(' ');
     let foundMarker = false;
+    let wordFound;
     for (let word of words) {
         if (markers.has(word)) {
             // console.error('FOUND', stringToCheck,'7777777777777', word);
             foundMarker = true;
+            wordFound = word;
             break;
         }
     }
-    return foundMarker ? true : null;
+    const returnBoolean = foundMarker ? true : null
+    return {
+        isStringRu: returnBoolean,
+        wordFound
+    }
 
 };
 const checkStringForRuGoogle = async (stringToCheck) => {
@@ -118,7 +41,11 @@ const checkStringForRuGoogle = async (stringToCheck) => {
     const googleResp = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=uk&hl=en-US&dt=t&dt=bd&dj=1&source=input&tk=466611.466611&q=${uriEncodedString}`);
     const googleRespJson = await googleResp.json();
     // console.error('GOGLA', stringToCheck, googleRespJson.src);
-    return googleRespJson.src === 'ru';
+    const returnBoolean = googleRespJson.src === 'ru'
+    return {
+        isStringRu: returnBoolean,
+        langFound: googleRespJson.src
+    };
 
 };
 setTimeout(() => {
@@ -137,8 +64,14 @@ setTimeout(() => {
 const stats = {
     total: {
         total: 0,
-        russian: 0,
-        notRussian: 0
+        russian: {
+            number: 0,
+            texts: []
+        },
+        notRussian: {
+            number: 0,
+            texts: []
+        }
     },
     byCharsTitle: {
         number: 0,
@@ -176,12 +109,56 @@ const stats = {
 
 /**
  *
+ * @param allDataObject
+ * @param ru
+ * @param {('byCharsTitle')|('byCharsChannelName')|('byCharsDescription')|('noCyrillic')|('markerWords')|('google')} reasonName
+ * @param reasonDetails
+ */
+const addToStats = (allDataObject = {}, ru, reasonName, reasonDetails) => {
+    console.log(reasonName, ':', '\n',
+        'title: ',allDataObject.title, '\n',
+        'channelName: ', allDataObject.channelName, '\n',
+        'description: ',  allDataObject.description, '\n',
+        'checkResult: ', ru, '\n',
+        'details: ', reasonDetails
+    );
+    if (ru) {
+        stats.total.russian.number = stats.total.russian.number + 1
+        stats.total.russian.texts.push({
+            ...allDataObject,
+            reason: reasonName,
+            reasonDetails
+        })
+    } else {
+        stats.total.notRussian.number = stats.total.notRussian.number + 1
+        stats.total.notRussian.texts.push({
+            ...allDataObject,
+            reason: reasonName,
+            reasonDetails
+        })
+    }
+    stats[reasonName].number = stats[reasonName].number + 1
+    stats[reasonName].texts.push({
+        ...allDataObject,
+        reasonDetails,
+        isRu: ru
+    })
+}
+
+/**
+ *
  * @param title
  * @param [channelName]
  * @param [description]
  * @returns {Promise<boolean>}
  */
+
 export const checkIsVideoDataRu = async (title, channelName, description) => {
+    const allDataObject = {
+        title,
+        channelName,
+        description
+    }
     stats.total.total = stats.total.total + 1
     if (!title) return false;
     let isStringRu;
@@ -189,53 +166,22 @@ export const checkIsVideoDataRu = async (title, channelName, description) => {
     isStringRu = checkStringForRuChars(title);
     // console.log('ru chars check title:', title, isStringRu);
     if (isStringRu !== null) {
-        stats.byCharsTitle.number = stats.byCharsTitle.number + 1;
-        stats.byCharsTitle.texts.push({
-            title: title,
-            channelName: channelName,
-            description: description
-        })
-        if (isStringRu) {
-            stats.total.russian = stats.total.russian + 1;
-        } else {
-            stats.total.notRussian = stats.total.notRussian +1
-        }
+        addToStats(allDataObject, isStringRu, 'byCharsTitle', null)
         return isStringRu;
     }
 
     if (description) {
         isStringRu = checkStringForRuChars(description);
-        // console.log('ru chars check description:', description, isStringRu);
+        addToStats(allDataObject, isStringRu, 'byCharsDescription', null)
         if (isStringRu !== null) {
-            stats.byCharsDescription.number = stats.byCharsDescription.number + 1;
-            stats.byCharsDescription.texts.push({
-                title: title,
-                channelName: channelName,
-                description: description
-            })
-            if (isStringRu) {
-                stats.total.russian = stats.total.russian + 1;
-            } else {
-                stats.total.notRussian = stats.total.notRussian + 1
-            }
             return isStringRu;
         }
     }
-
+    // TODO not handle 'MIX' items
     if (channelName) {
-        isStringRu = checkStringForRuChars(channelName);
+        isStringRu = checkStringForRuChars(channelName, false);
+        addToStats(allDataObject, isStringRu, 'byCharsChannelName', null)
         if (isStringRu !== null) {
-            stats.byCharsChannelName.number = stats.byCharsChannelName.number + 1;
-            stats.byCharsChannelName.texts.push({
-                title: title,
-                channelName: channelName,
-                description: description
-            })
-            if (isStringRu) {
-                stats.total.russian = stats.total.russian +1 ;
-            } else {
-                stats.total.notRussian = stats.total.notRussian + 1
-            }
             return isStringRu
         }
     }
@@ -243,53 +189,25 @@ export const checkIsVideoDataRu = async (title, channelName, description) => {
     const concatenatedString = description ? title + ' ' + description : title;
 
     isStringRu = checkStringForCyrillic(concatenatedString);
-    // console.log('cyrrilic check:', title, isStringRu);
+    addToStats(allDataObject, isStringRu, 'noCyrillic', null)
     if (isStringRu !== null) {
-        stats.noCyrillic.number = stats.noCyrillic.number + 1;
-        stats.noCyrillic.texts.push({
-            title: title,
-            channelName: channelName,
-            description: description
-        })
-        if (isStringRu) {
-            stats.total.russian = stats.total.russian + 1;
-        } else {
-            stats.total.notRussian = stats.total.notRussian+ 1
-        }
         return isStringRu;
     }
 
-    isStringRu = checkStringForMarkerWords(concatenatedString);
+
+    const markerCheckResult = checkStringForMarkerWords(concatenatedString)
+    isStringRu = markerCheckResult.isStringRu;
     // console.log('marker word check:',concatenatedString, isStringRu);
+    addToStats(allDataObject, isStringRu, 'markerWords', markerCheckResult.wordFound)
     if (isStringRu !== null) {
-        stats.markerWords.number = stats.markerWords.number + 1;
-        stats.markerWords.texts.push({
-            title: title,
-            channelName: channelName,
-            description: description
-        })
-        if (isStringRu) {
-            stats.total.russian = stats.total.russian + 1;
-        } else {
-            stats.total.notRussian = stats.total.notRussian + 1
-        }
         return isStringRu;
     }
 
     try {
         const googleCheckResult = await checkStringForRuGoogle(concatenatedString);
-        stats.google.number = stats.google.number + 1;
-        stats.google.texts.push({
-            title: title,
-            channelName: channelName,
-            description: description
-        })
-        if (googleCheckResult) {
-            stats.total.russian = stats.total.russian + 1;
-        } else {
-            stats.total.notRussian = stats.total.notRussian + 1
-        }
-        return googleCheckResult;
+        isStringRu = googleCheckResult.isStringRu;
+        addToStats(allDataObject, isStringRu, 'google', googleCheckResult.langFound)
+        return isStringRu;
     } catch (e) {
         console.log(e.message);
         return false;
