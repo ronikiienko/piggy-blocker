@@ -52,8 +52,8 @@ export const handleRussianVideoItem = (node, context) => {
     //     console.log(node);
     //     console.log(openVideoOptions.parentElement.parentElement);
     // }
-    node.style.filter = 'blur(0.5px) opacity(20%)'
-    node.style.backgroundColor = 'blue'
+    node.style.filter = 'blur(0.5px) opacity(60%)'
+    node.style.backgroundColor = 'rgba(0, 0, 255, 0.5)'
 
     // TODO try to find way to hide videos
     // node.style.visibility = 'hidden',
