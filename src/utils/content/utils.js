@@ -18,7 +18,7 @@ export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTim
             observer.observe(whereToSearch, {childList: true, subtree: true});
             setTimeout(() => {
                 observer.disconnect()
-                reject('could not wait for node (did not find)')
+                reject('could not find node (time expired)')
             }, waitTime)
         }
     });
@@ -53,6 +53,7 @@ export const handleRussianVideoItem = (node, context) => {
     //     console.log(openVideoOptions.parentElement.parentElement);
     // }
     node.style.filter = 'blur(0.5px) opacity(20%)'
+    node.style.backgroundColor = 'blue'
 
     // TODO try to find way to hide videos
     // node.style.visibility = 'hidden',

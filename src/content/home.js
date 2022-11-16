@@ -1,15 +1,22 @@
 import {queue} from 'async-es';
-import {checkIsVideoDataRu} from '../common/utils/containsRussian';
+import {SETTINGS_KEYS, WHAT_TO_DO_MAP} from '../common/consts';
+import {getSettings} from '../utils/common/getSettings';
+import {checkIsVideoDataRu} from '../utils/content/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {handleRussianVideoItem, removeFilter, wait, waitForNodeLoad} from './utils';
+import {handleRussianVideoItem, removeFilter, wait, waitForNodeLoad} from '../utils/content/utils';
 
 
-const blockVideoQueue = queue(async (videoItem) => {
-    await blockVideoItem(videoItem);
+const blockVideoQueue = queue(async ({videoItem, settings}) => {
+    await blockVideoItem(videoItem, settings);
 }, 1);
 
 const openPopup = async (videoItem) => {
-    await waitForNodeLoad('#details #button', videoItem);
+    try {
+        await waitForNodeLoad('#details #button', videoItem);
+    } catch (e) {
+        console.log(e);
+        return
+    }
     const button = videoItem.querySelector('#details #button');
     if (!button) {
         await openPopup(videoItem);
@@ -19,62 +26,87 @@ const openPopup = async (videoItem) => {
     button.dispatchEvent(clickEvent);
 };
 
-const clickPopupOption = async (videoItem) => {
+const clickPopupOption = async (videoItem, actionItemMenuNumber) => {
     let popup = document.getElementsByTagName('tp-yt-iron-dropdown')[0];
-    // with timeout popup will be visible
-    await waitForNodeLoad('ytd-menu-service-item-renderer', popup);
+    popup.style.opacity = 0
+    try {
+        await waitForNodeLoad('ytd-menu-service-item-renderer', popup)
+    } catch (e) {
+        console.log(e);
+        return
+    }
     let menuItems = popup.querySelectorAll('ytd-menu-service-item-renderer');
+    if (menuItems.length <= actionItemMenuNumber || menuItems.length === 1) {
+        popup.style.display = 'none';
+        popup.style.opacity = 1;
+        return;
+    }
     const clickEvent = new Event('click', {bubbles: false});
-    menuItems[4].dispatchEvent(clickEvent);
-    // menuItems[4].click();
+    menuItems[actionItemMenuNumber].dispatchEvent(clickEvent);
+    popup.style.opacity = 1
     removeFilter(videoItem);
 };
 
-const blockVideoItem = async (videoItem) => {
+const blockVideoItem = async (videoItem, settings) => {
+    const whatToDo = settings?.[SETTINGS_KEYS.whatToDo]
+    if (whatToDo === WHAT_TO_DO_MAP.blur || !whatToDo) return
+    let actionItemMenuNumber;
+    if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 4
+    if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 5
+    if (!actionItemMenuNumber) return
     await openPopup(videoItem);
-    await clickPopupOption(videoItem);
+    await clickPopupOption(videoItem, actionItemMenuNumber);
 };
 
 const checkVideoItem = async (videoItem) => {
-    const videoTitle = videoItem.querySelector('#video-title-link');
+    if (!videoItem) return false
+    if (getComputedStyle(videoItem).display === 'none') return false
+    let videoTitle;
+    if (videoItem.classList.contains('ytd-rich-shelf-renderer')) {
+        videoTitle = videoItem.querySelector('#video-title');
+    } else {
+        videoTitle = videoItem.querySelector('#video-title-link')
+    }
     if (!videoTitle) return false;
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return false;
-    const titleText = videoTitle.title;
+    const titleText = videoTitle.innerText;
     if (!titleText) return false;
     const channelNameNode = videoItem.querySelector('#channel-name');
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
     return checkIsVideoDataRu(titleText, channelNameNode?.innerText);
 };
 
-const handleRows = async (rows) => {
+const handleRows = async (rows, settings) => {
     for (const row of rows) {
-        if (!(row.tagName === 'YTD-RICH-GRID-ROW')) continue;
-        for (const videoItem of row.children[0].children) {
-            if (!videoItem) continue;
-            if (getComputedStyle(videoItem).display === 'none') continue;
+        const videoItems = row.getElementsByTagName('ytd-rich-item-renderer')
+        for (const videoItem of videoItems) {
             checkVideoItem(videoItem)
                 .then(result => {
                     if (result) {
                         handleRussianVideoItem(videoItem, 'home');
-                        // blockVideoQueue.push(videoItem)
+                        blockVideoQueue.push({videoItem, settings})
                     }
                     return result;
                 })
                 .catch(e => console.log(e));
-            // break;
         }
-        // break;
     }
 };
 
 export const handleHomePage = async () => {
-    await waitForNodeLoad(SELECTOR.CONTAINER_HOME);
+    try {
+        await waitForNodeLoad(SELECTOR.CONTAINER_HOME);
+    } catch (e) {
+        console.log(e);
+        return
+    }
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     await wait(50);
-    await handleRows(videoItemsContainer.children);
+    const settings = await getSettings();
+    await handleRows(videoItemsContainer.children, settings);
     const videoItemsObserver = new MutationObserver(async function (mutations) {
         for (const mutation of mutations) {
-            await handleRows(mutation.addedNodes);
+            await handleRows(mutation.addedNodes, settings);
         }
     });
     videoItemsObserver.observe(videoItemsContainer, {childList: true});

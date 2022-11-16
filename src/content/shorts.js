@@ -1,6 +1,6 @@
-import {checkIsVideoDataRu} from '../common/utils/containsRussian';
+import {checkIsVideoDataRu} from '../utils/content/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {handleRussianVideoItem, wait, waitForNodeLoad} from './utils';
+import {handleRussianVideoItem, wait, waitForNodeLoad} from '../utils/content/utils';
 
 const handleTitleHeader = async (titleHeader, videoItem) => {
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return;
@@ -27,7 +27,12 @@ const handleVideoItem = async (videoItem) => {
 
 export const handleShortsPage = async () => {
     console.log('handling Shorts!~!!!!');
-    await waitForNodeLoad(SELECTOR.CONTAINER_SHORTS);
+    try {
+        await waitForNodeLoad(SELECTOR.CONTAINER_SHORTS);
+    } catch (e) {
+        console.log(e);
+        return
+    }
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_SHORTS);
     for (const videoItem of videoItemsContainer.children) {
         if (videoItem.tagName !== 'YTD-REEL-VIDEO-RENDERER') continue;

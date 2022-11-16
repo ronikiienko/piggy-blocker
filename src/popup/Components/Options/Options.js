@@ -1,5 +1,7 @@
+import awaitify from 'async-es/internal/awaitify';
 import React from 'react';
 import {DEFAULT_SETTINGS, SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../../../common/consts';
+import {getSettings} from '../../../utils/common/getSettings';
 import {Checkbox} from '../../StyledElements/Checkbox/Checkbox';
 import {Radio} from '../../StyledElements/Radio/Radio';
 import './Options.css';
@@ -8,11 +10,9 @@ import './Options.css';
 export const Options = () => {
     const [formData, setFormData] = React.useState(DEFAULT_SETTINGS);
     React.useEffect(() => {
-        chrome.storage.sync.get({[SETTINGS_STORAGE_KEY]: DEFAULT_SETTINGS})
-            .then(storage => {
-                setFormData(storage[SETTINGS_STORAGE_KEY]);
-            })
-            .catch(e => console.log(e));
+        getSettings()
+            .then(setFormData)
+            .catch(console.log)
     }, []);
 
     const handleInputChange = (event) => {

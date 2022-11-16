@@ -1,4 +1,5 @@
-import {CMD_GET_CURRENT_TAB} from '../common/consts';
+import {CMD_GET_CURRENT_TAB, SETTINGS_KEYS} from '../common/consts';
+import {getSettings} from '../utils/common/getSettings';
 import {handleHomePage} from './home';
 import {handleShortsPage} from './shorts';
 import {handleWatchPage} from './watch';
@@ -27,15 +28,16 @@ const handlePage = async (url) => {
     const pathname = new URL(url).pathname;
     if (!checkIfPageChanged(pathname)) return;
     prevPathname = pathname;
-    if (pathname === '/' && !isObservingHome) {
+    const settings = await getSettings()
+    if (pathname === '/' && !isObservingHome && settings[SETTINGS_KEYS.blockOnHome]) {
         isObservingHome = true;
         await handleHomePage();
     }
-    if (pathname.startsWith('/shorts') && !isObservingShorts) {
+    if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
         isObservingShorts = true;
         await handleShortsPage();
     }
-    if (pathname.startsWith('/watch') && !isObservingWatch) {
+    if (pathname.startsWith('/watch') && !isObservingWatch && settings[SETTINGS_KEYS.blockOnWatch]) {
         isObservingWatch = true
         await handleWatchPage()
     }
