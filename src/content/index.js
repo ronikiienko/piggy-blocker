@@ -31,7 +31,6 @@ const handlePage = async (url) => {
 };
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log('SMEREKA');
     if (message?.url) {
         handlePage(message.url)
             .catch(e => console.log(e));
@@ -50,6 +49,20 @@ chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
 //     document.dispatchEvent(keydown);
 //     document.body.scroll(0, 2000);
 // }, 3000);
+
+const mutationMinInterval = 200;
+let lastMutation;
+let mutationWaiter;
+const observer = new MutationObserver((mutations) => {
+    clearTimeout(mutationWaiter)
+
+    console.log('BLAH', mutations);
+});
+
+console.log('FOOBAR');
+setTimeout(() => {
+    observer.observe(document.body.querySelector('#contents'), {childList: true})
+}, 4000)
 
 
 

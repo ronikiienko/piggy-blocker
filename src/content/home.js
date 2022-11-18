@@ -4,6 +4,7 @@ import {getSettings} from '../utils/common/getSettings';
 import {checkIsVideoDataRu} from '../utils/content/containsRussian';
 import {handleRussianVideoItem, removeFilter, wait, waitForNodeLoad} from '../utils/content/utils';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
+import {videoStore} from './videoStore';
 
 
 const blockVideoQueue = queue(async ({videoItem, settings}) => {
@@ -69,12 +70,19 @@ const checkVideoItem = async (videoItem) => {
         videoTitle = videoItem.querySelector('#video-title-link');
     }
     if (!videoTitle) return false;
+    const videoLink = videoTitle.href;
+    // console.log(videoLink);
+    // const videoId = videoLink.split('watch?v=')[1]
+    // const storeCheck = videoStore.check(videoId)
+    // if (storeCheck !== null) return storeCheck
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return false;
     const titleText = videoTitle.innerText;
     if (!titleText) return false;
     const channelNameNode = videoItem.querySelector('#channel-name');
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
-    return checkIsVideoDataRu(titleText, channelNameNode?.innerText);
+    const checkResult = checkIsVideoDataRu(titleText, channelNameNode?.innerText);
+    // videoStore.addVideo(videoId, checkResult)
+    return checkResult;
 };
 
 const handleRows = async (rows, settings) => {
@@ -92,6 +100,19 @@ const handleRows = async (rows, settings) => {
         }
     }
 };
+const handleVideos = async (container, settings) => {
+    const videoItems = container.getElementsByTagName('ytd-rich-item-renderer');
+    for (const videoItem of videoItems) {
+        checkVideoItem(videoItem)
+            .then(result => {
+                if (result) {
+                    handleRussianVideoItem(videoItem, 'home');
+                    blockVideoQueue.push({videoItem, settings});
+                }
+            })
+            .catch(e => console.log(e));
+    }
+};
 // TODO when resizing screen everything breaks
 export const handleHomePage = async () => {
     try {
@@ -103,13 +124,20 @@ export const handleHomePage = async () => {
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     await wait(50);
     const settings = await getSettings();
-    await handleRows(videoItemsContainer.children, settings);
+    await handleRows(videoItemsContainer, settings);
+    // let timeout;
+    // const mutationCallback = () => {
+    //     clearTimeout(timeout);
+    //     timeout = setTimeout(() => {
+    //         handleVideos(videoItemsContainer)
+    //     }, 200);
+    // };
     const videoItemsObserver = new MutationObserver(async function (mutations) {
         for (const mutation of mutations) {
             await handleRows(mutation.addedNodes, settings);
         }
     });
-    videoItemsObserver.observe(videoItemsContainer, {childList: true});
+    videoItemsObserver.observe(videoItemsContainer, {childList: true, attributes: true});
 };
 
 // const waitForVideoTitleLoad = (videoItemNode) => {
