@@ -61,6 +61,7 @@ export const handleRussianVideoItem = (node, context) => {
 }
 export const removeFilter = (node) => {
     node.style.filter = 'blur(0px) opacity(100%)'
+    node.style.background = 'none'
 }
 export const wait = (msec) => {
     return new Promise(resolve => setTimeout(() => resolve(), msec));

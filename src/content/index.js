@@ -50,19 +50,19 @@ chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
 //     document.body.scroll(0, 2000);
 // }, 3000);
 
-const mutationMinInterval = 200;
-let lastMutation;
-let mutationWaiter;
-const observer = new MutationObserver((mutations) => {
-    clearTimeout(mutationWaiter)
-
-    console.log('BLAH', mutations);
-});
-
-console.log('FOOBAR');
-setTimeout(() => {
-    observer.observe(document.body.querySelector('#contents'), {childList: true})
-}, 4000)
+// const mutationMinInterval = 200;
+// let lastMutation;
+// let mutationWaiter;
+// const observer = new MutationObserver((mutations) => {
+//     clearTimeout(mutationWaiter)
+//
+//     console.log('BLAH', mutations);
+// });
+//
+// console.log('FOOBAR');
+// setTimeout(() => {
+//     observer.observe(document.body.querySelector('#contents'), {childList: true})
+// }, 4000)
 
 
 

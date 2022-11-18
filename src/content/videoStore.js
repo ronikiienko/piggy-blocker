@@ -3,7 +3,7 @@ export const videoStore = {
     notRu: new Set(),
     addVideo: function (id, isRu) {
         if (!id) return
-        if (isRu) this.ru.add(id)
+        if (isRu) return this.ru.add(id)
         this.notRu.add(id)
     },
     getRu: function () {
