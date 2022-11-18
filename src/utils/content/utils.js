@@ -18,7 +18,7 @@ export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTim
             observer.observe(whereToSearch, {childList: true, subtree: true});
             setTimeout(() => {
                 observer.disconnect()
-                reject('could not find node (time expired)')
+                reject(`could not find node ${nodeSelector} (time expired)`)
             }, waitTime)
         }
     });

@@ -11,39 +11,27 @@ let isObservingShorts = false;
 let isObservingHome = false;
 let isObservingWatch = false;
 
-let prevPathname;
-const checkIfPageChanged = (pathname) => {
-    // console.log('prev:', prevPathname, 'current:', pathname);
-    if (!prevPathname) return true;
-    // shorts have id like /shorts/id which changes on every scrolled video
-    if (pathname.startsWith('/shorts')) {
-        if (prevPathname.startsWith('/shorts') && pathname.startsWith('/shorts')) return false;
-    }
-    if (prevPathname === '/' || pathname === '/') return prevPathname !== pathname
-    if (prevPathname.startsWith(pathname) || pathname.startsWith(prevPathname)) return false;
-
-    return true;
-};
 const handlePage = async (url) => {
     const pathname = new URL(url).pathname;
-    if (!checkIfPageChanged(pathname)) return;
-    prevPathname = pathname;
     const settings = await getSettings()
     if (pathname === '/' && !isObservingHome && settings[SETTINGS_KEYS.blockOnHome]) {
         isObservingHome = true;
+        console.log('handling home page');
         await handleHomePage();
-    }
-    if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
-        isObservingShorts = true;
-        await handleShortsPage();
     }
     if (pathname.startsWith('/watch') && !isObservingWatch && settings[SETTINGS_KEYS.blockOnWatch]) {
         isObservingWatch = true
+        console.log('handling watch page');
         await handleWatchPage()
     }
+    // if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
+    //     isObservingShorts = true;
+    //     await handleShortsPage();
+    // }
 };
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log('SMEREKA');
     if (message?.url) {
         handlePage(message.url)
             .catch(e => console.log(e));

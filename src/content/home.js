@@ -61,6 +61,7 @@ const blockVideoItem = async (videoItem, settings) => {
 const checkVideoItem = async (videoItem) => {
     if (!videoItem) return false;
     if (getComputedStyle(videoItem).display === 'none') return false;
+    // if (!Boolean(videoItem.querySelector('#meta #metadata-line > span'))) return false;
     let videoTitle;
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) {
         videoTitle = videoItem.querySelector('#video-title');
@@ -82,7 +83,6 @@ const handleRows = async (rows, settings) => {
         for (const videoItem of videoItems) {
             checkVideoItem(videoItem)
                 .then(result => {
-                    console.log(result, videoItem);
                     if (result) {
                         handleRussianVideoItem(videoItem, 'home');
                         blockVideoQueue.push({videoItem, settings});
@@ -92,7 +92,7 @@ const handleRows = async (rows, settings) => {
         }
     }
 };
-
+// TODO when resizing screen everything breaks
 export const handleHomePage = async () => {
     try {
         await waitForNodeLoad(SELECTOR.CONTAINER_HOME);

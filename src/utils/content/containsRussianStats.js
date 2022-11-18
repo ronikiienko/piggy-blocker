@@ -66,13 +66,13 @@ const stats = {
  * @param reasonDetails
  */
 export const addToStats = (allDataObject = {}, ru, reasonName, reasonDetails) => {
-    console.log(reasonName, ':', '\n',
-        'title: ',allDataObject.title, '\n',
-        'channelName: ', allDataObject.channelName, '\n',
-        'description: ',  allDataObject.description, '\n',
-        'checkResult: ', ru, '\n',
-        'details: ', reasonDetails
-    );
+    // console.log(reasonName, ':', '\n',
+    //     'title: ',allDataObject.title, '\n',
+    //     'channelName: ', allDataObject.channelName, '\n',
+    //     'description: ',  allDataObject.description, '\n',
+    //     'checkResult: ', ru, '\n',
+    //     'details: ', reasonDetails
+    // );
     if (ru === null) return
     if (ru) {
         stats.total.russian.number = stats.total.russian.number + 1
