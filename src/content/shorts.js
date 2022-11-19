@@ -1,13 +1,13 @@
 import {checkIsVideoDataRu} from '../utils/content/containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {handleRussianVideoItem, wait, waitForNodeLoad} from '../utils/content/utils';
+import {applyFilter, wait, waitForNodeLoad} from '../utils/content/utils';
 
 const handleTitleHeader = async (titleHeader, videoItem) => {
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return;
     if (!titleHeader) return;
     const titleText = titleHeader.innerText;
     if (await checkIsVideoDataRu(titleText)) {
-        handleRussianVideoItem(videoItem, 'shorts');
+        applyFilter(videoItem, 'shorts');
     }
     videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
 }

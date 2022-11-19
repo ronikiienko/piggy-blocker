@@ -44,9 +44,15 @@
 .radio-label:active:before {
     background-color: var(--button-active);
 }
-input:checked + .radio-label:after {
+.radio-input:checked + .radio-label:after {
     transform: scale(50%);
 }
-input:checked + .radio-label {
+.radio-input:checked + .radio-label {
     color: var(--main-text);
 }
+
+.radio-input:disabled + .radio-label {
+    opacity: 0.2;
+}
+
+

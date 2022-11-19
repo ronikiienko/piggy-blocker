@@ -12,18 +12,18 @@ let isObservingHome = false;
 let isObservingWatch = false;
 
 const handlePage = async (url) => {
+    console.log('handling page');
     const pathname = new URL(url).pathname;
-    const settings = await getSettings()
-    if (pathname === '/' && !isObservingHome && settings[SETTINGS_KEYS.blockOnHome]) {
+    if (pathname === '/' && !isObservingHome) {
         isObservingHome = true;
         console.log('handling home page');
         await handleHomePage();
     }
-    if (pathname.startsWith('/watch') && !isObservingWatch && settings[SETTINGS_KEYS.blockOnWatch]) {
-        isObservingWatch = true
-        console.log('handling watch page');
-        await handleWatchPage()
-    }
+    // if (pathname.startsWith('/watch') && !isObservingWatch) {
+    //     isObservingWatch = true
+    //     console.log('handling watch page');
+    //     await handleWatchPage()
+    // }
     // if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
     //     isObservingShorts = true;
     //     await handleShortsPage();

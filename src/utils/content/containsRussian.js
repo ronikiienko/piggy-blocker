@@ -83,7 +83,7 @@ export const checkIsVideoDataRu = async (title, channelName, description) => {
             return isStringRu;
         }
     }
-    // TODO not handle 'MIX' items
+    // TODO maby not handle 'MIX' items
     if (channelName) {
         isStringRu = checkStringForRuChars(channelName, false);
         addToStats(allDataObject, isStringRu, 'byCharsChannelName', null)

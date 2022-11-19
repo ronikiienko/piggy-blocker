@@ -1,6 +1,12 @@
 import awaitify from 'async-es/internal/awaitify';
 import React from 'react';
-import {DEFAULT_SETTINGS, SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../../../common/consts';
+import {
+    BLUR_INTENSITY_MAP,
+    DEFAULT_SETTINGS,
+    SETTINGS_KEYS,
+    SETTINGS_STORAGE_KEY,
+    WHAT_TO_DO_MAP,
+} from '../../../common/consts';
 import {getSettings} from '../../../utils/common/getSettings';
 import {Checkbox} from '../../StyledElements/Checkbox/Checkbox';
 import {Radio} from '../../StyledElements/Radio/Radio';
@@ -37,7 +43,7 @@ export const Options = () => {
 
     return (
         <div>
-            <h1>Опції:</h1>
+            <h1>Налаштування:</h1>
             <div className="where-to-block options-part">
                 <h2>Де блокувати:</h2>
                 <Checkbox
@@ -69,22 +75,60 @@ export const Options = () => {
                     name={SETTINGS_KEYS.whatToDo}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.whatToDo] === WHAT_TO_DO_MAP.blur}
-                    label={"Тільки блюрити"}/>
+                    label={"Тільки блюрити"}
+                />
                 <br/>
                 <Radio
                     id={WHAT_TO_DO_MAP.notInterested}
                     name={SETTINGS_KEYS.whatToDo}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.whatToDo] === WHAT_TO_DO_MAP.notInterested}
-                    label={"Натискати \"Не цікавить\""}/>
+                    label={"Натискати \"Не цікавить\""}
+                />
                 <br/>
                 <Radio
                     id={WHAT_TO_DO_MAP.blockChannel}
                     name={SETTINGS_KEYS.whatToDo}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.whatToDo] === WHAT_TO_DO_MAP.blockChannel}
-                    label={"Натискати \"Не рекомендувати канал\""}/>
+                    label={"Натискати \"Не рекомендувати канал\""}
+                />
                 <br/>
+            </div>
+            <div className="how-to-blur options-part">
+                <h2>Як блюрити:</h2>
+                <Radio
+                    id={BLUR_INTENSITY_MAP.weak}
+                    name={SETTINGS_KEYS.blurIntensity}
+                    onChange={handleInputChange}
+                    checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.weak}
+                    label={"Слабко"}
+                />
+                <br/>
+                <Radio
+                    id={BLUR_INTENSITY_MAP.normal}
+                    name={SETTINGS_KEYS.blurIntensity}
+                    onChange={handleInputChange}
+                    checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.normal}
+                    label={"Середньо"}
+                />
+                <br/>
+                <Radio
+                    id={BLUR_INTENSITY_MAP.strong}
+                    name={SETTINGS_KEYS.blurIntensity}
+                    onChange={handleInputChange}
+                    checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.strong}
+                    label={"Максимально"}
+                />
+                <br/>
+                <Radio
+                    id={BLUR_INTENSITY_MAP.transparent}
+                    name={SETTINGS_KEYS.blurIntensity}
+                    onChange={handleInputChange}
+                    checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.transparent}
+                    label={"Прозорість"}
+                    // disabled={true}
+                />
             </div>
         </div>
     );

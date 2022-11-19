@@ -51,9 +51,13 @@
     opacity: 0.1;
     transition: all 0.2s;
 }
-input:checked + .checkbox-label:after {
+.checkbox-input:checked + .checkbox-label:after {
     opacity: 1;
 }
-input:checked + .checkbox-label {
+.checkbox-input:checked + .checkbox-label {
     color: var(--main-text);
+}
+
+.checkbox-input:disabled + .checkbox-label {
+    opacity: 0.2;
 }
