@@ -10,7 +10,6 @@ import {videoStore} from './videoStore';
 const blockVideoQueue = queue(async ({videoItem, settings}) => {
     await blockVideoItem(videoItem, settings);
 }, 1);
-
 const openPopup = async (videoItem) => {
     try {
         await waitForNodeLoad('#details #button', videoItem);
@@ -25,12 +24,12 @@ const openPopup = async (videoItem) => {
     }
     const clickEvent = new Event('click', {bubbles: false});
     button.dispatchEvent(clickEvent);
-    videoItem.classList.add(CLICKED_VIDEO_ITEM_CLASSNAME)
+    return button
 };
 
-const clickPopupOption = async (videoItem, actionItemMenuNumber) => {
-    let popup = document.getElementsByTagName('tp-yt-iron-dropdown')[0];
-    // popup.style.opacity = 0;
+const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton) => {
+    let popup = document.querySelector('tp-yt-iron-dropdown');
+    popup.style.opacity = 0;
     try {
         await waitForNodeLoad('ytd-menu-service-item-renderer', popup);
     } catch (e) {
@@ -38,33 +37,49 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber) => {
         return;
     }
     let menuItems = popup.querySelectorAll('ytd-menu-service-item-renderer');
-    await wait(100)
+    const clickEvent = new Event('click', {bubbles: false});
+    let menuItemsInnerText = [];
+    for (const menuItem of menuItems) {
+        menuItemsInnerText.push(menuItem.innerText);
+    }
+    const prevScrollPosition = document.documentElement.scrollTop
     if (menuItems.length <= actionItemMenuNumber) {
-        console.log('failed click')
-        document.body.click()
-        // popup.style.opacity = 1;
+        console.log('NOT CLICKINGGGGG', videoItem, menuItems.length, menuItems, menuItemsInnerText, prevScrollPosition);
+        popupOpenButton.dispatchEvent(clickEvent)
+        popup.style.opacity = 1
         return;
     }
-    const clickEvent = new Event('click', {bubbles: false});
-    console.log('clickinggggggg', videoItem, menuItems.length, menuItems);
-    menuItems[actionItemMenuNumber].dispatchEvent(clickEvent);
-    popup.style.opacity = 1;
+    menuItems[actionItemMenuNumber].dispatchEvent(clickEvent)
+    popup.style.opacity = 1
+    console.log('CLICKINGGGGGGG', videoItem, menuItems.length, menuItems, menuItemsInnerText, prevScrollPosition);
     removeFilter(videoItem);
+    wait(50).then(() => window.scrollTo(0, prevScrollPosition))
+    // popupOpenButton.dispatchEvent(clickEvent)
 };
 //  TODO channel name in shorts is huge with /n /n /n /n /n
 const blockVideoItem = async (videoItem, settings) => {
-    if (videoItem.classList.contains(CLICKED_VIDEO_ITEM_CLASSNAME)) return
+    if (videoItem.classList.contains('ytd-rich-shelf-renderer')) return
+    if (videoItem.classList.contains(CLICKED_VIDEO_ITEM_CLASSNAME)) {
+        console.log('element checked');
+        return;
+    }
+    // sometimes when popup is being closed and immediately opened there can be many elements,
+    // so possibly need timeout here, but this thing is mostly when not authorized, and i dont launch this function in such instance
+    // await wait(300)
     const whatToDo = settings?.[SETTINGS_KEYS.whatToDo];
     if (whatToDo === WHAT_TO_DO_MAP.blur || !whatToDo) return;
     let actionItemMenuNumber;
     if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 4;
     if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 5;
     if (!actionItemMenuNumber) return;
-    const popupOpeningResult =  await openPopup(videoItem);
-    await clickPopupOption(videoItem, actionItemMenuNumber);
+    const popupOpenButton = await openPopup(videoItem);
+    if (!popupOpenButton) return
+    await clickPopupOption(videoItem, actionItemMenuNumber, popupOpenButton);
+    videoItem.classList.add(CLICKED_VIDEO_ITEM_CLASSNAME)
 };
 
 const checkVideoItem = async (videoItem) => {
+    // TODO return false if 'dismissed' video
     if (!videoItem) return false;
     if (getComputedStyle(videoItem).display === 'none') return false;
     let videoTitle;
@@ -99,45 +114,53 @@ const checkVideoItem = async (videoItem) => {
 };
 
 
-const handleVideos = async (container, settings) => {
-    console.log('handling videos');
+const handleVideos = async (container, settings, isAuthorized) => {
+    console.log('handling videos', `authorized: ${isAuthorized}`);
     // console.log('not ru: ', videoStore.getNotRu(), 'ru: ', videoStore.getRu());
     // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-rich-item-renderer');
+    let handled = 0
     for (const videoItem of videoItems) {
         if (!settings[SETTINGS_KEYS.blockOnHome]) {
             removeFilter(videoItem)
             continue;
         }
         checkVideoItem(videoItem)
-            .then(result => {
-                if (result) {
+            .then(isRu => {
+                if (isRu) {
                     applyFilter(videoItem, 'home', settings);
-                    blockVideoQueue.push({videoItem, settings});
+                    if (isAuthorized) {
+                        blockVideoQueue.push({videoItem, settings});
+                    }
                 } else {
                     removeFilter(videoItem);
                 }
             })
             .catch(e => console.log(e));
+        handled++
+        // if (handled === 4) break;
     }
 };
 // TODO when resizing screen everything breaks
 export const handleHomePage = async () => {
     try {
         await waitForNodeLoad(SELECTOR.CONTAINER_HOME);
+        await waitForNodeLoad(SELECTOR.IS_AUTH_BUTTONS + ' #button');
     } catch (e) {
         console.log(e);
         return;
     }
+    const isAuthButtonsContainer = document.body.querySelector('#masthead-container #buttons');
+    const authButtonsNumber = isAuthButtonsContainer.children.length
+    const isAuthorized = authButtonsNumber === 3
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
-    await wait(50);
     let settings = await getSettings();
-    await handleVideos(videoItemsContainer, settings);
+    await handleVideos(videoItemsContainer, settings, isAuthorized);
     chrome.storage.onChanged.addListener(async (changes, areaName) => {
         if (changes[SETTINGS_STORAGE_KEY] && areaName === 'sync') {
             const newSettings = await getSettings()
             if (!newSettings) return
-            await handleVideos(videoItemsContainer, newSettings)
+            await handleVideos(videoItemsContainer, newSettings, isAuthorized)
             settings = newSettings
         }
     })
@@ -145,7 +168,7 @@ export const handleHomePage = async () => {
     const videoItemsObserver = new MutationObserver(async function (mutations) {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            handleVideos(videoItemsContainer, settings);
+            handleVideos(videoItemsContainer, settings, isAuthorized);
         }, 400);
     });
     videoItemsObserver.observe(videoItemsContainer, {childList: true});

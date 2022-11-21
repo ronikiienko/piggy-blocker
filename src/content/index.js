@@ -1,6 +1,6 @@
 import {CMD_GET_CURRENT_TAB, SETTINGS_KEYS} from '../common/consts';
 import {getSettings} from '../utils/common/getSettings';
-import {handleHomePage} from './home';
+import {handleHomePage, killBlockQueueHome} from './home';
 import {handleShortsPage} from './shorts';
 import {handleWatchPage} from './watch';
 
