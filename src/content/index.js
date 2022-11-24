@@ -1,6 +1,5 @@
 import {CMD_GET_CURRENT_TAB, SETTINGS_KEYS} from '../common/consts';
-import {getSettings} from '../utils/common/getSettings';
-import {handleHomePage, killBlockQueueHome} from './home';
+import {clearQueueHome, getQueueHome, handleHomePage} from './home';
 import {handleShortsPage} from './shorts';
 import {handleWatchPage} from './watch';
 
@@ -12,12 +11,15 @@ let isObservingHome = false;
 let isObservingWatch = false;
 
 const handlePage = async (url) => {
-    console.log('handling page');
+    console.log('url changed', url);
     const pathname = new URL(url).pathname;
     if (pathname === '/' && !isObservingHome) {
         isObservingHome = true;
         console.log('handling home page');
         await handleHomePage();
+    } else {
+        console.log('queue killed');
+        clearQueueHome()
     }
     // if (pathname.startsWith('/watch') && !isObservingWatch) {
     //     isObservingWatch = true
@@ -31,6 +33,7 @@ const handlePage = async (url) => {
 };
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log('message', message);
     if (message?.url) {
         handlePage(message.url)
             .catch(e => console.log(e));

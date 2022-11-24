@@ -57,7 +57,7 @@ export const applyFilter = (node, context, settings) => {
     // }
     let filter;
     let visibility;
-    switch (settings[SETTINGS_KEYS.blurIntensity]) {
+    switch (settings?.[SETTINGS_KEYS.blurIntensity]) {
         case BLUR_INTENSITY_MAP.weak:
             filter = 'blur(1px) opacity(40%)';
             visibility = 'visible'

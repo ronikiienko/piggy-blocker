@@ -1,4 +1,3 @@
-import awaitify from 'async-es/internal/awaitify';
 import React from 'react';
 import {
     BLUR_INTENSITY_MAP,
