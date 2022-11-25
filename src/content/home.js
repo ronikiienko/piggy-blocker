@@ -10,8 +10,8 @@ import {videoStore} from './videoStore';
 // const blockVideoQueue = queue(async ({videoItem, settings}) => {
 //     await blockVideoItem(videoItem, settings);
 // }, 1);
-const blockVideoQueue = new Queue(async ({videoItem, settings}) => {
-    await blockVideoItem(videoItem, settings);
+const blockVideoQueue = new Queue(async ({videoItem, settings, init}) => {
+    await blockVideoItem(videoItem, settings, init);
 });
 
 export const getQueueHome = () => {
@@ -21,9 +21,9 @@ export const getQueueHome = () => {
 let videoItemsObserver;
 
 export const disconnectAllHome = () => {
-    videoItemsObserver?.disconnect();
-    blockVideoQueue.clear();
-};
+    videoItemsObserver?.disconnect()
+    blockVideoQueue.clear()
+}
 
 const openPopup = async (videoItem) => {
     try {
@@ -52,7 +52,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     let popup = document.querySelector('tp-yt-iron-dropdown');
     popup.style.opacity = 0;
     try {
-        await waitForNodeLoad('ytd-menu-service-item-renderer', popup);
+        await waitForNodeLoad('ytd-menu-service-item-renderer', document);
     } catch (e) {
         console.log(e);
         return;
@@ -77,16 +77,18 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     // popupOpenButton.dispatchEvent(clickEvent)
 };
 //  TODO channel name in shorts is huge with /n /n /n /n /n
-const blockVideoItem = async (videoItem, settings) => {
-    console.log('blocking video item');
+const blockVideoItem = async (videoItem, settings, init) => {
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) return;
     const whatToDo = settings?.[SETTINGS_KEYS.whatToDo];
     if (whatToDo === WHAT_TO_DO_MAP.blur || !whatToDo) {
         return;
     }
-    if (videoItem.classList.contains(CLICKED_VIDEO_ITEM_CLASSNAME)) {
-        console.log('element checked');
-        return;
+    console.log('init:', init);
+    if (!init) {
+        if (videoItem.classList.contains(CLICKED_VIDEO_ITEM_CLASSNAME)) {
+            console.log('element checked');
+            return;
+        }
     }
     // sometimes when popup is being closed and immediately opened there can be many elements,
     // so possibly need timeout here, but this thing is mostly when not authorized, and i dont launch this function in such instance
@@ -141,10 +143,11 @@ const checkVideoItem = async (videoItem) => {
  * @param container {HTMLElement}
  * @param settings {Object} User settings
  * @param isAuthorized {boolean} When not authorized, items won't be blocked
+ * @param {Boolean} [init=false] If true, items with clicked classname will be also blocked
  * @returns {Promise<void>}
  */
 
-const handleVideos = async (container, settings, isAuthorized) => {
+const handleVideos = async (container, settings, isAuthorized, init) => {
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
     // console.log('not ru: ', videoStore.getNotRu(), 'ru: ', videoStore.getRu());
     // TODO maby change to more efficient selector
@@ -159,10 +162,7 @@ const handleVideos = async (container, settings, isAuthorized) => {
             .then(isRu => {
                 if (isRu) {
                     applyFilter(videoItem, 'home', settings);
-                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({
-                        videoItem,
-                        settings,
-                    });
+                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({videoItem, settings, init});
                 } else {
                     removeFilter(videoItem);
                 }
@@ -187,7 +187,7 @@ export const handleHomePage = async () => {
     const isAuthorized = authButtonsNumber === 3;
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     let settings = await getSettings();
-    await handleVideos(videoItemsContainer, settings, isAuthorized);
+    await handleVideos(videoItemsContainer, settings, isAuthorized, true);
     chrome.storage.onChanged.addListener(async (changes, areaName) => {
         if (changes[SETTINGS_STORAGE_KEY] && areaName === 'sync') {
             blockVideoQueue.clear();
