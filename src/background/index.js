@@ -1,4 +1,4 @@
-import {CMD_GET_CURRENT_TAB} from '../common/consts';
+import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -16,8 +16,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // different content scripts for different urls for same reason (need to update page to change script)
 // popstate in content script not fires
 
+
+
 chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
     if (!details.url.startsWith('https://www.youtube.com/')) return
-    chrome.tabs.sendMessage(details.tabId, details)
+    chrome.tabs.sendMessage(details.tabId, {details, cmd: CMD_TAB_UPDATE})
         .catch(e => console.log(e));
 });

@@ -1,25 +1,23 @@
-import {CMD_GET_CURRENT_TAB, SETTINGS_KEYS} from '../common/consts';
-import {clearQueueHome, getQueueHome, handleHomePage} from './home';
-import {handleShortsPage} from './shorts';
-import {handleWatchPage} from './watch';
+import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
+import {disconnectAllHome, handleHomePage} from './home';
 
 // TODO sometimes videos arent being analyzed
 // TODO possibly handle hashtag pages
 
 let isObservingShorts = false;
-let isObservingHome = false;
+// let isObservingHome = false;
 let isObservingWatch = false;
 
 const handlePage = async (url) => {
     console.log('url changed', url);
     const pathname = new URL(url).pathname;
-    if (pathname === '/' && !isObservingHome) {
-        isObservingHome = true;
-        console.log('handling home page');
+    if (pathname === '/'/* && !isObservingHome*/) {
+        disconnectAllHome()
+        // isObservingHome = true;
         await handleHomePage();
     } else {
         console.log('queue killed');
-        clearQueueHome()
+        disconnectAllHome()
     }
     // if (pathname.startsWith('/watch') && !isObservingWatch) {
     //     isObservingWatch = true
@@ -32,19 +30,34 @@ const handlePage = async (url) => {
     // }
 };
 
+
+// TODO may have some problems with shorts (link changes on every short video scroll)
+
+let prevUrl;
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('message', message);
-    if (message?.url) {
-        handlePage(message.url)
-            .catch(e => console.log(e));
+    switch (message.cmd) {
+        case CMD_TAB_UPDATE:
+            if (message?.details?.url) {
+                if (message.details.url === prevUrl) return
+                prevUrl = message.details.url
+                handlePage(message.details.url)
+                    .catch(e => console.log(e));
+            }
+            break;
     }
+    return true;
 });
 
 chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
     if (tab.url) {
+        prevUrl = tab.url
+        console.log(prevUrl);
         handlePage(tab.url)
             .catch(e => console.log(e));
     }
+    return true
 });
 
 // setInterval(() => {

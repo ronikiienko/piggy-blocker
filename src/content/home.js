@@ -18,12 +18,14 @@ export const getQueueHome = () => {
     return blockVideoQueue.getQueue();
 };
 
-export const clearQueueHome = () => {
+let videoItemsObserver;
+
+export const disconnectAllHome = () => {
+    videoItemsObserver?.disconnect();
     blockVideoQueue.clear();
 };
 
 const openPopup = async (videoItem) => {
-    console.log('opening popup', videoItem);
     try {
         await waitForNodeLoad('#details #button', videoItem);
     } catch (e) {
@@ -48,10 +50,9 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
         return;
     }
     let popup = document.querySelector('tp-yt-iron-dropdown');
-    console.log('popup', popup);
     popup.style.opacity = 0;
     try {
-        await waitForNodeLoad('ytd-menu-service-item-renderer', document);
+        await waitForNodeLoad('ytd-menu-service-item-renderer', popup);
     } catch (e) {
         console.log(e);
         return;
@@ -77,6 +78,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
 };
 //  TODO channel name in shorts is huge with /n /n /n /n /n
 const blockVideoItem = async (videoItem, settings) => {
+    console.log('blocking video item');
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) return;
     const whatToDo = settings?.[SETTINGS_KEYS.whatToDo];
     if (whatToDo === WHAT_TO_DO_MAP.blur || !whatToDo) {
@@ -134,13 +136,16 @@ const checkVideoItem = async (videoItem) => {
     return checkResult;
 };
 
+/**
+ *
+ * @param container {HTMLElement}
+ * @param settings {Object} User settings
+ * @param isAuthorized {boolean} When not authorized, items won't be blocked
+ * @returns {Promise<void>}
+ */
 
 const handleVideos = async (container, settings, isAuthorized) => {
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
-    if (whatToDo === WHAT_TO_DO_MAP.blur) {
-        clearQueueHome();
-        console.log('options changed', getQueueHome());
-    }
     // console.log('not ru: ', videoStore.getNotRu(), 'ru: ', videoStore.getRu());
     // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-rich-item-renderer');
@@ -154,7 +159,10 @@ const handleVideos = async (container, settings, isAuthorized) => {
             .then(isRu => {
                 if (isRu) {
                     applyFilter(videoItem, 'home', settings);
-                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({videoItem, settings});
+                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({
+                        videoItem,
+                        settings,
+                    });
                 } else {
                     removeFilter(videoItem);
                 }
@@ -166,6 +174,7 @@ const handleVideos = async (container, settings, isAuthorized) => {
 };
 // TODO when resizing screen everything breaks
 export const handleHomePage = async () => {
+    console.log('handling home page');
     try {
         await waitForNodeLoad(SELECTOR.CONTAINER_HOME);
         await waitForNodeLoad(SELECTOR.IS_AUTH_BUTTONS + ' #button');
@@ -181,6 +190,7 @@ export const handleHomePage = async () => {
     await handleVideos(videoItemsContainer, settings, isAuthorized);
     chrome.storage.onChanged.addListener(async (changes, areaName) => {
         if (changes[SETTINGS_STORAGE_KEY] && areaName === 'sync') {
+            blockVideoQueue.clear();
             const newSettings = await getSettings();
             if (!newSettings) return;
             await handleVideos(videoItemsContainer, newSettings, isAuthorized);
@@ -188,11 +198,10 @@ export const handleHomePage = async () => {
         }
     });
     let timeout;
-    const videoItemsObserver = new MutationObserver(async function (mutations) {
+    videoItemsObserver = new MutationObserver(async function (mutations) {
         console.log('mutation!!!!!!!!!!!!!!1');
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            console.log('new block queue', getQueueHome());
             handleVideos(videoItemsContainer, settings, isAuthorized);
         }, 400);
     });
