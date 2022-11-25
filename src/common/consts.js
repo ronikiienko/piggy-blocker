@@ -1,5 +1,6 @@
 export const CMD_GET_CURRENT_TAB = 'CMD_GET_CURRENT_TAB';
-export const CMD_TAB_UPDATE = 'CMD_TAB_UPDATE'
+export const CMD_TAB_UPDATE = 'CMD_TAB_UPDATE';
+export const CMD_ADD_TO_STATS = 'CMD_ADD_TO_STATS'
 
 export const SETTINGS_STORAGE_KEY = 'settings'
 

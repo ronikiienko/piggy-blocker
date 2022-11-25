@@ -1,4 +1,4 @@
-import {BLUR_INTENSITY_MAP, SETTINGS_KEYS} from '../../common/consts';
+import {BLUR_INTENSITY_MAP, SETTINGS_KEYS} from '../common/consts';
 
 
 export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTime) => {

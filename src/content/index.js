@@ -1,5 +1,5 @@
 import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
-import {wait} from '../utils/content/utils';
+import {wait} from './utils';
 import {disconnectAllHome, handleHomePage} from './home';
 
 // TODO sometimes videos arent being analyzed

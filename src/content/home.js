@@ -1,9 +1,9 @@
 import {title} from 'process/browser';
 import {SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
 import {Queue} from '../common/queue';
-import {getSettings} from '../utils/common/getSettings';
-import {checkIsVideoDataRu} from '../utils/content/containsRussian';
-import {applyFilter, removeFilter, wait, waitForNodeLoad} from '../utils/content/utils';
+import {getSettings} from '../common/getSettings';
+import {checkIsVideoDataRu} from './containsRussian';
+import {applyFilter, removeFilter, wait, waitForNodeLoad} from './utils';
 import {SELECTOR} from './consts';
 import {clickedStore, isRuStore} from './videoStore';
 

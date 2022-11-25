@@ -7,10 +7,6 @@
         "service_worker": "background/index.js",
         "type": "module"
     },
-    "options_ui": {
-        "page": "options/options.html",
-        "open_in_tab": true
-    },
     "action": {
         "default_popup": "popup/popup.html"
     },
@@ -28,6 +24,7 @@
         "storage",
         "tabs",
         "activeTab",
-        "webNavigation"
+        "webNavigation",
+        "unlimitedStorage"
     ]
 }

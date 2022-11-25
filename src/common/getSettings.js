@@ -1,4 +1,4 @@
-import {DEFAULT_SETTINGS, SETTINGS_STORAGE_KEY} from '../../common/consts';
+import {DEFAULT_SETTINGS, SETTINGS_STORAGE_KEY} from './consts';
 
 
 export const getSettings = async () => {

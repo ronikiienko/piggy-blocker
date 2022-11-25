@@ -1,4 +1,4 @@
-import {wait} from '../utils/content/utils';
+import {wait} from '../content/utils';
 
 
 export class Queue {
