@@ -1,17 +1,18 @@
+import {title} from 'process/browser';
 import {SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
 import {Queue} from '../common/queue';
 import {getSettings} from '../utils/common/getSettings';
 import {checkIsVideoDataRu} from '../utils/content/containsRussian';
 import {applyFilter, removeFilter, wait, waitForNodeLoad} from '../utils/content/utils';
-import {CLICKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
-import {videoStore} from './videoStore';
+import {SELECTOR} from './consts';
+import {clickedStore, isRuStore} from './videoStore';
 
 
 // const blockVideoQueue = queue(async ({videoItem, settings}) => {
 //     await blockVideoItem(videoItem, settings);
 // }, 1);
-const blockVideoQueue = new Queue(async ({videoItem, settings, init}) => {
-    await blockVideoItem(videoItem, settings, init);
+const blockVideoQueue = new Queue(async ({videoItem, settings, videoId}) => {
+    await blockVideoItem(videoItem, settings, videoId);
 });
 
 export const getQueueHome = () => {
@@ -21,9 +22,10 @@ export const getQueueHome = () => {
 let videoItemsObserver;
 
 export const disconnectAllHome = () => {
-    videoItemsObserver?.disconnect()
-    blockVideoQueue.clear()
-}
+    videoItemsObserver?.disconnect();
+    blockVideoQueue.clear();
+    clickedStore.clear()
+};
 
 const openPopup = async (videoItem) => {
     try {
@@ -52,12 +54,15 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     let popup = document.querySelector('tp-yt-iron-dropdown');
     popup.style.opacity = 0;
     try {
+        // for some reason when return from other page, searching inside popup not work, so i search in document
         await waitForNodeLoad('ytd-menu-service-item-renderer', document);
     } catch (e) {
         console.log(e);
         return;
     }
     let menuItems = document.querySelectorAll('ytd-menu-service-item-renderer');
+    console.log('blocking.....', videoItem, menuItems.length);
+
     const clickEvent = new Event('click', {bubbles: false});
     // let menuItemsInnerText = [];
     // for (const menuItem of menuItems) {
@@ -77,18 +82,16 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     // popupOpenButton.dispatchEvent(clickEvent)
 };
 //  TODO channel name in shorts is huge with /n /n /n /n /n
-const blockVideoItem = async (videoItem, settings, init) => {
+const blockVideoItem = async (videoItem, settings, videoId) => {
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) return;
     const whatToDo = settings?.[SETTINGS_KEYS.whatToDo];
     if (whatToDo === WHAT_TO_DO_MAP.blur || !whatToDo) {
         return;
     }
-    console.log('init:', init);
-    if (!init) {
-        if (videoItem.classList.contains(CLICKED_VIDEO_ITEM_CLASSNAME)) {
-            console.log('element checked');
-            return;
-        }
+    // console.log('init:', init);
+    if (clickedStore.check(videoId)) {
+        console.log('element checked');
+        return;
     }
     // sometimes when popup is being closed and immediately opened there can be many elements,
     // so possibly need timeout here, but this thing is mostly when not authorized, and i dont launch this function in such instance
@@ -100,7 +103,7 @@ const blockVideoItem = async (videoItem, settings, init) => {
     const popupOpenButton = await openPopup(videoItem);
     if (!popupOpenButton) return;
     await clickPopupOption(videoItem, actionItemMenuNumber, popupOpenButton);
-    videoItem.classList.add(CLICKED_VIDEO_ITEM_CLASSNAME);
+    clickedStore.add(videoId)
 };
 
 const checkVideoItem = async (videoItem) => {
@@ -123,10 +126,10 @@ const checkVideoItem = async (videoItem) => {
     }
     // console.log('video handled');
     if (videoId) {
-        const storeCheck = videoStore.check(videoId);
+        const storeCheck = isRuStore.check(videoId);
         if (storeCheck !== null) {
             // console.log('useful at all')
-            return storeCheck;
+            return {isRu: storeCheck, videoId};
         }
     }
     // console.log('not useful at all');
@@ -134,8 +137,8 @@ const checkVideoItem = async (videoItem) => {
     if (!titleText) return false;
     const channelNameNode = videoItem.querySelector('#channel-name');
     const checkResult = await checkIsVideoDataRu(titleText, channelNameNode?.innerText);
-    if (videoId) videoStore.addVideo(videoId, checkResult);
-    return checkResult;
+    if (videoId) isRuStore.addVideo(videoId, checkResult);
+    return {isRu: checkResult, videoId, titleText, videoLink};
 };
 
 /**
@@ -143,13 +146,12 @@ const checkVideoItem = async (videoItem) => {
  * @param container {HTMLElement}
  * @param settings {Object} User settings
  * @param isAuthorized {boolean} When not authorized, items won't be blocked
- * @param {Boolean} [init=false] If true, items with clicked classname will be also blocked
  * @returns {Promise<void>}
  */
 
-const handleVideos = async (container, settings, isAuthorized, init) => {
+const handleVideos = async (container, settings, isAuthorized) => {
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
-    // console.log('not ru: ', videoStore.getNotRu(), 'ru: ', videoStore.getRu());
+    // console.log('not ru: ', isRuStore.getNotRu(), 'ru: ', isRuStore.getRu());
     // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-rich-item-renderer');
     let handled = 0;
@@ -159,10 +161,10 @@ const handleVideos = async (container, settings, isAuthorized, init) => {
             continue;
         }
         checkVideoItem(videoItem)
-            .then(isRu => {
-                if (isRu) {
+            .then(result => {
+                if (result.isRu) {
                     applyFilter(videoItem, 'home', settings);
-                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({videoItem, settings, init});
+                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({videoItem, settings, videoId: result.videoId});
                 } else {
                     removeFilter(videoItem);
                 }
@@ -187,7 +189,7 @@ export const handleHomePage = async () => {
     const isAuthorized = authButtonsNumber === 3;
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     let settings = await getSettings();
-    await handleVideos(videoItemsContainer, settings, isAuthorized, true);
+    await handleVideos(videoItemsContainer, settings, isAuthorized);
     chrome.storage.onChanged.addListener(async (changes, areaName) => {
         if (changes[SETTINGS_STORAGE_KEY] && areaName === 'sync') {
             blockVideoQueue.clear();

@@ -1,4 +1,4 @@
-export const videoStore = {
+export const isRuStore = {
     ru: new Set(),
     notRu: new Set(),
     addVideo: function (id, isRu) {
@@ -22,5 +22,23 @@ export const videoStore = {
         if (this.ru.has(id)) return true;
         if (this.notRu.has(id)) return false;
         return null;
-    }
+    },
+
 };
+export const clickedStore = {
+    clicked: new Set(),
+    add: function (id) {
+        if (!id) return
+        this.clicked.add(id)
+    },
+    getClicked: function () {
+        return this.clicked
+    },
+    check: function (id) {
+        if (!id) return false;
+        return this.clicked.has(id);
+    },
+    clear: function () {
+        this.clicked.clear()
+    }
+}

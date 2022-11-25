@@ -1,4 +1,5 @@
 import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
+import {wait} from '../utils/content/utils';
 import {disconnectAllHome, handleHomePage} from './home';
 
 // TODO sometimes videos arent being analyzed
@@ -8,10 +9,11 @@ let isObservingShorts = false;
 // let isObservingHome = false;
 let isObservingWatch = false;
 
-const handlePage = async (url) => {
+const handlePage = async (url, init) => {
     console.log('url changed', url);
     const pathname = new URL(url).pathname;
     if (pathname === '/'/* && !isObservingHome*/) {
+        if (!init) await wait(2000)
         disconnectAllHome()
         // isObservingHome = true;
         await handleHomePage();
@@ -42,7 +44,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message?.details?.url) {
                 if (message.details.url === prevUrl) return
                 prevUrl = message.details.url
-                handlePage(message.details.url)
+                handlePage(message.details.url, false)
                     .catch(e => console.log(e));
             }
             break;
@@ -54,7 +56,7 @@ chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
     if (tab.url) {
         prevUrl = tab.url
         console.log(prevUrl);
-        handlePage(tab.url)
+        handlePage(tab.url, true)
             .catch(e => console.log(e));
     }
     return true
