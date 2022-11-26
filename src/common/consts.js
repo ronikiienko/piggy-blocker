@@ -38,3 +38,17 @@ export const DEFAULT_SETTINGS = {
     whatToDo: 'blur',
     theme: 'light',
 };
+export const SELECTOR = {
+    CONTAINER_HOME: '#contents.ytd-rich-grid-renderer',
+    CONTAINER_WATCH: '.ytd-watch-next-secondary-results-renderer #contents.ytd-item-section-renderer',
+    CONTAINER_SHORTS: '#shorts-inner-container',
+    IS_AUTH_BUTTONS: '#masthead-container #buttons',
+};
+
+export const BLOCK_REASONS = {
+    byCharsTitle: 'byCharsTitle',
+    byCharsChannelName: 'byCharsChannelName',
+    noCyrillic: 'noCyrillic',
+    markerWords: 'markerWords',
+    google: 'google'
+}

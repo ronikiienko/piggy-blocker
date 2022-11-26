@@ -1,5 +1,6 @@
+import {SELECTOR} from '../common/consts';
 import {checkIsVideoDataRu} from './containsRussian';
-import {CHECKED_VIDEO_ITEM_CLASSNAME, SELECTOR} from './consts';
+import {CHECKED_VIDEO_ITEM_CLASSNAME} from './consts';
 import {applyFilter, waitForNodeLoad} from './utils';
 
 const handleVideoItem = async (videoItem) => {

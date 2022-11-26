@@ -1,4 +1,4 @@
-import {addToStats} from './containsRussianStats';
+import {BLOCK_REASONS} from '../common/consts';
 
 
 const ruCharsPattern = /ё|э|ии|ы|ъ|ее|шь/i;
@@ -32,11 +32,11 @@ const checkStringForMarkerWords = (stringToCheck) => {
             break;
         }
     }
-    const returnBoolean = foundMarker ? true : null
+    const returnBoolean = foundMarker ? true : null;
     return {
-        isStringRu: returnBoolean,
-        wordFound
-    }
+        isRu: returnBoolean,
+        wordFound,
+    };
 
 };
 const checkStringForRuGoogle = async (stringToCheck) => {
@@ -44,66 +44,76 @@ const checkStringForRuGoogle = async (stringToCheck) => {
     const googleResp = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=uk&hl=en-US&dt=t&dt=bd&dj=1&source=input&tk=466611.466611&q=${uriEncodedString}`);
     const googleRespJson = await googleResp.json();
     // console.error('GOGLA', stringToCheck, googleRespJson.src);
-    const returnBoolean = googleRespJson?.src === 'ru'
+    const returnBoolean = googleRespJson?.src === 'ru';
     return {
-        isStringRu: returnBoolean,
-        langFound: googleRespJson.src
+        isRu: returnBoolean,
+        langFound: googleRespJson.src,
     };
 
 };
 
+
 /**
  *
  * @param title
- * @param [channelName]
- * @param [videoLink]
- * @returns {Promise<boolean>}
+ * @param channelName
+ * @returns {Promise<{reason: string, isRu: boolean, reasonDetails}|boolean|{reason: string, isRu: boolean, reasonDetails: null}>}
  */
 
-export const checkIsVideoDataRu = async (title, channelName, videoLink) => {
-    const allDataObject = {
-        title,
-        channelName,
-        link: videoLink,
-    }
+export const checkIsVideoDataRu = async (title, channelName) => {
     if (!title) return false;
-    let isStringRu;
+    let isRu;
 
-    isStringRu = checkStringForRuChars(title);
-    // console.log('ru chars check title:', title, isStringRu);
-    addToStats(allDataObject, isStringRu, 'byCharsTitle', null)
-    if (isStringRu !== null) {
-        return isStringRu;
+    isRu = checkStringForRuChars(title);
+    // console.log('ru chars check title:', title, isRu);
+    if (isRu !== null) {
+        return {
+            isRu,
+            reason: BLOCK_REASONS.byCharsTitle,
+            reasonDetails: null,
+        };
     }
     // TODO maby not handle 'MIX' items
     if (channelName) {
-        isStringRu = checkStringForRuChars(channelName, false);
-        addToStats(allDataObject, isStringRu, 'byCharsChannelName', null)
-        if (isStringRu !== null) {
-            return isStringRu
+        isRu = checkStringForRuChars(channelName, false);
+        if (isRu !== null) {
+            return {
+                isRu,
+                reason: BLOCK_REASONS.byCharsChannelName,
+                reasonDetails: null,
+            };
         }
     }
 
-    isStringRu = checkStringForCyrillic(title);
-    addToStats(allDataObject, isStringRu, 'noCyrillic', null)
-    if (isStringRu !== null) {
-        return isStringRu;
+    isRu = checkStringForCyrillic(title);
+    if (isRu !== null) {
+        return {
+            isRu,
+            reason: BLOCK_REASONS.noCyrillic,
+            reasonDetails: null,
+        };
     }
 
 
-    const markerCheckResult = checkStringForMarkerWords(title)
-    isStringRu = markerCheckResult.isStringRu;
-    // console.log('marker word check:',concatenatedString, isStringRu);
-    addToStats(allDataObject, isStringRu, 'markerWords', markerCheckResult.wordFound)
-    if (isStringRu !== null) {
-        return isStringRu;
+    const markerCheckResult = checkStringForMarkerWords(title);
+    isRu = markerCheckResult.isRu;
+    // console.log('marker word check:',concatenatedString, isRu);
+    if (isRu !== null) {
+        return {
+            isRu,
+            reason: BLOCK_REASONS.markerWords,
+            reasonDetails: markerCheckResult.wordFound,
+        };
     }
 
     try {
         const googleCheckResult = await checkStringForRuGoogle(title);
-        isStringRu = googleCheckResult.isStringRu;
-        addToStats(allDataObject, isStringRu, 'google', googleCheckResult.langFound)
-        return isStringRu;
+        isRu = googleCheckResult.isRu;
+        return {
+            isRu,
+            reason: BLOCK_REASONS.google,
+            reasonDetails: googleCheckResult.langFound,
+        };
     } catch (e) {
         console.log(e.message);
         return false;

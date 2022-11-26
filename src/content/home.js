@@ -1,8 +1,8 @@
-import {SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
+import {SELECTOR, SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
 import {getSettings} from '../common/getSettings';
 import {Queue} from '../common/queue';
-import {SELECTOR} from './consts';
 import {checkIsVideoDataRu} from './containsRussian';
+import {addToStats} from './containsRussianStats';
 import {applyFilter, removeFilter, wait, waitForNodeLoad} from './utils';
 import {clickedStore, isRuStore} from './videoStore';
 
@@ -156,9 +156,12 @@ const checkVideoItem = async (videoItem) => {
     if (storeCheck !== null) {
         return {isRu: storeCheck, id: videoId, title: titleText, link: videoLink};
     }
-    const checkResult = await checkIsVideoDataRu(titleText, channelName, videoLink);
-    isRuStore.addVideo(videoId, checkResult);
-    return {isRu: checkResult, id: videoId, title: titleText, link: videoLink};
+    const checkResult = await checkIsVideoDataRu(titleText, channelName);
+    if (checkResult.reason) {
+        addToStats(titleText, channelName, checkResult.isRu, checkResult.reason, checkResult.reasonDetails)
+    }
+    isRuStore.addVideo(videoId, checkResult.isRu);
+    return {isRu: checkResult.isRu, id: videoId, title: titleText, link: videoLink};
 };
 
 /**

@@ -63,25 +63,27 @@ const stats = {
 
 /**
  *
- * @param allDataObject
+ * @param title
+ * @param channelName
  * @param ru
- * @param {('byCharsTitle')|('byCharsChannelName')|('byCharsDescription')|('noCyrillic')|('markerWords')|('google')} reasonName
+ * @param {('byCharsTitle')|('byCharsChannelName')|('byCharsDescription')|('noCyrillic')|('markerWords')|('google')} reason
  * @param reasonDetails
  */
-export const addToStats = (allDataObject = {}, ru, reasonName, reasonDetails) => {
+export const addToStats = (title, channelName, ru, reason, reasonDetails) => {
     if (ru) {
         chrome.runtime.sendMessage({
             cmd: CMD_ADD_TO_STATS,
             data: {
-                ...allDataObject,
-                reason: reasonName,
+                title,
+                channelName,
+                reason: reason,
                 reasonDetails
             }
         }, () => {
             console.log('saved to indexedDB');
         })
     }
-    // console.log(reasonName, ':', '\n',
+    // console.log(reason, ':', '\n',
     //     'title: ',allDataObject.title, '\n',
     //     'channelName: ', allDataObject.channelName, '\n',
     //     'description: ',  allDataObject.description, '\n',
@@ -92,21 +94,24 @@ export const addToStats = (allDataObject = {}, ru, reasonName, reasonDetails) =>
     if (ru) {
         stats.total.russian.number = stats.total.russian.number + 1
         stats.total.russian.texts.push({
-            ...allDataObject,
-            reason: reasonName,
+            title,
+            channelName,
+            reason: reason,
             reasonDetails
         })
     } else {
         stats.total.notRussian.number = stats.total.notRussian.number + 1
         stats.total.notRussian.texts.push({
-            ...allDataObject,
-            reason: reasonName,
+            title,
+            channelName,
+            reason: reason,
             reasonDetails
         })
     }
-    stats[reasonName].number = stats[reasonName].number + 1
-    stats[reasonName].texts.push({
-        ...allDataObject,
+    stats[reason].number = stats[reason].number + 1
+    stats[reason].texts.push({
+        title,
+        channelName,
         reasonDetails,
         isRu: ru
     })
