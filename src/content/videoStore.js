@@ -35,6 +35,7 @@ export const clickedStore = {
         return this.clicked
     },
     check: function (id) {
+        // console.log('yes', id, this.clicked.has(id));
         if (!id) return false;
         return this.clicked.has(id);
     },

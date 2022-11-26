@@ -34,6 +34,10 @@ export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTim
  */
 
 export const applyFilter = (node, context, settings) => {
+    if (!node || !settings) {
+        console.log('could not apply filter (no settings or no node');
+        return
+    }
     // for (let i = 0; i < 100; i++) {
     //     document.dispatchEvent(new KeyboardEvent('keydown', {'key':'ArrowUp', bubbles: true, cancelable: false}));
     // }
@@ -86,6 +90,10 @@ export const applyFilter = (node, context, settings) => {
     //     node.style.borderCollapse = 'collapse'
 };
 export const removeFilter = (node) => {
+    if (!node) {
+        console.log('could not remove filter from undefined node');
+        return
+    }
     node.style.filter = 'blur(0px) opacity(100%)';
     node.style.visibility = 'visible';
     // node.style.background = 'none'

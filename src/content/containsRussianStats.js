@@ -1,3 +1,6 @@
+import {CMD_ADD_TO_STATS} from '../common/consts';
+
+
 setTimeout(() => {
     stats.total.total = stats.total.russian.number + stats.total.notRussian.number;
     for (let key in stats.percentages) {
@@ -66,6 +69,18 @@ const stats = {
  * @param reasonDetails
  */
 export const addToStats = (allDataObject = {}, ru, reasonName, reasonDetails) => {
+    if (ru) {
+        chrome.runtime.sendMessage({
+            cmd: CMD_ADD_TO_STATS,
+            data: {
+                ...allDataObject,
+                reason: reasonName,
+                reasonDetails
+            }
+        }, () => {
+            console.log('saved to indexedDB');
+        })
+    }
     // console.log(reasonName, ':', '\n',
     //     'title: ',allDataObject.title, '\n',
     //     'channelName: ', allDataObject.channelName, '\n',

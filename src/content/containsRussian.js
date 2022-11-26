@@ -56,15 +56,15 @@ const checkStringForRuGoogle = async (stringToCheck) => {
  *
  * @param title
  * @param [channelName]
- * @param [description]
+ * @param [videoLink]
  * @returns {Promise<boolean>}
  */
 
-export const checkIsVideoDataRu = async (title, channelName, description) => {
+export const checkIsVideoDataRu = async (title, channelName, videoLink) => {
     const allDataObject = {
         title,
         channelName,
-        description
+        link: videoLink,
     }
     if (!title) return false;
     let isStringRu;
@@ -75,14 +75,6 @@ export const checkIsVideoDataRu = async (title, channelName, description) => {
     if (isStringRu !== null) {
         return isStringRu;
     }
-
-    if (description) {
-        isStringRu = checkStringForRuChars(description);
-        addToStats(allDataObject, isStringRu, 'byCharsDescription', null)
-        if (isStringRu !== null) {
-            return isStringRu;
-        }
-    }
     // TODO maby not handle 'MIX' items
     if (channelName) {
         isStringRu = checkStringForRuChars(channelName, false);
@@ -92,16 +84,14 @@ export const checkIsVideoDataRu = async (title, channelName, description) => {
         }
     }
 
-    const concatenatedString = description ? title + ' ' + description : title;
-
-    isStringRu = checkStringForCyrillic(concatenatedString);
+    isStringRu = checkStringForCyrillic(title);
     addToStats(allDataObject, isStringRu, 'noCyrillic', null)
     if (isStringRu !== null) {
         return isStringRu;
     }
 
 
-    const markerCheckResult = checkStringForMarkerWords(concatenatedString)
+    const markerCheckResult = checkStringForMarkerWords(title)
     isStringRu = markerCheckResult.isStringRu;
     // console.log('marker word check:',concatenatedString, isStringRu);
     addToStats(allDataObject, isStringRu, 'markerWords', markerCheckResult.wordFound)
@@ -110,7 +100,7 @@ export const checkIsVideoDataRu = async (title, channelName, description) => {
     }
 
     try {
-        const googleCheckResult = await checkStringForRuGoogle(concatenatedString);
+        const googleCheckResult = await checkStringForRuGoogle(title);
         isStringRu = googleCheckResult.isStringRu;
         addToStats(allDataObject, isStringRu, 'google', googleCheckResult.langFound)
         return isStringRu;

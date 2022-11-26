@@ -1,10 +1,9 @@
-import {title} from 'process/browser';
 import {SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
-import {Queue} from '../common/queue';
 import {getSettings} from '../common/getSettings';
+import {Queue} from '../common/queue';
+import {SELECTOR} from './consts';
 import {checkIsVideoDataRu} from './containsRussian';
 import {applyFilter, removeFilter, wait, waitForNodeLoad} from './utils';
-import {SELECTOR} from './consts';
 import {clickedStore, isRuStore} from './videoStore';
 
 
@@ -24,10 +23,14 @@ let videoItemsObserver;
 export const disconnectAllHome = () => {
     videoItemsObserver?.disconnect();
     blockVideoQueue.clear();
-    clickedStore.clear()
+    clickedStore.clear();
 };
 
 const openPopup = async (videoItem) => {
+    if (!videoItem) {
+        console.log('no video item provided, could not open popup');
+        return false
+    }
     try {
         await waitForNodeLoad('#details #button', videoItem);
     } catch (e) {
@@ -35,16 +38,16 @@ const openPopup = async (videoItem) => {
         return false;
     }
     const button = videoItem.querySelector('#details #button');
-    if (!button) {
-        await openPopup(videoItem);
-        return false;
-    }
     const clickEvent = new Event('click', {bubbles: false});
     button.dispatchEvent(clickEvent);
     return button;
 };
 
 const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton) => {
+    if (!videoItem || !actionItemMenuNumber || !popupOpenButton) {
+        console.log('could not click popup option');
+        return
+    }
     try {
         await waitForNodeLoad('tp-yt-iron-dropdown');
     } catch (e) {
@@ -52,6 +55,10 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
         return;
     }
     let popup = document.querySelector('tp-yt-iron-dropdown');
+    if (!popup) {
+        console.log('could not click popup option (could not find popup)');
+        return
+    }
     popup.style.opacity = 0;
     try {
         // for some reason when return from other page, searching inside popup not work, so i search in document
@@ -69,7 +76,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     //     menuItemsInnerText.push(menuItem.innerText);
     // }
     const prevScrollPosition = document.documentElement.scrollTop;
-    if (menuItems.length <= actionItemMenuNumber) {
+    if (menuItems?.length <= actionItemMenuNumber) {
         // console.log('NOT CLICKINGGGGG', videoItem, menuItems.length, menuItems, menuItemsInnerText, prevScrollPosition);
         popupOpenButton.dispatchEvent(clickEvent);
         popup.style.opacity = 1;
@@ -83,12 +90,19 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
 };
 //  TODO channel name in shorts is huge with /n /n /n /n /n
 const blockVideoItem = async (videoItem, settings, videoId) => {
+    if (!videoItem || !settings || !videoId) {
+        console.log('could not block video item');
+        return
+    }
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) return;
     const whatToDo = settings?.[SETTINGS_KEYS.whatToDo];
     if (whatToDo === WHAT_TO_DO_MAP.blur || !whatToDo) {
         return;
     }
-    // console.log('init:', init);
+    if (!videoId) {
+        console.log('no video id');
+        return;
+    }
     if (clickedStore.check(videoId)) {
         console.log('element checked');
         return;
@@ -103,7 +117,7 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
     const popupOpenButton = await openPopup(videoItem);
     if (!popupOpenButton) return;
     await clickPopupOption(videoItem, actionItemMenuNumber, popupOpenButton);
-    clickedStore.add(videoId)
+    clickedStore.add(videoId);
 };
 
 const checkVideoItem = async (videoItem) => {
@@ -113,32 +127,38 @@ const checkVideoItem = async (videoItem) => {
     let videoTitle;
     let videoLink;
     let videoId;
+    let channelNameNode;
+    let channelName;
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) {
         videoTitle = videoItem.querySelector('#video-title');
         if (!videoTitle) return false;
+        channelName = null;
         videoLink = videoTitle.parentElement.parentElement.href;
         videoId = videoLink?.split('/shorts/')[1];
     } else {
         videoTitle = videoItem.querySelector('#video-title-link');
         if (!videoTitle) return false;
+        channelNameNode = videoItem.querySelector('#channel-name');
+        channelName = channelNameNode?.innerText;
+        if (!channelName) {
+            console.warn('could not get chanel name');
+            return false;
+        }
         videoLink = videoTitle?.href;
         videoId = videoLink?.split('watch?v=')[1];
     }
-    // console.log('video handled');
-    if (videoId) {
-        const storeCheck = isRuStore.check(videoId);
-        if (storeCheck !== null) {
-            // console.log('useful at all')
-            return {isRu: storeCheck, videoId};
-        }
-    }
-    // console.log('not useful at all');
     const titleText = videoTitle.innerText;
-    if (!titleText) return false;
-    const channelNameNode = videoItem.querySelector('#channel-name');
-    const checkResult = await checkIsVideoDataRu(titleText, channelNameNode?.innerText);
-    if (videoId) isRuStore.addVideo(videoId, checkResult);
-    return {isRu: checkResult, videoId, titleText, videoLink};
+    if (!videoTitle || !titleText || !videoLink || !videoId) {
+        console.warn('could not get video data', videoItem);
+        return false;
+    }
+    const storeCheck = isRuStore.check(videoId);
+    if (storeCheck !== null) {
+        return {isRu: storeCheck, id: videoId, title: titleText, link: videoLink};
+    }
+    const checkResult = await checkIsVideoDataRu(titleText, channelName, videoLink);
+    isRuStore.addVideo(videoId, checkResult);
+    return {isRu: checkResult, id: videoId, title: titleText, link: videoLink};
 };
 
 /**
@@ -151,10 +171,11 @@ const checkVideoItem = async (videoItem) => {
 
 const handleVideos = async (container, settings, isAuthorized) => {
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
-    // console.log('not ru: ', isRuStore.getNotRu(), 'ru: ', isRuStore.getRu());
     // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-rich-item-renderer');
-    let handled = 0;
+    if (!videoItems || !whatToDo) {
+        console.log('could not handle videos', container);
+    }
     for (const videoItem of videoItems) {
         if (!settings[SETTINGS_KEYS.blockOnHome]) {
             removeFilter(videoItem);
@@ -164,14 +185,16 @@ const handleVideos = async (container, settings, isAuthorized) => {
             .then(result => {
                 if (result.isRu) {
                     applyFilter(videoItem, 'home', settings);
-                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({videoItem, settings, videoId: result.videoId});
+                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({
+                        videoItem,
+                        settings,
+                        videoId: result.id,
+                    });
                 } else {
                     removeFilter(videoItem);
                 }
             })
             .catch(e => console.log(e));
-        handled++;
-        // if (handled === 4) break;
     }
 };
 // TODO when resizing screen everything breaks
@@ -189,6 +212,10 @@ export const handleHomePage = async () => {
     const isAuthorized = authButtonsNumber === 3;
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     let settings = await getSettings();
+    if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer) {
+        console.log('could not handle home page');
+        return
+    }
     await handleVideos(videoItemsContainer, settings, isAuthorized);
     chrome.storage.onChanged.addListener(async (changes, areaName) => {
         if (changes[SETTINGS_STORAGE_KEY] && areaName === 'sync') {
