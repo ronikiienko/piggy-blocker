@@ -45,7 +45,18 @@ export const SELECTOR = {
     IS_AUTH_BUTTONS: '#masthead-container #buttons',
 };
 
-export const BLOCK_REASONS = {
+export const BLOCKED_VIDEOS_DB_NAME = 'blockedVideos'
+
+export const BLOCKED_VIDEOS_DB_KEYS = {
+    title: 'title',
+    link: 'link',
+    channelName: 'channelName',
+    reason: 'reason',
+    reasonDetails: 'reasonDetails',
+    timeWhenBlocked: 'timeWhenBlocked'
+}
+
+export const BLOCK_REASONS_MAP = {
     byCharsTitle: 'byCharsTitle',
     byCharsChannelName: 'byCharsChannelName',
     noCyrillic: 'noCyrillic',

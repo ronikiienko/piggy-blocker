@@ -1,4 +1,4 @@
-import {BLOCK_REASONS} from '../common/consts';
+import {BLOCK_REASONS_MAP} from '../common/consts';
 
 
 const ruCharsPattern = /ё|э|ии|ы|ъ|ее|шь/i;
@@ -69,7 +69,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
     if (isRu !== null) {
         return {
             isRu,
-            reason: BLOCK_REASONS.byCharsTitle,
+            reason: BLOCK_REASONS_MAP.byCharsTitle,
             reasonDetails: null,
         };
     }
@@ -79,7 +79,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
         if (isRu !== null) {
             return {
                 isRu,
-                reason: BLOCK_REASONS.byCharsChannelName,
+                reason: BLOCK_REASONS_MAP.byCharsChannelName,
                 reasonDetails: null,
             };
         }
@@ -89,7 +89,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
     if (isRu !== null) {
         return {
             isRu,
-            reason: BLOCK_REASONS.noCyrillic,
+            reason: BLOCK_REASONS_MAP.noCyrillic,
             reasonDetails: null,
         };
     }
@@ -101,7 +101,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
     if (isRu !== null) {
         return {
             isRu,
-            reason: BLOCK_REASONS.markerWords,
+            reason: BLOCK_REASONS_MAP.markerWords,
             reasonDetails: markerCheckResult.wordFound,
         };
     }
@@ -111,7 +111,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
         isRu = googleCheckResult.isRu;
         return {
             isRu,
-            reason: BLOCK_REASONS.google,
+            reason: BLOCK_REASONS_MAP.google,
             reasonDetails: googleCheckResult.langFound,
         };
     } catch (e) {

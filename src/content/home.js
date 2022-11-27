@@ -149,17 +149,17 @@ const checkVideoItem = async (videoItem) => {
     }
     const titleText = videoTitle.innerText;
     if (!videoTitle || !titleText || !videoLink || !videoId) {
+        // TODO when change mode from "transparent" to blur, cant get some video data
         console.warn('could not get video data', videoItem);
         return false;
     }
     const storeCheck = isRuStore.check(videoId);
     if (storeCheck !== null) {
+        console.log('already in store');
         return {isRu: storeCheck, id: videoId, title: titleText, link: videoLink};
     }
     const checkResult = await checkIsVideoDataRu(titleText, channelName);
-    if (checkResult.reason) {
-        addToStats(titleText, channelName, checkResult.isRu, checkResult.reason, checkResult.reasonDetails)
-    }
+    if (checkResult.reason) addToStats(titleText, channelName, checkResult.isRu, checkResult.reason, checkResult.reasonDetails)
     isRuStore.addVideo(videoId, checkResult.isRu);
     return {isRu: checkResult.isRu, id: videoId, title: titleText, link: videoLink};
 };
