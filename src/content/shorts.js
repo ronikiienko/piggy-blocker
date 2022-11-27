@@ -1,7 +1,8 @@
 import {SELECTOR} from '../common/consts';
+import {wait} from '../common/utils';
 import {checkIsVideoDataRu} from './containsRussian';
 import {CHECKED_VIDEO_ITEM_CLASSNAME} from './consts';
-import {applyFilter, wait, waitForNodeLoad} from './utils';
+import {applyFilter, waitForNodeLoad} from './utils';
 
 const handleTitleHeader = async (titleHeader, videoItem) => {
     if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return;

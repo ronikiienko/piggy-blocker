@@ -1,6 +1,7 @@
 import {useLiveQuery} from 'dexie-react-hooks';
 import React from 'react';
 import {BLOCK_REASONS_MAP, BLOCKED_VIDEOS_DB_NAME, BLOCKED_VIDEOS_DB_KEYS} from '../../../common/consts';
+import {countPercentage} from '../../../common/utils';
 import {db} from '../../../commonBackground/db';
 
 
@@ -38,14 +39,14 @@ export const Stats = () => {
             <h3>Заблоковано за весь час:</h3>
             <p>{totalBlocked}</p>
             <h2>З них:</h2>
-            <h3>За рос. буквами в назві:</h3>
-            <p>{byCharsTitle.length} ({byCharsTitle.length / totalBlocked * 100}%)</p>
-            <h3>За рос. буквами в назві каналу:</h3>
-            <p>{byCharsChannelName.length} ({byCharsChannelName.length / totalBlocked * 100}%)</p>
-            <h3>За словами маркерами:</h3>
-            <p>{markerWords.length} ({markerWords.length / totalBlocked * 100}%)</p>
-            <h3>Google translate api:</h3>
-            <p>{google.length} ({google.length / totalBlocked * 100}%)</p>
+            <h3 title="Зараховується, якщо в назві відео знайдено специфічно російські літери">За рос. буквами в назві:</h3>
+            <p>{byCharsTitle.length} ({countPercentage(byCharsTitle.length, totalBlocked, 0)}%)</p>
+            <h3 title="Зараховується, якщо в назві каналу знайдено специфічно російські літери">За рос. буквами в назві каналу:</h3>
+            <p>{byCharsChannelName.length} ({countPercentage(byCharsChannelName.length, totalBlocked, 0)}%)</p>
+            <h3 title="Зараховується, якщо назва відео містить хоч одне з невеликого списку найрозповсюдженіших російських слів">За словами маркерами:</h3>
+            <p>{markerWords.length} ({countPercentage(markerWords.length, totalBlocked, 0)}%)</p>
+            <h3 title="Якщо відео не пройшло по ніяким з попередніх пунктів, та містить хоч одну кириличну літеру, воно тоді, і тільки тоді відправляється до google translate, бо це досить довга задача, тому її використання треба мінімізувати">Google translate api:</h3>
+            <p>{google.length} ({countPercentage(google.length, totalBlocked, 0)}%)</p>
             {/*<p>{byCharsTitle.length + byCharsChannelName.length + markerWords.length + google.length}</p>*/}
         </div>
     );

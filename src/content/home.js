@@ -1,9 +1,10 @@
 import {SELECTOR, SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
 import {getSettings} from '../common/getSettings';
 import {Queue} from '../common/queue';
+import {wait} from '../common/utils';
 import {checkIsVideoDataRu} from './containsRussian';
 import {addToStats} from './containsRussianStats';
-import {applyFilter, removeFilter, wait, waitForNodeLoad} from './utils';
+import {applyFilter, removeFilter, waitForNodeLoad} from './utils';
 import {clickedStore, isRuStore} from './videoStore';
 
 

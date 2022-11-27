@@ -98,6 +98,3 @@ export const removeFilter = (node) => {
     node.style.visibility = 'visible';
     // node.style.background = 'none'
 };
-export const wait = (msec) => {
-    return new Promise(resolve => setTimeout(() => resolve(), msec));
-};
