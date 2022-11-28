@@ -8,6 +8,10 @@ export const useTheme = () => {
     const [theme, setTheme] = React.useState('light');
 
     React.useEffect(() => {
+        document.body.dataset.theme = theme;
+    }, [theme]);
+
+    React.useEffect(() => {
         getSettings()
             .then(settings => {
                 setTheme(settings[SETTINGS_KEYS.theme]);

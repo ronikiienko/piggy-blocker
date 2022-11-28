@@ -7,13 +7,14 @@ import './Main.css';
 
 
 export const Main = () => {
-    const [theme, toggleTheme] = useTheme();
+    const [, toggleTheme] = useTheme();
 
     return (
-        <div data-theme={theme} className="main-container">
+        <div className="main-container">
             <div className="sub-main-container options-container">
-                <Options />
-                <Button style={{width: '100%', margin: 'auto', marginTop: '10px'}} onClick={toggleTheme}>Темна/Світла тема</Button>
+                <Options/>
+                <Button style={{width: '100%', margin: 'auto', marginTop: '10px'}} onClick={toggleTheme}>Темна/Світла
+                    тема</Button>
             </div>
             <div className="sub-main-container options-container">
                 <Stats/>

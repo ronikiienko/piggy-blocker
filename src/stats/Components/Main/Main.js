@@ -1,16 +1,15 @@
 import React from 'react';
-import {SETTINGS_KEYS} from '../../../common/consts';
-import {getSettings} from '../../../common/getSettings';
-import './Main.css';
 import {useTheme} from '../../../commonBackground/hooks/useTheme';
+import {Total} from '../Total/Total';
+import './Main.css';
 
 
 export const Main = () => {
-    const [theme] = useTheme();
+    const [] = useTheme();
+
     return (
-        <div data-theme={theme} className="main-container">
-            <h1>Hello</h1>
-            {/*<p>{theme}</p>*/}
+        <div className="main-container">
+            <Total/>
         </div>
     );
 };
