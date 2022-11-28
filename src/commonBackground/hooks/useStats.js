@@ -5,8 +5,8 @@ import {
     BLOCKED_VIDEOS_DB_NAME,
     NOT_RU_LIST_DB_NAME,
     RU_LIST_DB_NAME,
-} from '../common/consts';
-import {db} from './db';
+} from '../../common/consts';
+import {db} from '../db';
 
 
 export const useStats = () => {

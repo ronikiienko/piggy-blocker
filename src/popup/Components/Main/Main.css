@@ -1,6 +1,4 @@
 .main-container {
-    width: 700px;
-    /*height: 400px;*/
     background-color: var(--bg-color);
     color: var(--main-text);
     margin: 0;

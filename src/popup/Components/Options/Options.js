@@ -126,7 +126,7 @@ export const Options = () => {
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.transparent}
                     label={"Прозорість"}
-                    // disabled={true}
+                    disabled={true}
                 />
             </div>
         </div>

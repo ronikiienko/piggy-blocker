@@ -1,6 +1,6 @@
 import React from 'react';
 import {countPercentage} from '../../../common/utils';
-import {useStats} from '../../../commonBackground/useStats';
+import {useStats} from '../../../commonBackground/hooks/useStats';
 
 
 export const Stats = () => {
@@ -19,9 +19,9 @@ export const Stats = () => {
             <span>Не рос: {notRuTotal.length} ({countPercentage(notRuTotal.length, totalAnalyzedNumber)}%)</span>
             <br />
             <h2>З них:</h2>
-            <h3 title="Зараховується, якщо в назві відео знайдено специфічно російські літери">За рос. буквами в назві:</h3>
+            <h3 title="Зараховується, якщо в назві відео знайдено специфічно російські літери">За рос. літерами в назві:</h3>
             <p>{byCharsTitle.length} ({countPercentage(byCharsTitle.length, ruTotal.length)}%)</p>
-            <h3 title="Зараховується, якщо в назві каналу знайдено специфічно російські літери">За рос. буквами в назві каналу:</h3>
+            <h3 title="Зараховується, якщо в назві каналу знайдено специфічно російські літери">За рос. літерами в назві каналу:</h3>
             <p>{byCharsChannelName.length} ({countPercentage(byCharsChannelName.length, ruTotal.length)}%)</p>
             <h3 title="Зараховується, якщо назва відео містить хоч одне з невеликого списку найрозповсюдженіших російських слів">За словами маркерами:</h3>
             <p>{markerWords.length} ({countPercentage(markerWords.length, ruTotal.length)}%)</p>

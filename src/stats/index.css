@@ -1,9 +1,15 @@
+html {
+    height: 100vh;
+}
 body {
+    height: 100%;
+    overflow: hidden;
     font-family: 'Roboto', sans-serif;
     margin: 0;
-    width: 730px;
-    height: fit-content;
-    overflow: hidden;
+}
+
+#root {
+    height: 100%;
 }
 
 :root {

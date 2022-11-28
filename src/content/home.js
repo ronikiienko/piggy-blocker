@@ -229,7 +229,7 @@ export const handleHomePage = async () => {
     }
     await handleVideos(videoItemsContainer, settings, isAuthorized);
     chrome.storage.onChanged.addListener(async (changes, areaName) => {
-        if (changes[SETTINGS_STORAGE_KEY] && areaName === 'sync') {
+        if (changes[SETTINGS_STORAGE_KEY]) {
             blockVideoQueue.clear();
             const newSettings = await getSettings();
             if (!newSettings) return;
