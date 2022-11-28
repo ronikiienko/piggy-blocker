@@ -7,8 +7,8 @@ import {
     WHAT_TO_DO_MAP,
 } from '../../../common/consts';
 import {getSettings} from '../../../common/getSettings';
-import {Checkbox} from '../../StyledElements/Checkbox/Checkbox';
-import {Radio} from '../../StyledElements/Radio/Radio';
+import {Checkbox} from '../../../commonBackground/StyledElements/Checkbox/Checkbox';
+import {Radio} from '../../../commonBackground/StyledElements/Radio/Radio';
 import './Options.css';
 
 

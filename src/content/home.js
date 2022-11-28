@@ -1,9 +1,9 @@
-import {SELECTOR, SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
+import {BLOCKED_VIDEOS_DB_KEYS, SELECTOR, SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
 import {getSettings} from '../common/getSettings';
 import {Queue} from '../common/queue';
 import {wait} from '../common/utils';
 import {checkIsVideoDataRu} from './containsRussian';
-import {addToStats} from './containsRussianStats';
+import {addToDb} from './containsRussianStats';
 import {applyFilter, removeFilter, waitForNodeLoad} from './utils';
 import {clickedStore, isRuStore} from './videoStore';
 
@@ -160,7 +160,14 @@ const checkVideoItem = async (videoItem) => {
         return {isRu: storeCheck, id: videoId, title: titleText, link: videoLink};
     }
     const checkResult = await checkIsVideoDataRu(titleText, channelName);
-    if (checkResult.reason) addToStats(titleText, channelName, checkResult.isRu, checkResult.reason, checkResult.reasonDetails)
+    if (checkResult.reason) addToDb({
+        [BLOCKED_VIDEOS_DB_KEYS.title]: titleText || null,
+        [BLOCKED_VIDEOS_DB_KEYS.channelName]: channelName || null,
+        [BLOCKED_VIDEOS_DB_KEYS.link]: videoLink || null,
+        [BLOCKED_VIDEOS_DB_KEYS.reason]: checkResult.reason || null,
+        [BLOCKED_VIDEOS_DB_KEYS.reasonDetails]: checkResult.reasonDetails || null,
+        [BLOCKED_VIDEOS_DB_KEYS.timeWhenBlocked]: Date.now() || null
+    }, checkResult.isRu)
     isRuStore.addVideo(videoId, checkResult.isRu);
     return {isRu: checkResult.isRu, id: videoId, title: titleText, link: videoLink};
 };

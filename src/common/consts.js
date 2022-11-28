@@ -1,7 +1,5 @@
 export const CMD_GET_CURRENT_TAB = 'CMD_GET_CURRENT_TAB';
 export const CMD_TAB_UPDATE = 'CMD_TAB_UPDATE';
-export const CMD_ADD_TO_STATS = 'CMD_ADD_TO_STATS';
-export const CMD_GET_STATS = 'CMD_GET_STATS'
 
 export const SETTINGS_STORAGE_KEY = 'settings'
 
@@ -45,6 +43,9 @@ export const SELECTOR = {
     IS_AUTH_BUTTONS: '#masthead-container #buttons',
 };
 
+
+export const CMD_ADD_TO_BLOCKED_STATS = 'CMD_ADD_TO_BLOCKED_STATS';
+
 export const BLOCKED_VIDEOS_DB_NAME = 'blockedVideos'
 
 export const BLOCKED_VIDEOS_DB_KEYS = {
@@ -62,4 +63,16 @@ export const BLOCK_REASONS_MAP = {
     noCyrillic: 'noCyrillic',
     markerWords: 'markerWords',
     google: 'google'
+}
+
+
+export const CMD_ADD_TO_RU_LIST = 'CMD_ADD_TO_RU_LIST'
+export const CMD_ADD_TO_NOT_RU_LIST = 'CMD_ADD_TO_NOT_RU_LIST'
+
+export const RU_LIST_DB_NAME = 'ruList'
+
+export const NOT_RU_LIST_DB_NAME = 'notRuList'
+
+export const LIST_DB_KEYS = {
+    youtubeId: 'youtubeId'
 }

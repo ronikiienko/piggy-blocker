@@ -1,6 +1,6 @@
 import React from 'react';
 import {DEFAULT_SETTINGS, SETTINGS_KEYS, SETTINGS_STORAGE_KEY} from '../../../common/consts';
-import {Button} from '../../StyledElements/Button/Button';
+import {Button} from '../../../commonBackground/StyledElements/Button/Button';
 import {Options} from '../Options/Options';
 import {Stats} from '../Stats/Stats';
 import './Main.css';
