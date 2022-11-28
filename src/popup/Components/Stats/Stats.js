@@ -1,53 +1,15 @@
-import {useLiveQuery} from 'dexie-react-hooks';
 import React from 'react';
-import {
-    BLOCK_REASONS_MAP,
-    BLOCKED_VIDEOS_DB_NAME,
-    BLOCKED_VIDEOS_DB_KEYS,
-    RU_LIST_DB_NAME, NOT_RU_LIST_DB_NAME,
-} from '../../../common/consts';
 import {countPercentage} from '../../../common/utils';
-import {db} from '../../../commonBackground/db';
-import stats from '../../../stats/index.html'
+import {useStats} from '../../../commonBackground/useStats';
 
 
-console.log('ssssssssss', stats);
 export const Stats = () => {
-    const ruTotal = useLiveQuery(
-        () => db[RU_LIST_DB_NAME].toArray()
-    )
-    const notRuTotal = useLiveQuery(
-        () => db[NOT_RU_LIST_DB_NAME].toArray()
-    )
-    const byCharsTitle = useLiveQuery(
-        () => db[BLOCKED_VIDEOS_DB_NAME]
-            .where(BLOCKED_VIDEOS_DB_KEYS.reason)
-            .equals(BLOCK_REASONS_MAP.byCharsTitle)
-            .toArray()
-    )
-    const byCharsChannelName = useLiveQuery(() =>
-        db[BLOCKED_VIDEOS_DB_NAME]
-            .where(BLOCKED_VIDEOS_DB_KEYS.reason)
-            .equals(BLOCK_REASONS_MAP.byCharsChannelName)
-            .toArray()
-    )
-    const markerWords = useLiveQuery(() =>
-        db[BLOCKED_VIDEOS_DB_NAME]
-            .where(BLOCKED_VIDEOS_DB_KEYS.reason)
-            .equals(BLOCK_REASONS_MAP.markerWords)
-            .toArray()
-    )
-    const google = useLiveQuery(() =>
-        db[BLOCKED_VIDEOS_DB_NAME]
-            .where(BLOCKED_VIDEOS_DB_KEYS.reason)
-            .equals(BLOCK_REASONS_MAP.google)
-            .toArray()
-    )
+    const {ruTotal, notRuTotal, markerWords, byCharsChannelName, byCharsTitle, google} = useStats()
     if (!byCharsTitle || !byCharsChannelName || !markerWords || !google) return null
     const totalAnalyzedNumber = ruTotal.length + notRuTotal.length
     return (
         <div>
-            <a href={stats} target="_blank">blah</a>
+            <a href={chrome.runtime.getURL('stats/index.html')} target="_blank">blah</a>
             <h1>Статистика:</h1>
             <h3>Проаналізовано за весь час:</h3>
             <span>Всього: {ruTotal.length + notRuTotal.length}</span>
