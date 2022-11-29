@@ -1,0 +1,15 @@
+.blocked-item {
+    background-color: var(--bg-secondary);
+    margin-block: 5px;
+    padding: 10px;
+    border-radius: 10px;
+}
+.channel-name {
+    /*border-left: 1px solid var(--bg-color);*/
+    margin-left: 15px;
+    color: var(--text-secondary);
+}
+.search-container {
+    width: fit-content;
+    margin: auto;
+}

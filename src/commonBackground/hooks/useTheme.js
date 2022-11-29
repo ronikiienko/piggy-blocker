@@ -4,11 +4,12 @@ import {getSettings} from '../../common/getSettings';
 
 
 export const useTheme = () => {
+    // TODO set data-theme on html instead of body
     // TODO use browser theme as default
     const [theme, setTheme] = React.useState('light');
 
     React.useEffect(() => {
-        document.body.dataset.theme = theme;
+        document.documentElement.dataset.theme = theme;
     }, [theme]);
 
     React.useEffect(() => {

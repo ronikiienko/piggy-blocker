@@ -76,3 +76,16 @@ export const NOT_RU_LIST_DB_NAME = 'notRuList'
 export const LIST_DB_KEYS = {
     youtubeId: 'youtubeId'
 }
+
+export const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+
+
+export const REASON_FILTER_KEYS = {
+    any: 'any',
+    byCharsTitle: 'byCharsTitle',
+    byCharsChannelName: 'byCharsChannelName',
+    markerWords: 'markerWords',
+    google: 'google'
+}

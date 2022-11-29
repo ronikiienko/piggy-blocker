@@ -1,7 +1,7 @@
 import React from 'react';
 import {useTheme} from '../../../commonBackground/hooks/useTheme';
-import {Total} from '../Total/Total';
 import './Main.css';
+import {ForTimePeriod} from '../ForTimePeriod/ForTimePeriod';
 
 
 export const Main = () => {
@@ -9,7 +9,7 @@ export const Main = () => {
 
     return (
         <div className="main-container">
-            <Total/>
+            <ForTimePeriod />
         </div>
     );
 };

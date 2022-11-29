@@ -1,0 +1,9 @@
+.select-input-label {
+    font-size: 16px;
+    font-weight: lighter;
+    /*padding-right: 6px;*/
+    width: fit-content;
+}
+.select-input {
+    margin: 5px
+}

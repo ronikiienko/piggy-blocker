@@ -1,0 +1,35 @@
+.date-picker {
+    color: var(--button-default);
+    background-color: transparent;
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid var(--button-default);
+    margin: 5px;
+    font-size: 13px;
+}
+.date-picker-container {
+    margin: 5px;
+    display: inline-block;
+}
+.date-picker:hover {
+    color: var(--button-hover);
+    background-color: var(--button-background-hover);
+    border: 1px solid var(--button-hover);
+}
+.date-picker:active {
+    color: var(--button-active);
+    background-color: var(--button-background-active);
+    border: 1px solid var(--button-active);
+}
+.date-picker::-webkit-datetime-edit-day-field, .date-picker::-webkit-datetime-edit-month-field, .date-picker::-webkit-datetime-edit-year-field {
+    text-transform: uppercase;
+}
+.date-picker::-webkit-calendar-picker-indicator {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="%23bbbbbb" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>');
+}
+.date-picker-label {
+    font-size: 16px;
+    font-weight: lighter;
+    /*padding-right: 6px;*/
+    width: fit-content;
+}

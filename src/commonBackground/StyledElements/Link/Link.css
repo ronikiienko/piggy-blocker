@@ -1,0 +1,9 @@
+.link {
+    color: var(--main-text);
+}
+.link:hover {
+    color: var(--text-blue);
+}
+.link:active {
+    color: var(--youtube-red);
+}

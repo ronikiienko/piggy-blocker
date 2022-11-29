@@ -1,6 +1,11 @@
+
+html {
+    color: var(--main-text);
+    background-color: var(--bg-color);
+}
 body {
-    font-family: 'Roboto', sans-serif;
     margin: 0;
+    padding: 15px;
 }
 
 
