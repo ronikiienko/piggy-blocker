@@ -1,43 +1,24 @@
 import React from 'react';
-import {
-    BLUR_INTENSITY_MAP,
-    DEFAULT_SETTINGS,
-    SETTINGS_KEYS,
-    SETTINGS_STORAGE_KEY,
-    WHAT_TO_DO_MAP,
-} from '../../../common/consts';
-import {getSettings} from '../../../common/getSettings';
+import {BLUR_INTENSITY_MAP, SETTINGS_KEYS, WHAT_TO_DO_MAP} from '../../../common/consts';
+import {useSettings} from '../../../commonBackground/hooks/useSettings';
 import {Checkbox} from '../../../commonBackground/StyledElements/Checkbox/Checkbox';
 import {Radio} from '../../../commonBackground/StyledElements/Radio/Radio';
 import './Options.css';
 
 
 export const Options = () => {
-    const [formData, setFormData] = React.useState(DEFAULT_SETTINGS);
-    React.useEffect(() => {
-        getSettings()
-            .then(setFormData)
-            .catch(console.log)
-    }, []);
+    // const [formData, setFormData] = React.useState(DEFAULT_SETTINGS);
+    const [formData, updateSettings] = useSettings();
+    // React.useEffect(() => {
+    //     getSettings()
+    //         .then(setFormData)
+    //         .catch(console.log)
+    // }, []);
 
     const handleInputChange = (event) => {
-        setFormData((prevFormData) => {
-            let newFormData;
-            if (event.target.type === 'radio') {
-                newFormData = {
-                    ...prevFormData,
-                    [event.target.name]: event.target.id,
-                };
-            } else {
-                newFormData = {
-                    ...prevFormData,
-                    [event.target.id]: event.target.checked,
-                };
-            }
-            chrome.storage.sync.set({[SETTINGS_STORAGE_KEY]: newFormData})
-                .catch(e => console.log(e));
-            return newFormData;
-        });
+        let newKeyName = event.target.type === 'radio' ? event.target.name : event.target.id;
+        let newValue = event.target.type === 'radio' ?event.target.id : event.target.checked;
+        updateSettings({[newKeyName]: newValue});
     };
 
     return (

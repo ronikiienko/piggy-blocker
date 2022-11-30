@@ -1,6 +1,9 @@
 .blocked-item {
+    width: 85%;
+    min-width: 500px;
+    margin: auto;
     background-color: var(--bg-secondary);
-    margin-block: 5px;
+    margin-block: 8px;
     padding: 10px;
     border-radius: 10px;
 }
@@ -10,6 +13,13 @@
     color: var(--text-secondary);
 }
 .search-container {
-    width: fit-content;
     margin: auto;
+    width: fit-content;
+    /*margin: auto;*/
+}
+.block-details {
+    width: fit-content;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+    border-bottom: 1px solid var(--bg-color);
 }

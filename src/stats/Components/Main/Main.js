@@ -5,7 +5,7 @@ import {ForTimePeriod} from '../ForTimePeriod/ForTimePeriod';
 
 
 export const Main = () => {
-    const [] = useTheme();
+    useTheme();
 
     return (
         <div className="main-container">

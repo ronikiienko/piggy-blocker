@@ -11,6 +11,8 @@
     --button-active: rgb(5, 65, 140);
     --button-background-hover: rgb(223, 236, 255);
     --button-background-active: rgb(201, 224, 255);
+    --link-visited: rgb(154, 68, 151);
+    --link-visited-hover: rgb(147, 0, 142)
 }
 [data-theme="dark"] {
     --bg-color: #0f0f0f;
@@ -24,4 +26,6 @@
     --button-active: rgb(133, 201, 255);
     --button-background-hover: rgb(6, 35, 75);
     --button-background-active: rgb(20, 45, 82);
+    --link-visited: rgb(204, 81, 177);
+    --link-visited-hover: rgb(217, 124, 197)
 }

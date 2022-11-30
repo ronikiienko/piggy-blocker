@@ -7,5 +7,6 @@ export const getSettings = async () => {
         return storage[SETTINGS_STORAGE_KEY];
     } catch (e) {
         console.log(e);
+        return DEFAULT_SETTINGS;
     }
 };

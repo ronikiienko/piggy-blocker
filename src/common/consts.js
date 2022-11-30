@@ -34,6 +34,7 @@ export const DEFAULT_SETTINGS = {
     blockOnShorts: true,
     blurIntensity: 'normal',
     whatToDo: 'blur',
+    // TODO use browser theme as default
     theme: 'light',
 };
 export const SELECTOR = {
