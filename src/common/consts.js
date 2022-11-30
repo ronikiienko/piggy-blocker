@@ -1,7 +1,7 @@
 export const CMD_GET_CURRENT_TAB = 'CMD_GET_CURRENT_TAB';
 export const CMD_TAB_UPDATE = 'CMD_TAB_UPDATE';
 
-export const SETTINGS_STORAGE_KEY = 'settings'
+export const SETTINGS_STORAGE_KEY = 'settings';
 
 export const SETTINGS_KEYS = {
     blockOnHome: 'blockOnHome',
@@ -9,7 +9,7 @@ export const SETTINGS_KEYS = {
     blockOnShorts: 'blockOnShorts',
     whatToDo: 'whatToDo',
     blurIntensity: 'blurIntensity',
-    theme: 'theme'
+    theme: 'theme',
 };
 
 export const WHAT_TO_DO_MAP = {
@@ -17,16 +17,16 @@ export const WHAT_TO_DO_MAP = {
     notInterested: 'notInterested',
     blockChannel: 'blockChannel',
 };
-export const BLUR_INTENSITY_MAP =  {
+export const BLUR_INTENSITY_MAP = {
     weak: 'weak',
     normal: 'normal',
     strong: 'strong',
-    transparent: 'transparent'
-}
+    transparent: 'transparent',
+};
 export const THEME_MAP = {
     light: 'light',
-    dark: 'dark'
-}
+    dark: 'dark',
+};
 
 export const DEFAULT_SETTINGS = {
     blockOnHome: true,
@@ -47,39 +47,35 @@ export const SELECTOR = {
 
 export const CMD_ADD_TO_BLOCKED_STATS = 'CMD_ADD_TO_BLOCKED_STATS';
 
-export const BLOCKED_VIDEOS_DB_NAME = 'blockedVideos'
+export const BLOCKED_VIDEOS_DB_NAME = 'blockedVideos';
 
-export const BLOCKED_VIDEOS_DB_KEYS = {
+export const VIDEOS_DB_KEYS = {
     title: 'title',
     link: 'link',
     channelName: 'channelName',
     reason: 'reason',
     reasonDetails: 'reasonDetails',
-    timeWhenBlocked: 'timeWhenBlocked'
-}
+    timeWhenBlocked: 'timeWhenBlocked',
+};
 
 export const BLOCK_REASONS_MAP = {
     byCharsTitle: 'byCharsTitle',
     byCharsChannelName: 'byCharsChannelName',
     noCyrillic: 'noCyrillic',
     markerWords: 'markerWords',
-    google: 'google'
-}
+    google: 'google',
+};
 
 
-export const CMD_ADD_TO_RU_LIST = 'CMD_ADD_TO_RU_LIST'
-export const CMD_ADD_TO_NOT_RU_LIST = 'CMD_ADD_TO_NOT_RU_LIST'
+export const CMD_ADD_TO_RU_LIST = 'CMD_ADD_TO_RU_LIST';
+export const CMD_ADD_TO_NOT_RU_LIST = 'CMD_ADD_TO_NOT_RU_LIST';
 
-export const RU_LIST_DB_NAME = 'ruList'
+export const RU_LIST_DB_NAME = 'ruList';
 
-export const NOT_RU_LIST_DB_NAME = 'notRuList'
+export const NOT_RU_LIST_DB_NAME = 'notRuList';
 
-export const LIST_DB_KEYS = {
-    youtubeId: 'youtubeId'
-}
-
-export const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+export const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
 
@@ -88,5 +84,5 @@ export const REASON_FILTER_KEYS = {
     byCharsTitle: 'byCharsTitle',
     byCharsChannelName: 'byCharsChannelName',
     markerWords: 'markerWords',
-    google: 'google'
-}
+    google: 'google',
+};

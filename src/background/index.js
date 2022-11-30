@@ -1,10 +1,5 @@
-import {
-    CMD_ADD_NOT_RU_TO_STATS,
-    CMD_ADD_TO_BLOCKED_STATS, CMD_ADD_TO_NOT_RU_LIST, CMD_ADD_TO_RU_LIST,
-    CMD_GET_CURRENT_TAB,
-    CMD_TAB_UPDATE,
-} from '../common/consts';
-import {addToNotRuList, addToRuList, addToStats} from '../commonBackground/db';
+import {CMD_ADD_TO_NOT_RU_LIST, CMD_ADD_TO_RU_LIST, CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
+import {addToNotRuList, addToRuList} from '../commonBackground/db';
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -14,14 +9,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 .then(tabs => sendResponse(tabs[0]))
                 .catch(e => console.log(e));
             break;
-        case CMD_ADD_TO_BLOCKED_STATS:
-            addToStats(message?.data)
-            break;
         case CMD_ADD_TO_RU_LIST:
-            addToRuList(message.id)
+            addToRuList(message?.data)
             break;
         case CMD_ADD_TO_NOT_RU_LIST:
-            addToNotRuList(message.id)
+            addToNotRuList(message?.data)
             break;
     }
     return true;

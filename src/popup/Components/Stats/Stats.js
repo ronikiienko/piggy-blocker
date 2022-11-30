@@ -1,33 +1,33 @@
 import React from 'react';
 import {countPercentage} from '../../../common/utils';
-import {useStats} from '../../../commonBackground/hooks/useStats';
+import {useNotRuList} from '../../../commonBackground/hooks/useNotRuList';
+import {useRuList} from '../../../commonBackground/hooks/useRuList';
 
 
 export const Stats = () => {
-    const {ruTotal, notRuTotal, markerWords, byCharsChannelName, byCharsTitle, google} = useStats()
-    if (!byCharsTitle || !byCharsChannelName || !markerWords || !google) return null
-    const totalAnalyzedNumber = ruTotal.length + notRuTotal.length
+    const ruList = useRuList()
+    const notRuList = useNotRuList()
+    const totalAnalyzedNumber = ruList.all.length + notRuList.all.length
     return (
         <div>
-            <a href={chrome.runtime.getURL('stats/index.html')} target="_blank">blah</a>
+            <a href={chrome.runtime.getURL('stats/index.html')} target="_blank"  rel="noreferrer">blah</a>
             <h1>Статистика:</h1>
             <h3>Проаналізовано за весь час:</h3>
-            <span>Всього: {ruTotal.length + notRuTotal.length}</span>
+            <span>Всього: {ruList.all.length + notRuList.all.length}</span>
             <br />
-            <span>Знайдено рос. відео: {ruTotal.length} ({countPercentage(ruTotal.length, totalAnalyzedNumber)}%)</span>
+            <span>Знайдено рос. відео: {ruList.all.length} ({countPercentage(ruList.all.length, totalAnalyzedNumber)}%)</span>
             <br />
-            <span>Не рос: {notRuTotal.length} ({countPercentage(notRuTotal.length, totalAnalyzedNumber)}%)</span>
+            <span>Не рос: {notRuList.all.length} ({countPercentage(notRuList.all.length, totalAnalyzedNumber)}%)</span>
             <br />
             <h2>З них:</h2>
             <h3 title="Зараховується, якщо в назві відео знайдено специфічно російські літери">За рос. літерами в назві:</h3>
-            <p>{byCharsTitle.length} ({countPercentage(byCharsTitle.length, ruTotal.length)}%)</p>
+            <p>{ruList.byCharsTitle.length} ({countPercentage(ruList.byCharsTitle.length, ruList.all.length)}%)</p>
             <h3 title="Зараховується, якщо в назві каналу знайдено специфічно російські літери">За рос. літерами в назві каналу:</h3>
-            <p>{byCharsChannelName.length} ({countPercentage(byCharsChannelName.length, ruTotal.length)}%)</p>
+            <p>{ruList.byCharsChannelName.length} ({countPercentage(ruList.byCharsChannelName.length, ruList.all.length)}%)</p>
             <h3 title="Зараховується, якщо назва відео містить хоч одне з невеликого списку найрозповсюдженіших російських слів">За словами маркерами:</h3>
-            <p>{markerWords.length} ({countPercentage(markerWords.length, ruTotal.length)}%)</p>
+            <p>{ruList.markerWords.length} ({countPercentage(ruList.markerWords.length, ruList.all.length)}%)</p>
             <h3 title="Якщо відео не пройшло по ніяким з попередніх пунктів, та містить хоч одну кириличну літеру, воно тоді, і тільки тоді відправляється до google translate, бо це досить довга задача, тому її використання треба мінімізувати">Google translate api:</h3>
-            <p>{google.length} ({countPercentage(google.length, ruTotal.length)}%)</p>
-            {/*<p>{byCharsTitle.length + byCharsChannelName.length + markerWords.length + google.length}</p>*/}
+            <p>{ruList.google.length} ({countPercentage(ruList.google.length, ruList.all.length)}%)</p>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import {useLiveQuery} from 'dexie-react-hooks';
 import React from 'react';
-import {BLOCKED_VIDEOS_DB_KEYS, BLOCKED_VIDEOS_DB_NAME, REASON_FILTER_KEYS} from '../../../common/consts';
+import {VIDEOS_DB_KEYS, BLOCKED_VIDEOS_DB_NAME, REASON_FILTER_KEYS, RU_LIST_DB_NAME} from '../../../common/consts';
 import {getReadableDate} from '../../../common/utils';
 import {db} from '../../../commonBackground/db';
 import {DateRangePicker} from '../../../commonBackground/StyledElements/DateRangePicker/DateRangePicker';
@@ -32,15 +32,15 @@ const selectOptions = [
         value: REASON_FILTER_KEYS.markerWords,
     },
 ];
-export const ForTimePeriod = () => {
+export const FilteredStats = () => {
     const [dateRange, setDateRange] = React.useState({fromDate: '', toDate: ''});
     const [reasonFilter, setReasonFilter] = React.useState(REASON_FILTER_KEYS.any);
     const [searchFilter, setSearchFilter] = React.useState('');
 
     // TODO sometimes new day records come with old. probably problem with gmt+2:00
     const blockedInRange = useLiveQuery(
-        () => db[BLOCKED_VIDEOS_DB_NAME]
-            .where(BLOCKED_VIDEOS_DB_KEYS.timeWhenBlocked)
+        () => db[RU_LIST_DB_NAME]
+            .where(VIDEOS_DB_KEYS.timeWhenBlocked)
             .between(
                 new Date(dateRange.fromDate)?.getTime() || 0,
                 new Date(dateRange.toDate)?.getTime() || Infinity,
@@ -70,17 +70,17 @@ export const ForTimePeriod = () => {
             </div>
             <div className="blocked-items-container">
                 {blockedInRange.map((blockedItem) => {
-                    if (blockedItem[BLOCKED_VIDEOS_DB_KEYS.reason] !== reasonFilter && reasonFilter !== REASON_FILTER_KEYS.any) return null;
-                    if (searchFilter && !(blockedItem[BLOCKED_VIDEOS_DB_KEYS.title]?.toLowerCase()?.includes(searchFilter.toLowerCase()) || blockedItem[BLOCKED_VIDEOS_DB_KEYS.channelName]?.toLowerCase()?.includes(searchFilter.toLowerCase()))) return null;
-                    const date = new Date(blockedItem[BLOCKED_VIDEOS_DB_KEYS.timeWhenBlocked]);
+                    if (blockedItem[VIDEOS_DB_KEYS.reason] !== reasonFilter && reasonFilter !== REASON_FILTER_KEYS.any) return null;
+                    if (searchFilter && !(blockedItem[VIDEOS_DB_KEYS.title]?.toLowerCase()?.includes(searchFilter.toLowerCase()) || blockedItem[VIDEOS_DB_KEYS.channelName]?.toLowerCase()?.includes(searchFilter.toLowerCase()))) return null;
+                    const date = new Date(blockedItem[VIDEOS_DB_KEYS.timeWhenBlocked]);
                     return <div className="blocked-item" key={blockedItem.id}>
                         <div className="block-details">{getReadableDate(date)}</div>
                         <Link
-                            href={blockedItem[BLOCKED_VIDEOS_DB_KEYS.link]}
-                            text={blockedItem[BLOCKED_VIDEOS_DB_KEYS.title]}
+                            href={blockedItem[VIDEOS_DB_KEYS.link]}
+                            text={blockedItem[VIDEOS_DB_KEYS.title]}
                         />
                         <span className="channel-name">
-                            - {blockedItem[BLOCKED_VIDEOS_DB_KEYS.channelName] || 'Short video'}
+                            - {blockedItem[VIDEOS_DB_KEYS.channelName] || 'Short video'}
                         </span>
                     </div>;
                 })}

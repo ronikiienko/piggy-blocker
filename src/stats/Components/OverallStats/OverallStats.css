@@ -1,0 +1,17 @@
+.ru-not-ru-container {
+    display: flex;
+    justify-content: space-around;
+}
+.total-blocked {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+.language-overall {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+}
+.block-reason {
+    margin: 2px;
+    font-size: 0.9rem;
+}

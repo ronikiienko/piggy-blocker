@@ -1,10 +1,4 @@
-import {useLiveQuery} from 'dexie-react-hooks';
-import {
-    BLOCK_REASONS_MAP, BLOCKED_VIDEOS_DB_KEYS,
-    CMD_ADD_TO_BLOCKED_STATS,
-    CMD_ADD_TO_NOT_RU_LIST,
-    CMD_ADD_TO_RU_LIST,
-} from '../common/consts';
+import {CMD_ADD_TO_NOT_RU_LIST, CMD_ADD_TO_RU_LIST} from '../common/consts';
 
 
 setTimeout(() => {
@@ -69,21 +63,17 @@ const stats = {
 
 
 export const addToDb = (data, isRu) => {
+    // TODO add reason to notru
     if (isRu) {
         chrome.runtime.sendMessage({
-            cmd: CMD_ADD_TO_BLOCKED_STATS,
-            data
-        })
-            .catch(console.log)
-        chrome.runtime.sendMessage({
             cmd: CMD_ADD_TO_RU_LIST,
-            id: data[BLOCKED_VIDEOS_DB_KEYS.link]
+            data
         })
             .catch(console.log)
     } else {
         chrome.runtime.sendMessage({
             cmd: CMD_ADD_TO_NOT_RU_LIST,
-            id: data[BLOCKED_VIDEOS_DB_KEYS.link]
+            data
         })
             .catch(console.log)
     }

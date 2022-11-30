@@ -1,7 +1,8 @@
 import React from 'react';
 import {useTheme} from '../../../commonBackground/hooks/useTheme';
+import {FilteredStats} from '../FilteredStats/FilteredStats';
+import {OverallStats} from '../OverallStats/OverallStats';
 import './Main.css';
-import {ForTimePeriod} from '../ForTimePeriod/ForTimePeriod';
 
 
 export const Main = () => {
@@ -9,7 +10,8 @@ export const Main = () => {
 
     return (
         <div className="main-container">
-            <ForTimePeriod />
+            <OverallStats />
+            <FilteredStats />
         </div>
     );
 };
