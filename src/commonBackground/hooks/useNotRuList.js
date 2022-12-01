@@ -40,6 +40,7 @@ export const useNotRuList = () => {
                 .equals(BLOCK_REASONS_MAP.noCyrillic)
                 .toArray(),
         [],
+        []
     )
     const google = useLiveQuery(() =>
             db[NOT_RU_LIST_DB_NAME]

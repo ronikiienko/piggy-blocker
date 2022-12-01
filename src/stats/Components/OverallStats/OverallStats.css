@@ -13,5 +13,8 @@
 }
 .block-reason {
     margin: 2px;
-    font-size: 0.9rem;
+    font-size: 1rem;
+}
+.overall-stats-container {
+    margin-bottom: 10px;
 }
