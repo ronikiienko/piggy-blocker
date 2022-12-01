@@ -1,6 +1,7 @@
 import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
 import {wait} from '../common/utils';
 import {disconnectAllHome, handleHomePage} from './home';
+import {handleWatchPage} from './watch';
 
 // TODO sometimes videos arent being analyzed
 // TODO possibly handle hashtag pages
@@ -21,11 +22,11 @@ const handlePage = async (url, init) => {
         console.log('queue killed');
         disconnectAllHome()
     }
-    // if (pathname.startsWith('/watch') && !isObservingWatch) {
-    //     isObservingWatch = true
-    //     console.log('handling watch page');
-    //     await handleWatchPage()
-    // }
+    if (pathname.startsWith('/watch') && !isObservingWatch) {
+        isObservingWatch = true
+        console.log('handling watch page');
+        await handleWatchPage()
+    }
     // if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
     //     isObservingShorts = true;
     //     await handleShortsPage();
@@ -37,7 +38,7 @@ const handlePage = async (url, init) => {
 
 let prevUrl;
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
     console.log('message', message);
     switch (message.cmd) {
         case CMD_TAB_UPDATE:
@@ -49,7 +50,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             }
             break;
     }
-    return true;
 });
 
 chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
@@ -59,7 +59,6 @@ chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
         handlePage(tab.url, true)
             .catch(e => console.log(e));
     }
-    return true
 });
 
 // setInterval(() => {

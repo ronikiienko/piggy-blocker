@@ -3,7 +3,6 @@ import {DatePicker} from '../DatePicker/DatePicker';
 
 
 export const DateRangePicker = ({dateRange, setDateRange}) => {
-    console.log('date picker rerender');
     const changeHandler = (event) => {
         setDateRange(prevDateRange => ({
             ...prevDateRange,

@@ -50,6 +50,7 @@ export const CMD_ADD_TO_BLOCKED_STATS = 'CMD_ADD_TO_BLOCKED_STATS';
 export const BLOCKED_VIDEOS_DB_NAME = 'blockedVideos';
 
 export const VIDEOS_DB_KEYS = {
+    ytId: 'ytId',
     title: 'title',
     link: 'link',
     channelName: 'channelName',
@@ -64,6 +65,7 @@ export const BLOCK_REASONS_MAP = {
     noCyrillic: 'noCyrillic',
     markerWords: 'markerWords',
     google: 'google',
+    inSessStorage: 'inSessStorage'
 };
 
 
@@ -85,4 +87,6 @@ export const REASON_FILTER_KEYS = {
     byCharsChannelName: 'byCharsChannelName',
     markerWords: 'markerWords',
     google: 'google',
+    noCyrillic: 'noCyrillic'
 };
+

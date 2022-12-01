@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             chrome.tabs.query({active: true, currentWindow: true})
                 .then(tabs => sendResponse(tabs[0]))
                 .catch(e => console.log(e));
-            break;
+            return true;
         case CMD_ADD_TO_RU_LIST:
             addToRuList(message?.data)
             break;
@@ -16,7 +16,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             addToNotRuList(message?.data)
             break;
     }
-    return true;
 });
 
 // tabs.onUpdated not work because YouTube is SPA,

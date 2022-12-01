@@ -1,4 +1,5 @@
 import {BLOCK_REASONS_MAP} from '../common/consts';
+import {isRuStore} from './videoStore';
 
 
 const ruCharsPattern = /ё|э|ии|ы|ъ|ее|шь/i;
@@ -15,6 +16,13 @@ const checkStringForRuChars = (stringToCheck, searchForUkr = true) => {
     return null;
 
 };
+
+const checkSessionStore = (id) => {
+    if (!id) return false
+    const storeCheck = isRuStore.check(id);
+    if (storeCheck === null) return null
+    return storeCheck;
+}
 const checkStringForCyrillic = (stringToCheck) => {
     if (!cyrillicPattern.test(stringToCheck)) return false;
     return null;
@@ -25,7 +33,7 @@ const checkStringForMarkerWords = (stringToCheck) => {
     let foundMarker = false;
     let wordFound;
     for (let word of words) {
-        if (markers.has(word)) {
+        if (markers.has(word.toLowerCase())) {
             // console.error('FOUND', stringToCheck,'7777777777777', word);
             foundMarker = true;
             wordFound = word;
@@ -56,17 +64,28 @@ const checkStringForRuGoogle = async (stringToCheck) => {
 /**
  *
  * @param title
- * @param channelName
+ * @param [channelName] {string}
  * @returns {Promise<{reason: string, isRu: boolean, reasonDetails}|boolean|{reason: string, isRu: boolean, reasonDetails: null}>}
  */
 
-export const checkIsVideoDataRu = async (title, channelName) => {
+export const checkIsVideoDataRu = async (title, channelName, id) => {
     if (!title) return false;
     let isRu;
+
+    isRu = checkSessionStore(id)
+    if (isRu !== null) {
+        console.log('in sess storage...');
+        return {
+            isRu,
+            reason: BLOCK_REASONS_MAP.inSessStorage,
+            reasonDetails: null
+        }
+    }
 
     isRu = checkStringForRuChars(title);
     // console.log('ru chars check title:', title, isRu);
     if (isRu !== null) {
+        isRuStore.addVideo(id, isRu);
         return {
             isRu,
             reason: BLOCK_REASONS_MAP.byCharsTitle,
@@ -77,6 +96,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
     if (channelName) {
         isRu = checkStringForRuChars(channelName, false);
         if (isRu !== null) {
+            isRuStore.addVideo(id, isRu);
             return {
                 isRu,
                 reason: BLOCK_REASONS_MAP.byCharsChannelName,
@@ -87,6 +107,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
 
     isRu = checkStringForCyrillic(title);
     if (isRu !== null) {
+        isRuStore.addVideo(id, isRu);
         return {
             isRu,
             reason: BLOCK_REASONS_MAP.noCyrillic,
@@ -99,6 +120,7 @@ export const checkIsVideoDataRu = async (title, channelName) => {
     isRu = markerCheckResult.isRu;
     // console.log('marker word check:',concatenatedString, isRu);
     if (isRu !== null) {
+        isRuStore.addVideo(id, isRu);
         return {
             isRu,
             reason: BLOCK_REASONS_MAP.markerWords,
@@ -109,13 +131,14 @@ export const checkIsVideoDataRu = async (title, channelName) => {
     try {
         const googleCheckResult = await checkStringForRuGoogle(title);
         isRu = googleCheckResult.isRu;
+        isRuStore.addVideo(id, isRu);
         return {
             isRu,
             reason: BLOCK_REASONS_MAP.google,
             reasonDetails: googleCheckResult.langFound,
         };
     } catch (e) {
-        console.log(e.message);
+        console.log(e.message, 'mimim');
         return false;
     }
 };

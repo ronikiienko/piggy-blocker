@@ -7,7 +7,7 @@
     padding: 10px;
     border-radius: 10px;
 }
-.channel-name {
+.item-channel-name {
     /*border-left: 1px solid var(--bg-color);*/
     margin-left: 15px;
     color: var(--text-secondary);
@@ -17,9 +17,15 @@
     width: fit-content;
     /*margin: auto;*/
 }
-.block-details {
+.item-block-details {
     width: fit-content;
-    padding-bottom: 2px;
-    margin-bottom: 2px;
-    border-bottom: 1px solid var(--bg-color);
+    margin-bottom: 4px;
+}
+.item-block-reason {
+    margin-left: 20px;
+    color: var(--text-secondary)
+}
+.item-yt-id {
+    margin-left: 20px;
+    color: var(--text-secondary);
 }

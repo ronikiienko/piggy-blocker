@@ -1,4 +1,11 @@
-import {VIDEOS_DB_KEYS, SELECTOR, SETTINGS_KEYS, SETTINGS_STORAGE_KEY, WHAT_TO_DO_MAP} from '../common/consts';
+import {
+    VIDEOS_DB_KEYS,
+    SELECTOR,
+    SETTINGS_KEYS,
+    SETTINGS_STORAGE_KEY,
+    WHAT_TO_DO_MAP,
+    BLOCK_REASONS_MAP,
+} from '../common/consts';
 import {getSettings} from '../common/getSettings';
 import {Queue} from '../common/queue';
 import {wait} from '../common/utils';
@@ -134,7 +141,7 @@ const checkVideoItem = async (videoItem) => {
         videoTitle = videoItem.querySelector('#video-title');
         if (!videoTitle) return false;
         channelName = null;
-        videoLink = videoTitle.parentElement.parentElement.href;
+        videoLink = videoTitle?.parentElement?.parentElement?.href;
         videoId = videoLink?.split('/shorts/')[1];
     } else {
         videoTitle = videoItem.querySelector('#video-title-link');
@@ -148,27 +155,24 @@ const checkVideoItem = async (videoItem) => {
         videoLink = videoTitle?.href;
         videoId = videoLink?.split('watch?v=')[1];
     }
-    const titleText = videoTitle.innerText;
+    const titleText = videoTitle?.innerText;
     if (!videoTitle || !titleText || !videoLink || !videoId) {
         // TODO when change mode from "transparent" to blur, cant get some video data
         console.warn('could not get video data', videoItem);
         return false;
     }
-    const storeCheck = isRuStore.check(videoId);
-    if (storeCheck !== null) {
-        console.log('already in store');
-        return {isRu: storeCheck, id: videoId, title: titleText, link: videoLink};
+    const checkResult = await checkIsVideoDataRu(titleText, channelName, videoId);
+    if (checkResult?.reason && checkResult?.reason !== BLOCK_REASONS_MAP.inSessStorage && videoId) {
+        addToDb({
+            [VIDEOS_DB_KEYS.ytId]: videoId || null,
+            [VIDEOS_DB_KEYS.title]: titleText || null,
+            [VIDEOS_DB_KEYS.channelName]: channelName || null,
+            [VIDEOS_DB_KEYS.link]: videoLink || null,
+            [VIDEOS_DB_KEYS.reason]: checkResult.reason || null,
+            [VIDEOS_DB_KEYS.reasonDetails]: checkResult.reasonDetails || null,
+            [VIDEOS_DB_KEYS.timeWhenBlocked]: Date.now() || null,
+        }, checkResult.isRu);
     }
-    const checkResult = await checkIsVideoDataRu(titleText, channelName);
-    if (checkResult.reason) addToDb({
-        [VIDEOS_DB_KEYS.title]: titleText || null,
-        [VIDEOS_DB_KEYS.channelName]: channelName || null,
-        [VIDEOS_DB_KEYS.link]: videoLink || null,
-        [VIDEOS_DB_KEYS.reason]: checkResult.reason || null,
-        [VIDEOS_DB_KEYS.reasonDetails]: checkResult.reasonDetails || null,
-        [VIDEOS_DB_KEYS.timeWhenBlocked]: Date.now() || null
-    }, checkResult.isRu)
-    isRuStore.addVideo(videoId, checkResult.isRu);
     return {isRu: checkResult.isRu, id: videoId, title: titleText, link: videoLink};
 };
 
