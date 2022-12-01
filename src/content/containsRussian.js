@@ -52,7 +52,7 @@ const checkStringForRuGoogle = async (stringToCheck) => {
 
 };
 
-
+// TODO add check by indexedDB local db
 /**
  *
  * @param title
