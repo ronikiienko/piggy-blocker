@@ -116,6 +116,7 @@ export const handleWatchPage = async () => {
     const videoItemsObserver = new MutationObserver(async function () {
         console.log('mutation!!!!!!!!!!!!!!1');
         clearTimeout(timeout);
+        // TODO possibly make wait time less
         timeout = setTimeout(() => {
             handleVideos(videoItemsContainer, settings, isAuthorized);
         }, 400);

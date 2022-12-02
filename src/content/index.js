@@ -2,7 +2,7 @@ import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
 import {wait} from '../common/utils';
 import {disconnectAllHome, handleHomePage} from './home';
 import {handleWatchPage} from './watch';
-
+import './promiseAll'
 // TODO sometimes videos arent being analyzed
 // TODO possibly handle hashtag pages
 

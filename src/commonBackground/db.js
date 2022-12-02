@@ -18,3 +18,8 @@ export const addToNotRuList = (data) => {
     db[NOT_RU_LIST_DB_NAME].put(data)
 }
 
+export const clearDb = () => {
+    db[RU_LIST_DB_NAME].clear()
+    db[NOT_RU_LIST_DB_NAME].clear()
+}
+

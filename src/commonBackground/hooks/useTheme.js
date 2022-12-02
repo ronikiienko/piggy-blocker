@@ -1,5 +1,5 @@
 import React from 'react';
-import {DEFAULT_SETTINGS, SETTINGS_KEYS, SETTINGS_STORAGE_KEY} from '../../common/consts';
+import {DEFAULT_SETTINGS, SETTINGS_KEYS} from '../../common/consts';
 // import {getSettings} from '../../common/getSettings';
 import {useSettings} from './useSettings';
 

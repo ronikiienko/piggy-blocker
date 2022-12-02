@@ -5,7 +5,8 @@ html {
 }
 body {
     margin: 0;
-    padding: 15px;
+    padding-block: 15px;
+    padding-inline: 50px;
 }
 body::-webkit-scrollbar {
     width: 1em;

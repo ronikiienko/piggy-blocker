@@ -90,3 +90,10 @@ export const REASON_FILTER_KEYS = {
     noCyrillic: 'noCyrillic'
 };
 
+export const DEFAULT_FILTERS = {
+    dateRange: {fromDate: '', toDate: ''},
+    reasonFilter: REASON_FILTER_KEYS.any,
+    searchFilter: '',
+    languageFilter: RU_LIST_DB_NAME,
+}
+

@@ -2,6 +2,7 @@ import {wait} from './utils';
 
 
 export class Queue {
+    // TODO eslint doesnt like queue declare
     queue = [];
     inProcess = false;
 
@@ -36,11 +37,11 @@ export class Queue {
     }
 }
 
-const queueCallback = async (params) => {
-    await wait(2000);
-    console.log('function....', params);
-};
-
+// const queueCallback = async (params) => {
+//     await wait(2000);
+//     console.log('function....', params);
+// };
+//
 // const myQueue = new Queue(queueCallback);
 // myQueue.push({robot: '1'});
 // myQueue.push({robot: '2'});

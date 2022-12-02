@@ -1,20 +1,12 @@
 import {BLOCK_REASONS_MAP} from '../common/consts';
+import {cyrillicPattern, ruCharsPattern, ruWords, ukrCharsPattern, ukrWords} from './containsRussianConsts';
 import {isRuStore} from './videoStore';
-
-
-const ruCharsPattern = /ё|э|ии|ы|ъ|ее|шь/i;
-const ukrCharsPattern = /[іїє]/i;
-const cyrillicPattern = /[\u0400-\u04FF]+/i;
-const markers = new Set(['больше', 'будет', 'будут', 'во', 'вообще', 'вот', 'время', 'всего', 'всем', 'всех', 'где', 'его', 'если', 'есть', 'еще', 'и', 'из', 'или', 'им', 'именно', 'интересно', 'их', 'к', 'как', 'какие', 'какой', 'когда', 'конечно', 'кто', 'лет', 'ли', 'либо', 'лучше', 'меня', 'мне', 'много', 'может', 'можно', 'надо', 'налоги', 'например', 'нет', 'ни', 'но', 'нужно', 'они', 'отвечаю', 'очень', 'под', 'после', 'почему', 'работать', 'с', 'сейчас', 'со', 'стоит', 'такое', 'такой', 'теперь', 'только', 'украине', 'чем', 'что']);
-const ruWordsPattern = /\sи\s/i;
-
 const checkStringForRuChars = (stringToCheck, searchForUkr = true) => {
     if (ruCharsPattern.test(stringToCheck)) return true;
     if (searchForUkr) {
         if (ukrCharsPattern.test(stringToCheck)) return false;
     }
     return null;
-
 };
 
 const checkSessionStore = (id) => {
@@ -30,19 +22,25 @@ const checkStringForCyrillic = (stringToCheck) => {
 };
 const checkStringForMarkerWords = (stringToCheck) => {
     const words = stringToCheck.split(' ');
-    let foundMarker = false;
+    let foundMarker = null;
     let wordFound;
     for (let word of words) {
-        if (markers.has(word.toLowerCase())) {
+        word = word.toLowerCase().replace(/[.,()!]/g, '')
+        if (ruWords.has(word)) {
+            // console.error('FOUND', stringToCheck,'7777777777777', word);
+            foundMarker = true;
+            wordFound = word;
+            break;
+        }
+        if (ukrWords.has(word)) {
             // console.error('FOUND', stringToCheck,'7777777777777', word);
             foundMarker = true;
             wordFound = word;
             break;
         }
     }
-    const returnBoolean = foundMarker ? true : null;
     return {
-        isRu: returnBoolean,
+        isRu: foundMarker,
         wordFound,
     };
 

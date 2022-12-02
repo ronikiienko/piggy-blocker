@@ -2,7 +2,7 @@ import React from 'react';
 import {DatePicker} from '../DatePicker/DatePicker';
 
 
-export const DateRangePicker = ({dateRange, setDateRange}) => {
+export const DateRangePicker = ({dateRange, setDateRange, withHours}) => {
     const changeHandler = (event) => {
         setDateRange(prevDateRange => ({
             ...prevDateRange,
@@ -12,8 +12,8 @@ export const DateRangePicker = ({dateRange, setDateRange}) => {
 
     return (
         <>
-            <DatePicker value={dateRange.fromDate} label="From date:" id="fromDate" onChange={changeHandler}/>
-            <DatePicker value={dateRange.toDate} label="To date:" id="toDate" onChange={changeHandler}/>
+            <DatePicker value={dateRange.fromDate} withHours={withHours} label="Від:" id="fromDate" onChange={changeHandler}/>
+            <DatePicker value={dateRange.toDate} withHours={withHours} label="До:" id="toDate" onChange={changeHandler}/>
         </>
     );
 };

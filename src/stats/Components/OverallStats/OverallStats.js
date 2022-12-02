@@ -11,47 +11,13 @@ import {Button} from '../../../commonBackground/StyledElements/Button/Button';
 export const OverallStats = () => {
     const notRuList = useNotRuList();
     const ruList = useRuList();
-    // const [usedWords, setUsedWords] = React.useState([])
-    const detectWords = () => {
-        const markers = new Set(['больше', 'будет', 'будут', 'во', 'вообще', 'вот', 'время', 'всего', 'всем', 'всех', 'где', 'его', 'если', 'есть', 'еще', 'и', 'из', 'или', 'им', 'именно', 'интересно', 'их', 'к', 'как', 'какие', 'какой', 'когда', 'конечно', 'кто', 'лет', 'ли', 'либо', 'лучше', 'меня', 'мне', 'много', 'может', 'можно', 'надо', 'налоги', 'например', 'нет', 'ни', 'но', 'нужно', 'они', 'отвечаю', 'очень', 'под', 'после', 'почему', 'работать', 'с', 'сейчас', 'со', 'стоит', 'такое', 'такой', 'теперь', 'только', 'украине', 'чем', 'что']);
-        const allWords = []
-        let analyzedTitles = []
-        for (let ruItem of ruList.google) {
-            const title = ruItem[VIDEOS_DB_KEYS.title]
-            if (analyzedTitles.includes(title)) {
-                console.log('title already analyzed', title);
-                continue
-            }
-            analyzedTitles.push(title)
-            const words = title.split(' ')
-            for (let word of words) {
-                if (markers.has(word.toLowerCase())) {
-                    console.log(title, 'hmmmm');
-                }
-                allWords[word] = allWords?.[word] ? allWords[word] + 1 : 1
-            }
-        }
-        let sortable = [];
-        for (let word in allWords) {
-            sortable.push([word, allWords[word]]);
-        }
-        const sorted = sortable.sort(function(a, b) {
-            return b[1] - a[1];
-        });
-        const filtered = sorted.filter((value) => {
-            return value[1] > 2 && value[0].match(/\p{L}/gu);
-        })
-        console.log(filtered);
-        // setUsedWords(allWords)
-    }
     const totalAnalyzedNumber = ruList.all.length + notRuList.all.length;
     return (
         <div className="overall-stats-container">
-            <Button onClick={detectWords}>Count word stats</Button>
             <div
                 className="total-blocked"
             >
-                Total: {ruList.all.length + notRuList.all.length}
+                Загалом: {ruList.all.length + notRuList.all.length}
             </div>
             <div className="ru-not-ru-container">
                 <div>
@@ -79,8 +45,7 @@ export const OverallStats = () => {
                             title="Зараховується, якщо назва відео містить хоч одне з невеликого списку найрозповсюдженіших російських слів"
                             className="block-reason"
                         >
-                            За словами
-                            маркерами: {ruList.markerWords.length} ({countPercentage(ruList.markerWords.length, ruList.all.length)}%)
+                            Знайдено російські слова: {ruList.markerWords.length} ({countPercentage(ruList.markerWords.length, ruList.all.length)}%)
                         </div>
                         <div
                             title="Зараховується, якщо в назві каналу знайдено специфічно російські літери"
@@ -94,7 +59,7 @@ export const OverallStats = () => {
                 <div>
                     <div className="language-overall"
                     >
-                        Not ru: {notRuList.all.length} ({countPercentage(notRuList.all.length, totalAnalyzedNumber)}%)
+                        Не ru: {notRuList.all.length} ({countPercentage(notRuList.all.length, totalAnalyzedNumber)}%)
                     </div>
                     <div>
                         <div
@@ -125,6 +90,12 @@ export const OverallStats = () => {
                         >
                             Укр. літери в назві
                             каналу: {notRuList.byCharsChannelName.length} ({countPercentage(notRuList.byCharsChannelName.length, notRuList.all.length)}%)
+                        </div>
+                        <div
+                            title="Зараховується, якщо назва відео містить хоч одне з невеликого списку найрозповсюдженіших українських слів"
+                            className="block-reason"
+                        >
+                            Знайдено укр. слова: {notRuList.markerWords.length} ({countPercentage(notRuList.markerWords.length, notRuList.all.length)}%)
                         </div>
                     </div>
                 </div>

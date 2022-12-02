@@ -1,5 +1,4 @@
 .blocked-item {
-    width: 85%;
     min-width: 500px;
     margin: auto;
     background-color: var(--bg-secondary);
@@ -13,9 +12,7 @@
     color: var(--text-secondary);
 }
 .search-container {
-    margin: auto;
     width: fit-content;
-    /*margin: auto;*/
 }
 .item-block-details {
     width: fit-content;
