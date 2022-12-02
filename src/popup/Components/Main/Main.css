@@ -2,6 +2,7 @@
     background-color: var(--bg-color);
     color: var(--main-text);
     margin: 0;
+    padding: 15px;
     font-size: 1rem;
     display: flex;
     justify-content: space-between;
@@ -10,6 +11,8 @@
 .sub-main-container {
     border-radius: 10px;
     flex: 1;
+    padding-block: 5px;
+    padding-inline: 10px;
     background-color: var(--bg-secondary);
 }
 h1, h2 {

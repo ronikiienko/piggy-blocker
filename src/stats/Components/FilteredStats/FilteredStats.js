@@ -30,27 +30,27 @@ const languageSelectOptions = [
 
 const reasonSelectOptions = [
     {
-        label: REASON_FILTER_KEYS.any,
+        label: 'Будь-які',
         value: REASON_FILTER_KEYS.any,
     },
     {
-        label: REASON_FILTER_KEYS.byCharsTitle,
+        label: 'По літерам в назві відео',
         value: REASON_FILTER_KEYS.byCharsTitle,
     },
     {
-        label: REASON_FILTER_KEYS.byCharsChannelName,
+        label: 'По літерам в назві каналу',
         value: REASON_FILTER_KEYS.byCharsChannelName,
     },
     {
-        label: REASON_FILTER_KEYS.google,
+        label: 'Бо гугл так вирішив',
         value: REASON_FILTER_KEYS.google,
     },
     {
-        label: REASON_FILTER_KEYS.markerWords,
+        label: 'По словам-маркерам',
         value: REASON_FILTER_KEYS.markerWords,
     },
     {
-        label: REASON_FILTER_KEYS.noCyrillic,
+        label: 'Не знайдено кирилиці',
         value: REASON_FILTER_KEYS.noCyrillic,
     },
 ];
@@ -154,10 +154,11 @@ export const FilteredStats = () => {
                     const date = new Date(listItem[VIDEOS_DB_KEYS.timeWhenBlocked]);
                     return <div className="blocked-item" key={listItem[VIDEOS_DB_KEYS.ytId]}>
                         <div className="item-block-details">
-                            <span>{getReadableDate(date)}</span>
+                            <span title="Коли відео було аналізовано">{getReadableDate(date)}</span>
                             <span
+                                title="Причина та деталі детекту (якщо результат гугл то буде написано мову яку гугл задетектив, якщо слова, то слово яке було знайдено)"
                                 className="item-block-reason">{listItem[VIDEOS_DB_KEYS.reason]} {listItem?.[VIDEOS_DB_KEYS.reasonDetails] ? `(${listItem?.[VIDEOS_DB_KEYS.reasonDetails]})` : ''}</span>
-                            <span className="item-yt-id">{listItem[VIDEOS_DB_KEYS.ytId]}</span>
+                            <span title="ID відео" className="item-yt-id">{listItem[VIDEOS_DB_KEYS.ytId]}</span>
                         </div>
                         <Link
                             href={listItem[VIDEOS_DB_KEYS.link]}

@@ -76,9 +76,12 @@ export const RU_LIST_DB_NAME = 'ruList';
 
 export const NOT_RU_LIST_DB_NAME = 'notRuList';
 
-export const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+export const monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+    'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень',
 ];
+// export const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+//     'July', 'August', 'September', 'October', 'November', 'December',
+// ];
 
 
 export const REASON_FILTER_KEYS = {
