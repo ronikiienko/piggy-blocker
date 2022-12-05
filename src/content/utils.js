@@ -60,30 +60,23 @@ export const applyFilter = (node, context, settings) => {
     //     console.log(openVideoOptions.parentElement.parentElement);
     // }
     let filter;
-    let visibility;
     switch (settings?.[SETTINGS_KEYS.blurIntensity]) {
         case BLUR_INTENSITY_MAP.weak:
             filter = 'blur(1px) opacity(40%)';
-            visibility = 'visible'
             break;
         case BLUR_INTENSITY_MAP.normal:
             filter = 'blur(4px) opacity(30%)';
-            visibility = 'visible'
             break;
         case BLUR_INTENSITY_MAP.strong:
             filter = 'blur(12px) opacity(20%)';
-            visibility = 'visible'
             break;
         case BLUR_INTENSITY_MAP.transparent:
-            filter = 'blur(4px) opacity(30%)';
-            visibility = 'hidden';
+            filter = 'opacity(0%)';
             break;
         default:
             filter = 'blur(4px) opacity(30%)';
-            visibility = 'visible'
     }
     node.style.filter = filter;
-    node.style.visibility = visibility;
 
     // TODO try to find way to hide videos
     // node.style.visibility = 'hidden',
@@ -95,6 +88,5 @@ export const removeFilter = (node) => {
         return
     }
     node.style.filter = 'blur(0px) opacity(100%)';
-    node.style.visibility = 'visible';
     // node.style.background = 'none'
 };

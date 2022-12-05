@@ -1,7 +1,7 @@
 import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
 import {wait} from '../common/utils';
 import {disconnectAllHome, handleHomePage} from './home';
-import {handleWatchPage} from './watch';
+import {disconnectAllWatch, handleWatchPage} from './watch';
 import './promiseAll'
 // TODO sometimes videos arent being analyzed
 // TODO possibly handle hashtag pages
@@ -26,6 +26,9 @@ const handlePage = async (url, init) => {
         isObservingWatch = true
         console.log('handling watch page');
         await handleWatchPage()
+    } else {
+        console.log('watch queue killed')
+        disconnectAllWatch()
     }
     // if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
     //     isObservingShorts = true;

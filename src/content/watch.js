@@ -7,27 +7,102 @@ import {
     WHAT_TO_DO_MAP,
 } from '../common/consts';
 import {getSettings} from '../common/getSettings';
+import {Queue} from '../common/queue';
+import {wait} from '../common/utils';
 import {checkIsVideoDataRu} from './containsRussian';
 import {addToDb} from './containsRussianStats';
 import {applyFilter, removeFilter, waitForNodeLoad} from './utils';
-import {isRuStore} from './videoStore';
+import {clickedStore} from './videoStore';
 
 
-const handleVideoItem = async (videoItem) => {
-    console.log(videoItem);
-    // if (videoItem.classList.contains(CHECKED_VIDEO_ITEM_CLASSNAME)) return
-    const titleSpan = videoItem.querySelector('h3 > span');
-    const titleText = titleSpan?.innerText;
-    checkIsVideoDataRu(titleText)
-        .then(result => {
-            if (result) {
-                applyFilter(videoItem, 'watch');
-            }
-        });
-    // videoItem.classList.add(CHECKED_VIDEO_ITEM_CLASSNAME);
+const blockVideoQueue = new Queue(async ({videoItem, settings, videoId}) => {
+    await blockVideoItem(videoItem, settings, videoId);
+});
+
+let videoItemsObserver;
+export const disconnectAllWatch = () => {
+    videoItemsObserver?.disconnect();
+    blockVideoQueue.clear();
+    clickedStore.clear();
+};
+const openPopup = async (videoItem) => {
+    try {
+        await waitForNodeLoad('#menu #button', videoItem);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+    const button = videoItem.querySelector('#menu #button');
+    const clickEvent = new Event('click', {bubbles: false});
+    button.dispatchEvent(clickEvent);
+    return button
 };
 
+const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton) => {
+    if (!videoItem || !actionItemMenuNumber || !popupOpenButton) {
+        console.log('could not click popup option');
+        return
+    }
+    try {
+        await waitForNodeLoad('tp-yt-iron-dropdown');
+    } catch (e) {
+        console.log(e);
+        return;
+    }
+    let popup = document.querySelector('tp-yt-iron-dropdown');
+    if (!popup) {
+        console.log('could not click popup option (could not find popup)');
+        return
+    }
+    popup.style.opacity = 0;
+    try {
+        await waitForNodeLoad('ytd-menu-service-item-renderer', document);
+    } catch (e) {
+        console.log(e);
+        return;
+    }
+    let menuItems = document.querySelectorAll('ytd-menu-service-item-renderer');
 
+    console.log('blocking.....', videoItem, menuItems.length);
+    const clickEvent = new Event('click', {bubbles: false});
+    const prevScrollPosition = document.documentElement.scrollTop;
+    if (menuItems?.length <= actionItemMenuNumber) {
+        popupOpenButton.dispatchEvent(clickEvent);
+        popup.style.opacity = 1;
+        return;
+    }
+    menuItems[actionItemMenuNumber].dispatchEvent(clickEvent);
+    popup.style.opacity = 1;
+    wait(50).then(() => window.scrollTo(0, prevScrollPosition));
+};
+
+const blockVideoItem = async (videoItem, settings, videoId) => {
+    if (!videoItem || !settings || !videoId) {
+        console.log('could not block video item');
+        return
+    }
+    if (videoItem.classList.contains('ytd-rich-shelf-renderer')) return;
+    const whatToDo = settings?.[SETTINGS_KEYS.whatToDo];
+    if (whatToDo === WHAT_TO_DO_MAP.blur || !whatToDo) {
+        return;
+    }
+    if (!videoId) {
+        console.log('no video id');
+        return;
+    }
+    if (clickedStore.check(videoId)) {
+        console.log('element clicked');
+        return;
+    }
+    let actionItemMenuNumber;
+    if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 4;
+    if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 5;
+    if (!actionItemMenuNumber) return;
+    const popupOpenButton = await openPopup(videoItem);
+    if (!popupOpenButton) return;
+    await clickPopupOption(videoItem, actionItemMenuNumber, popupOpenButton);
+    clickedStore.add(videoId);
+};
 const checkVideoItem = async (videoItem) => {
     if (!videoItem) return false;
     if (getComputedStyle(videoItem).display === 'none') return false;
@@ -78,6 +153,11 @@ const handleVideos = async (container, settings, isAuthorized) => {
             .then(result => {
                 if (result.isRu) {
                     applyFilter(videoItem, 'home', settings);
+                    if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({
+                        videoItem,
+                        settings,
+                        videoId: result.id,
+                    });
                 } else {
                     removeFilter(videoItem);
                 }
@@ -99,7 +179,7 @@ export const handleWatchPage = async () => {
     const isAuthorized = authButtonsNumber === 3;
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_WATCH);
     let settings = await getSettings();
-    if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer) {
+    if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer || !isAuthorized) {
         console.log('could not handle home page');
         return;
     }
@@ -113,7 +193,7 @@ export const handleWatchPage = async () => {
         }
     });
     let timeout;
-    const videoItemsObserver = new MutationObserver(async function () {
+    videoItemsObserver = new MutationObserver(async function () {
         console.log('mutation!!!!!!!!!!!!!!1');
         clearTimeout(timeout);
         // TODO possibly make wait time less

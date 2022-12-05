@@ -227,12 +227,12 @@ export const handleHomePage = async () => {
     const isAuthorized = authButtonsNumber === 3;
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_HOME);
     let settings = await getSettings();
-    if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer) {
+    if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer || !isAuthorized) {
         console.log('could not handle home page');
         return
     }
     await handleVideos(videoItemsContainer, settings, isAuthorized);
-    chrome.storage.onChanged.addListener(async (changes, areaName) => {
+    chrome.storage.onChanged.addListener(async (changes) => {
         if (changes[SETTINGS_STORAGE_KEY]) {
             blockVideoQueue.clear();
             const newSettings = await getSettings();

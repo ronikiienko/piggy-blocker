@@ -19,11 +19,11 @@ import './FilteredStats.css';
 
 const languageSelectOptions = [
     {
-        label: RU_LIST_DB_NAME,
+        label: 'Російське',
         value: RU_LIST_DB_NAME,
     },
     {
-        label: NOT_RU_LIST_DB_NAME,
+        label: 'Не російське',
         value: NOT_RU_LIST_DB_NAME,
     },
 ];
@@ -108,15 +108,18 @@ export const FilteredStats = () => {
                 allWords[word] = allWords?.[word] ? allWords[word] + 1 : 1;
             }
         }
+        console.log(allWords);
         let sortable = [];
         for (let word in allWords) {
+            // console.log(word, allWords[word]);
             sortable.push([word, allWords[word]]);
         }
         const sorted = sortable.sort(function (a, b) {
             return b[1] - a[1];
         });
-        const filtered = sorted.filter((value) => {
-            return value[1] > 3 && value[0].match(/\p{L}/gu);
+        let filtered = []
+        filtered = sorted.filter((value) => {
+            return value[1] > 1 && value[0].match(/\p{L}/gu);
         });
         console.log(filtered);
         // setUsedWords(allWords)
@@ -150,10 +153,11 @@ export const FilteredStats = () => {
 
             </div>
             <div className="blocked-items-container">
-                {filteredList.map((listItem) => {
+                {filteredList.map((listItem, index) => {
                     const date = new Date(listItem[VIDEOS_DB_KEYS.timeWhenBlocked]);
                     return <div className="blocked-item" key={listItem[VIDEOS_DB_KEYS.ytId]}>
                         <div className="item-block-details">
+                            <span className="item-index">{index + 1}.) </span>
                             <span title="Коли відео було аналізовано">{getReadableDate(date)}</span>
                             <span
                                 title="Причина та деталі детекту (якщо результат гугл то буде написано мову яку гугл задетектив, якщо слова, то слово яке було знайдено)"
