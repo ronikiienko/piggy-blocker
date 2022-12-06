@@ -1,8 +1,10 @@
-
-
 .search-container {
-    width: fit-content;
     border-bottom: 1px solid var(--splitters-gray);
     margin-bottom: 10px;
     padding-bottom: 2px;
+}
+.blocked-items-container {
+    height: calc(100vh - 290px);
+    overflow-y: auto;
+    padding-right: 5px;
 }

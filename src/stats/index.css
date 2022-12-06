@@ -9,20 +9,6 @@ body {
     padding-block: 15px;
     padding-inline: 30px;
 }
-body::-webkit-scrollbar {
-    width: 1em;
-    height: 1em;
-}
-
-body::-webkit-scrollbar-track {
-    background-color: var(--bg-secondary);
-}
-
-body::-webkit-scrollbar-thumb {
-    border-radius: 2px;
-    background-color: var(--text-secondary);
-    outline: 1px solid slategrey;
-}
 
 
 
