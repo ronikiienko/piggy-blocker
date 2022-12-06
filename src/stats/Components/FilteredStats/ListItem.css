@@ -1,0 +1,28 @@
+.list-item-container {
+    margin: auto;
+    background-color: var(--bg-secondary);
+    margin-block: 8px;
+    padding: 10px;
+    border-radius: 10px;
+}
+.list-item-channel-name {
+    /*border-left: 1px solid var(--bg-color);*/
+    margin-left: 15px;
+    color: var(--text-secondary);
+    display: none;
+}
+.list-item-block-details {
+    width: fit-content;
+    margin-bottom: 4px;
+}
+.list-item-block-reason {
+    margin-left: 20px;
+    color: var(--text-secondary)
+}
+.list-item-yt-id {
+    margin-left: 20px;
+    color: var(--text-secondary);
+}
+.list-item-index {
+    margin-right: 6px;
+}

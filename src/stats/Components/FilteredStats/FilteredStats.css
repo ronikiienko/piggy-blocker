@@ -1,33 +1,8 @@
-.blocked-item {
-    margin: auto;
-    background-color: var(--bg-secondary);
-    margin-block: 8px;
-    padding: 10px;
-    border-radius: 10px;
-}
-.item-channel-name {
-    /*border-left: 1px solid var(--bg-color);*/
-    margin-left: 15px;
-    color: var(--text-secondary);
-}
+
+
 .search-container {
     width: fit-content;
     border-bottom: 1px solid var(--splitters-gray);
     margin-bottom: 10px;
     padding-bottom: 2px;
-}
-.item-block-details {
-    width: fit-content;
-    margin-bottom: 4px;
-}
-.item-block-reason {
-    margin-left: 20px;
-    color: var(--text-secondary)
-}
-.item-yt-id {
-    margin-left: 20px;
-    color: var(--text-secondary);
-}
-.item-index {
-    margin-right: 6px;
 }

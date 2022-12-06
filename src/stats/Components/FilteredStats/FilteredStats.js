@@ -7,14 +7,12 @@ import {
     RU_LIST_DB_NAME,
     VIDEOS_DB_KEYS,
 } from '../../../common/consts';
-import {getReadableDate} from '../../../common/utils';
 import {db} from '../../../commonBackground/db';
-import {Button} from '../../../commonBackground/StyledElements/Button/Button';
 import {DateRangePicker} from '../../../commonBackground/StyledElements/DateRangePicker/DateRangePicker';
 import {Input} from '../../../commonBackground/StyledElements/Input/Input';
-import {Link} from '../../../commonBackground/StyledElements/Link/Link';
 import {Select} from '../../../commonBackground/StyledElements/Select/Select';
 import './FilteredStats.css';
+import {ListItem} from './ListItem';
 
 
 const languageSelectOptions = [
@@ -132,6 +130,7 @@ export const FilteredStats = () => {
                     setDateRange={setDateRange}
                     withHours={true}
                 />
+                <br />
                 <Select
                     label="Причина:"
                     options={reasonSelectOptions}
@@ -154,24 +153,7 @@ export const FilteredStats = () => {
             </div>
             <div className="blocked-items-container">
                 {filteredList.map((listItem, index) => {
-                    const date = new Date(listItem[VIDEOS_DB_KEYS.timeWhenBlocked]);
-                    return <div className="blocked-item" key={listItem[VIDEOS_DB_KEYS.ytId]}>
-                        <div className="item-block-details">
-                            <span className="item-index">{index + 1}.) </span>
-                            <span title="Коли відео було аналізовано">{getReadableDate(date)}</span>
-                            <span
-                                title="Причина та деталі детекту (якщо результат гугл то буде написано мову яку гугл задетектив, якщо слова, то слово яке було знайдено)"
-                                className="item-block-reason">{listItem[VIDEOS_DB_KEYS.reason]} {listItem?.[VIDEOS_DB_KEYS.reasonDetails] ? `(${listItem?.[VIDEOS_DB_KEYS.reasonDetails]})` : ''}</span>
-                            <span title="ID відео" className="item-yt-id">{listItem[VIDEOS_DB_KEYS.ytId]}</span>
-                        </div>
-                        <Link
-                            href={listItem[VIDEOS_DB_KEYS.link]}
-                            text={listItem[VIDEOS_DB_KEYS.title]}
-                        />
-                        <span className="item-channel-name">
-                            - {listItem[VIDEOS_DB_KEYS.channelName] || 'Short video'}
-                        </span>
-                    </div>;
+                    return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index} />
                 })}
             </div>
         </div>

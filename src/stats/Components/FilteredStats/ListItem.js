@@ -2,7 +2,7 @@ import React from 'react';
 import {VIDEOS_DB_KEYS} from '../../../common/consts';
 import {getReadableDate} from '../../../common/utils';
 import {Link} from '../../../commonBackground/StyledElements/Link/Link';
-
+import "./ListItem.css"
 
 export const ListItem = ({listItem, index}) => {
     return (
