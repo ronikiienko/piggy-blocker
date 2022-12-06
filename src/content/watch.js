@@ -21,6 +21,7 @@ const blockVideoQueue = new Queue(async ({videoItem, settings, videoId}) => {
 
 let videoItemsObserver;
 export const disconnectAllWatch = () => {
+    console.log('disconnecting from watch')
     videoItemsObserver?.disconnect();
     blockVideoQueue.clear();
     clickedStore.clear();
@@ -116,9 +117,9 @@ const checkVideoItem = async (videoItem) => {
     channelName = channelNameNode?.innerText
     videoTitle = titleNode?.innerText;
     videoLink = videoLinkNode?.href;
-    videoId = videoLink?.split('watch?v=')[1];
+    videoId = videoLink?.split('watch?v=')[1] || videoLink?.split('/shorts/')[1];
     if (!videoTitle || !channelName || !videoLink || !videoId) {
-        console.warn('could not get video data', videoItem);
+        console.warn('could not get video data', videoItem, {videoTitle, channelName, videoLink, videoId});
         return false;
     }
 
@@ -194,7 +195,7 @@ export const handleWatchPage = async () => {
     });
     let timeout;
     videoItemsObserver = new MutationObserver(async function () {
-        console.log('mutation!!!!!!!!!!!!!!1');
+        console.log('mutation, watch page!!!!!!!!!!!!!!1');
         clearTimeout(timeout);
         // TODO possibly make wait time less
         timeout = setTimeout(() => {

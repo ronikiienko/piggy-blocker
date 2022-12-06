@@ -8,10 +8,11 @@ import './promiseAll'
 
 let isObservingShorts = false;
 
+let prevUrl;
 const handlePage = async (url, init) => {
     console.log('url changed', url);
     const pathname = new URL(url).pathname;
-    if (pathname === '/'/* && !isObservingHome*/) {
+    if (pathname === '/') {
         if (!init) await wait(2000)
         disconnectAllHome()
         await handleHomePage();
@@ -19,13 +20,14 @@ const handlePage = async (url, init) => {
         console.log('queue killed');
         disconnectAllHome()
     }
-    if (pathname.startsWith('/watch')) {
-        console.log('handling watch page');
+    if (pathname.startsWith('/watch')/* && url !== prevUrl*/) {
+        console.log('handling watch page', 'prev url:', prevUrl, url);
         await handleWatchPage()
     } else {
-        console.log('watch queue killed')
+        console.log('watch queue killed', 'prev url:', prevUrl, url)
         disconnectAllWatch()
     }
+    prevUrl = url
     // if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
     //     isObservingShorts = true;
     //     await handleShortsPage();
@@ -34,8 +36,6 @@ const handlePage = async (url, init) => {
 
 
 // TODO may have some problems with shorts (link changes on every short video scroll)
-
-let prevUrl;
 
 chrome.runtime.onMessage.addListener((message) => {
     console.log('message', message);

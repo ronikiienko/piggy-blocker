@@ -9,7 +9,6 @@
     /*border-left: 1px solid var(--bg-color);*/
     margin-left: 15px;
     color: var(--text-secondary);
-    display: none;
 }
 .list-item-block-details {
     width: fit-content;

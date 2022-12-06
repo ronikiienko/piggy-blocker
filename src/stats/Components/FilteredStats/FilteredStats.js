@@ -9,6 +9,7 @@ import {
     VIDEOS_DB_KEYS,
 } from '../../../common/consts';
 import {db} from '../../../commonBackground/db';
+import {Button} from '../../../commonBackground/StyledElements/Button/Button';
 import {DateRangePicker} from '../../../commonBackground/StyledElements/DateRangePicker/DateRangePicker';
 import {Input} from '../../../commonBackground/StyledElements/Input/Input';
 import {Select} from '../../../commonBackground/StyledElements/Select/Select';
@@ -119,7 +120,7 @@ export const FilteredStats = () => {
         });
         let filtered = []
         filtered = sorted.filter((value) => {
-            return value[1] > 1 && value[0].match(/\p{L}/gu);
+            return value[1] > 0/* && value[0].match(/\p{L}/gu);*/
         });
         console.log(filtered);
         // setUsedWords(allWords)
@@ -132,6 +133,7 @@ export const FilteredStats = () => {
                     setDateRange={setDateRange}
                     withHours={true}
                 />
+                <Button onClick={detectWords}>Count word stats</Button>
                 <br />
                 <Select
                     label="Причина:"
@@ -150,8 +152,6 @@ export const FilteredStats = () => {
                     value={searchFilter}
                     onChange={(event) => setSearchFilter(event.target.value)}
                 />
-                {/*<Button onClick={detectWords}>Count word stats</Button>*/}
-
             </div>
             <div className="blocked-items-container" ref={listContainerRef}>
                 <ViewportList
