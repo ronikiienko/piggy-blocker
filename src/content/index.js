@@ -7,8 +7,6 @@ import './promiseAll'
 // TODO possibly handle hashtag pages
 
 let isObservingShorts = false;
-// let isObservingHome = false;
-let isObservingWatch = false;
 
 const handlePage = async (url, init) => {
     console.log('url changed', url);
@@ -16,14 +14,12 @@ const handlePage = async (url, init) => {
     if (pathname === '/'/* && !isObservingHome*/) {
         if (!init) await wait(2000)
         disconnectAllHome()
-        // isObservingHome = true;
         await handleHomePage();
     } else {
         console.log('queue killed');
         disconnectAllHome()
     }
-    if (pathname.startsWith('/watch') && !isObservingWatch) {
-        isObservingWatch = true
+    if (pathname.startsWith('/watch')) {
         console.log('handling watch page');
         await handleWatchPage()
     } else {
