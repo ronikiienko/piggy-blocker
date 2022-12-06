@@ -7,6 +7,12 @@ import {useRuList} from '../../../commonBackground/hooks/useRuList';
 export const Stats = () => {
     const ruList = useRuList()
     const notRuList = useNotRuList()
+    // const [recentList, setRecentList] = React.useState();
+    // React.useEffect(() => {
+    //     setRecentList(blockedInRange.filter(listItem => {
+    //
+    //     }).reverse());
+    // }, [ruList, notRuList]);
     const totalAnalyzedNumber = ruList.all.length + notRuList.all.length
     return (
         <div>

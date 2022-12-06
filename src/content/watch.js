@@ -138,7 +138,7 @@ const checkVideoItem = async (videoItem) => {
     return {isRu: checkResult.isRu, id: videoId, title: videoTitle, link: videoLink};
 };
 const handleVideos = async (container, settings, isAuthorized) => {
-    console.log('handling videos');
+    console.log('handling videos watch');
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
     // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-compact-video-renderer');
@@ -168,7 +168,9 @@ const handleVideos = async (container, settings, isAuthorized) => {
 };
 
 export const handleWatchPage = async () => {
+    console.clear()
     try {
+        console.log('getting container');
         await waitForNodeLoad(SELECTOR.CONTAINER_WATCH);
         await waitForNodeLoad(SELECTOR.IS_AUTH_BUTTONS + ' #button');
     } catch (e) {
@@ -181,7 +183,7 @@ export const handleWatchPage = async () => {
     const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_WATCH);
     let settings = await getSettings();
     if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer || !isAuthorized) {
-        console.log('could not handle home page');
+        console.log('could not handle home page', {settings, videoItemsContainer, authButtonsNumber, isAuthButtonsContainer, isAuthorized});
         return;
     }
     await handleVideos(videoItemsContainer, settings, isAuthorized);
