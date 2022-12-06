@@ -86,12 +86,6 @@ export const OverallStats = () => {
                             Укр. літери в назві
                             каналу: {notRuList.byCharsChannelName.length} ({countPercentage(notRuList.byCharsChannelName.length, notRuList.all.length)}%)
                         </div>
-                        <div
-                            title="Зараховується, якщо назва відео містить хоч одне з невеликого списку найрозповсюдженіших українських слів"
-                            className="block-reason"
-                        >
-                            Знайдено укр. слова: {notRuList.markerWords.length} ({countPercentage(notRuList.markerWords.length, notRuList.all.length)}%)
-                        </div>
                     </div>
                 </div>
             </div>
