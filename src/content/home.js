@@ -132,33 +132,33 @@ const checkVideoItem = async (videoItem) => {
     // TODO return false if 'dismissed' video
     if (!videoItem) return false;
     if (getComputedStyle(videoItem).display === 'none') return false;
-    let videoTitle;
+    let titleNode;
     let videoLink;
     let videoId;
     let channelNameNode;
     let channelName;
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) {
-        videoTitle = videoItem.querySelector('#video-title');
-        if (!videoTitle) return false;
+        titleNode = videoItem.querySelector('#video-title');
+        if (!titleNode) return false;
         channelName = null;
-        videoLink = videoTitle?.parentElement?.parentElement?.href;
+        videoLink = titleNode?.parentElement?.parentElement?.href;
         videoId = videoLink?.split('/shorts/')[1];
     } else {
-        videoTitle = videoItem.querySelector('#video-title-link');
-        if (!videoTitle) return false;
+        titleNode = videoItem.querySelector('#video-title-link');
+        if (!titleNode) return false;
         channelNameNode = videoItem.querySelector('#channel-name');
         channelName = channelNameNode?.innerText;
         if (!channelName) {
             console.warn('could not get chanel name');
             return false;
         }
-        videoLink = videoTitle?.href;
+        videoLink = titleNode?.href;
         videoId = videoLink?.split('watch?v=')[1];
     }
-    const titleText = videoTitle?.innerText;
-    if (!videoTitle || !titleText || !videoLink || !videoId) {
+    const titleText = titleNode?.innerText;
+    if (!titleText || !videoLink || !videoId/* || !channelName*/) {
         // TODO when change mode from "transparent" to blur, cant get some video data
-        console.warn('could not get video data', videoItem);
+        console.warn('could not get video data', videoItem, {titleNode, channelName, videoLink, videoId});
         return false;
     }
     const checkResult = await checkIsVideoDataRu(titleText, channelName, videoId);

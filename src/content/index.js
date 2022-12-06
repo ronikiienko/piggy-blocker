@@ -9,22 +9,26 @@ import './promiseAll'
 let isObservingShorts = false;
 
 let prevUrl;
+// setInterval(() => console.log(prevUrl), 100)
 const handlePage = async (url, init) => {
-    console.log('url changed', url);
+    if (prevUrl === url) return
+    console.log('url changed', 'prevUrl', prevUrl, 'newUrl', url);
     const pathname = new URL(url).pathname;
     if (pathname === '/') {
         if (!init) await wait(2000)
+        console.log('handling watch page');
         disconnectAllHome()
         await handleHomePage();
     } else {
-        console.log('queue killed');
+        console.log('home queue killed');
         disconnectAllHome()
     }
-    if (pathname.startsWith('/watch')/* && url !== prevUrl*/) {
-        console.log('handling watch page', 'prev url:', prevUrl, url);
+    if (pathname.startsWith('/watch') && url !== prevUrl) {
+        console.log('handling watch page');
+        disconnectAllWatch()
         await handleWatchPage()
     } else {
-        console.log('watch queue killed', 'prev url:', prevUrl, url)
+        console.log('watch queue killed',)
         disconnectAllWatch()
     }
     prevUrl = url
@@ -34,16 +38,13 @@ const handlePage = async (url, init) => {
     // }
 };
 
-
+// let prevUrl;
 // TODO may have some problems with shorts (link changes on every short video scroll)
 
 chrome.runtime.onMessage.addListener((message) => {
-    console.log('message', message);
     switch (message.cmd) {
         case CMD_TAB_UPDATE:
             if (message?.details?.url) {
-                if (message.details.url === prevUrl) return
-                prevUrl = message.details.url
                 handlePage(message.details.url, false)
                     .catch(e => console.log(e));
             }
@@ -53,8 +54,6 @@ chrome.runtime.onMessage.addListener((message) => {
 
 chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
     if (tab.url) {
-        prevUrl = tab.url
-        console.log(prevUrl);
         handlePage(tab.url, true)
             .catch(e => console.log(e));
     }

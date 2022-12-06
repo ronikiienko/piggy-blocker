@@ -72,7 +72,7 @@ export const checkIsVideoDataRu = async (title, channelName, id) => {
 
     isRu = checkSessionStore(id)
     if (isRu !== null) {
-        console.log('in sess storage...');
+        // console.log('in sess storage...');
         return {
             isRu,
             reason: BLOCK_REASONS_MAP.inSessStorage,
