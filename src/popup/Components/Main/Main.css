@@ -16,5 +16,8 @@
     background-color: var(--bg-secondary);
 }
 h1, h2 {
-    margin: 0.3rem
+    margin-block: 0.3rem;
 }
+/*p {*/
+/*    margin: 0*/
+/*}*/
