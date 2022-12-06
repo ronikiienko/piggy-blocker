@@ -2,12 +2,12 @@
 html {
     color: var(--main-text);
     background-color: var(--bg-color);
-    min-width: 600px;
+    min-width: 800px;
 }
 body {
     margin: 0;
     padding-block: 15px;
-    padding-inline: 20px;
+    padding-inline: 30px;
 }
 body::-webkit-scrollbar {
     width: 1em;

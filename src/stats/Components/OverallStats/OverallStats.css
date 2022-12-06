@@ -11,5 +11,7 @@
     font-size: 1rem;
 }
 .overall-stats-container {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--splitters-gray);
 }

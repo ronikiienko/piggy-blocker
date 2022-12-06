@@ -133,13 +133,13 @@ export const FilteredStats = () => {
                     withHours={true}
                 />
                 <Select
-                    label="Причина детекту:"
+                    label="Причина:"
                     options={reasonSelectOptions}
                     value={reasonFilter}
                     onChange={(event) => setReasonFilter(event.target.value)}
                 />
                 <Select
-                    label="Результат детекту:"
+                    label="Результат:"
                     options={languageSelectOptions}
                     value={languageFilter}
                     onChange={(event) => setLanguageFilter(event.target.value)}
@@ -149,7 +149,7 @@ export const FilteredStats = () => {
                     value={searchFilter}
                     onChange={(event) => setSearchFilter(event.target.value)}
                 />
-                <Button onClick={detectWords}>Count word stats</Button>
+                {/*<Button onClick={detectWords}>Count word stats</Button>*/}
 
             </div>
             <div className="blocked-items-container">
