@@ -1,5 +1,6 @@
 import {useLiveQuery} from 'dexie-react-hooks';
 import React from 'react';
+import ViewportList from 'react-viewport-list';
 import {
     DEFAULT_FILTERS,
     NOT_RU_LIST_DB_NAME,
@@ -85,8 +86,9 @@ export const FilteredStats = () => {
                     )
                 )
             );
-        }));
+        }).reverse());
     }, [blockedInRange, reasonFilter, searchFilter, languageFilter]);
+    const listContainerRef = React.useRef(null);
     if (!blockedInRange) return null;
 
     const detectWords = () => {
@@ -151,10 +153,18 @@ export const FilteredStats = () => {
                 {/*<Button onClick={detectWords}>Count word stats</Button>*/}
 
             </div>
-            <div className="blocked-items-container">
-                {filteredList.map((listItem, index) => {
-                    return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index} />
-                })}
+            <div className="blocked-items-container" ref={listContainerRef}>
+                <ViewportList
+                    viewportRef={listContainerRef}
+                    items={filteredList}
+                >
+                    {((listItem, index) => {
+                        return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index} />
+                    })}
+                </ViewportList>
+                {/*{filteredList.map((listItem, index) => {*/}
+                {/*    return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index} />*/}
+                {/*})}*/}
             </div>
         </div>
     );
