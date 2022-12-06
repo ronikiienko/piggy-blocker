@@ -14,17 +14,12 @@ export const OverallStats = () => {
     const totalAnalyzedNumber = ruList.all.length + notRuList.all.length;
     return (
         <div className="overall-stats-container">
-            <div
-                className="total-blocked"
-            >
-                Загалом: {ruList.all.length + notRuList.all.length}
-            </div>
             <div className="ru-not-ru-container">
                 <div>
                     <div
                         className="language-overall"
                     >
-                        Ru: {ruList.all.length} ({countPercentage(ruList.all.length, totalAnalyzedNumber)}%)
+                        Ru: {ruList.all.length} / {totalAnalyzedNumber} ({countPercentage(ruList.all.length, totalAnalyzedNumber)}%)
                     </div>
                     <div>
                         <div
@@ -59,7 +54,7 @@ export const OverallStats = () => {
                 <div>
                     <div className="language-overall"
                     >
-                        Не ru: {notRuList.all.length} ({countPercentage(notRuList.all.length, totalAnalyzedNumber)}%)
+                        Не ru: {notRuList.all.length} / {totalAnalyzedNumber} ({countPercentage(notRuList.all.length, totalAnalyzedNumber)}%)
                     </div>
                     <div>
                         <div
