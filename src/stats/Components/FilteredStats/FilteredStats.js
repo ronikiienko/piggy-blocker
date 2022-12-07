@@ -100,7 +100,7 @@ export const FilteredStats = () => {
         for (let ruItem of filteredList) {
             const title = ruItem[VIDEOS_DB_KEYS.title];
             if (analyzedTitles.includes(title)) {
-                console.log('title already analyzed', title);
+                // console.log('title already analyzed', title);
                 continue;
             }
             analyzedTitles.push(title);
@@ -111,7 +111,7 @@ export const FilteredStats = () => {
                 allWords[word] = allWords?.[word] ? allWords[word] + 1 : 1;
             }
         }
-        console.log(allWords);
+        // console.log(allWords);
         let sortable = [];
         for (let word in allWords) {
             // console.log(word, allWords[word]);
@@ -135,7 +135,7 @@ export const FilteredStats = () => {
                     setDateRange={setDateRange}
                     withHours={true}
                 />
-                <Button onClick={detectWords}>Count word stats</Button>
+                <Button onClick={detectWords} title="Перераховує кожне слово, яке було знайдене серед назв відфільтрованих відео, та скільки разів зустрічається. Виводиться в консоль (F12)">Порахувати статистику слів</Button>
                 <br />
                 <Select
                     label="Причина:"

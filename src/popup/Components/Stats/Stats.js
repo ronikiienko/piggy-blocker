@@ -8,10 +8,27 @@ import "./Stats.css"
 import {ListItem} from './ListItem';
 
 export const Stats = () => {
+    console.log('stats rerender');
     const recentRuList = useLiveQuery(() =>
             db[RU_LIST_DB_NAME]
                 .where(VIDEOS_DB_KEYS.timeWhenBlocked)
                 .above(Date.now() - 1000 * 60 * 60)
+                .reverse()
+                .toArray(),
+        [],
+        []
+    )
+    const dayRuList = useLiveQuery(() =>
+            db[RU_LIST_DB_NAME]
+                .where(VIDEOS_DB_KEYS.timeWhenBlocked)
+                .above(Date.now() - 1000 * 60 * 60 * 24)
+                .reverse()
+                .toArray(),
+        [],
+        []
+    )
+    const totalRuList = useLiveQuery(() =>
+            db[RU_LIST_DB_NAME]
                 .reverse()
                 .toArray(),
         [],
@@ -26,8 +43,12 @@ export const Stats = () => {
             >
                 Детальна статистика тут
             </Button>
-            <h2 className="main-title">Остання година:</h2>
-            <span className="recent-found-total">Знайдено рос. відео: {recentRuList.length}</span>
+            <div className="overall-stats-container">
+                <h2 className="main-title">Знайдено рос. відео:</h2>
+                <div className="recent-found-total">За останню годину: {recentRuList.length}</div>
+                <div className="recent-found-total">За останню добу: {dayRuList.length}</div>
+                <div className="recent-found-total">За весь час: {totalRuList.length}</div>
+            </div>
             <div ref={listContainerRef} className="recent-list-container">
                 <ViewportList
                     viewportRef={listContainerRef}

@@ -5,6 +5,7 @@ html {
     min-width: 800px;
 }
 body {
+    overflow-y: hidden;
     margin: 0;
     padding-block: 15px;
     padding-inline: 30px;

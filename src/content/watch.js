@@ -140,7 +140,7 @@ const checkVideoItem = async (videoItem) => {
     return {isRu: checkResult.isRu, id: videoId, title: videoTitle, link: videoLink};
 };
 const handleVideos = async (container, settings, isAuthorized) => {
-    console.log('handling videos watch');
+    console.log('handling videos watch', {container, settings, isAuthorized});
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
     // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-compact-video-renderer');
@@ -148,12 +148,14 @@ const handleVideos = async (container, settings, isAuthorized) => {
         console.log('could find videos', container);
     }
     for (const videoItem of videoItems) {
+        console.log('videoItem:', videoItem)
         if (!settings[SETTINGS_KEYS.blockOnWatch]) {
             removeFilter(videoItem);
             continue;
         }
         checkVideoItem(videoItem)
             .then(result => {
+                console.log('videoItemResult....', videoItem,result);
                 if (result.isRu) {
                     applyFilter(videoItem, 'home', settings);
                     if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({
@@ -173,7 +175,6 @@ export const handleWatchPage = async () => {
     console.clear()
     try {
         console.log('getting container');
-        await waitForNodeLoad(SELECTOR.CONTAINER_WATCH);
         await waitForNodeLoad(SELECTOR.IS_AUTH_BUTTONS + ' #button');
     } catch (e) {
         console.log(e);
@@ -182,10 +183,12 @@ export const handleWatchPage = async () => {
     const isAuthButtonsContainer = document.body.querySelector('#masthead-container #buttons');
     const authButtonsNumber = isAuthButtonsContainer.children.length;
     const isAuthorized = authButtonsNumber === 3;
-    const videoItemsContainer = document.querySelector(SELECTOR.CONTAINER_WATCH);
+    // sometimes containers are different so i get parent
+    const videoItemsContainer = document.body.querySelector('ytd-compact-video-renderer').parentElement
+    console.log(videoItemsContainer);
     let settings = await getSettings();
     if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer || !isAuthorized) {
-        console.log('could not handle home page', {settings, videoItemsContainer, authButtonsNumber, isAuthButtonsContainer, isAuthorized});
+        console.warn('could not handle home page', {settings, videoItemsContainer, authButtonsNumber, isAuthButtonsContainer, isAuthorized});
         return;
     }
     await handleVideos(videoItemsContainer, settings, isAuthorized);
@@ -198,13 +201,13 @@ export const handleWatchPage = async () => {
         }
     });
     let timeout;
-    videoItemsObserver = new MutationObserver(async function () {
-        console.log('mutation, watch page!!!!!!!!!!!!!!1');
+    videoItemsObserver = new MutationObserver(async function (mutation) {
+        console.log('mutation, watch page!!!!!!!!!!!!!!1', mutation);
         clearTimeout(timeout);
         // TODO possibly make wait time less
         timeout = setTimeout(() => {
             handleVideos(videoItemsContainer, settings, isAuthorized);
         }, 200);
     })
-    videoItemsObserver.observe(videoItemsContainer, {childList: true});
+    videoItemsObserver.observe(videoItemsContainer, {childList: true/*, attributes: true*/});
 };

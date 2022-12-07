@@ -1,6 +1,13 @@
 import {BLUR_INTENSITY_MAP, SETTINGS_KEYS} from '../common/consts';
 
 
+/**
+ *
+ * @param nodeSelector
+ * @param containerToSearchIn
+ * @param maxWaitingTime
+ * @returns {Promise<unknown>}
+ */
 export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTime) => {
     // TODO stop if could not find anything for a long time
     const waitTime = maxWaitingTime ? maxWaitingTime : 10000;
@@ -8,13 +15,14 @@ export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTim
 
     return new Promise((resolve, reject) => {
         const observer = new MutationObserver(function (mutation, observer) {
+            console.log(whereToSearch.querySelector(nodeSelector), nodeSelector);
             // console.log(mutation, 'MUTATION MUTATION', nodeSelector, whereToSearch);
-            if (Boolean(whereToSearch.querySelector(nodeSelector))) {
+            if (whereToSearch.querySelector(nodeSelector)) {
                 this.disconnect();
                 resolve();
             }
         });
-        if (Boolean(whereToSearch.querySelector(nodeSelector))) {
+        if (whereToSearch.querySelector(nodeSelector)) {
             resolve();
         } else {
             observer.observe(whereToSearch, {childList: true, subtree: true});

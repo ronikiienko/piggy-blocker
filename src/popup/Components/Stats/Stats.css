@@ -1,8 +1,10 @@
 .recent-list-container {
-    height: 425px;
+    height: 380px;
     overflow-y: auto;
 }
 .recent-found-total {
-    display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+}
+.overall-stats-container {
+    margin-block: 10px;
 }
