@@ -122,8 +122,10 @@ const checkVideoItem = async (videoItem) => {
         console.warn('could not get video data', videoItem, {videoTitle, channelName, videoLink, videoId});
         return false;
     }
-
+    // TODO when scroll down more, takes more time
+    // console.time(videoId);
     const checkResult = await checkIsVideoDataRu(videoTitle, channelName, videoId);
+    // console.timeEnd(videoId);
     if (checkResult?.reason && checkResult?.reason !== BLOCK_REASONS_MAP.inSessStorage) {
         addToDb({
             [VIDEOS_DB_KEYS.ytId]: videoId || null,
@@ -202,7 +204,7 @@ export const handleWatchPage = async () => {
         // TODO possibly make wait time less
         timeout = setTimeout(() => {
             handleVideos(videoItemsContainer, settings, isAuthorized);
-        }, 400);
+        }, 200);
     })
     videoItemsObserver.observe(videoItemsContainer, {childList: true});
 };

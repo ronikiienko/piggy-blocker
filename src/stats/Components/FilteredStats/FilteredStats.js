@@ -120,7 +120,7 @@ export const FilteredStats = () => {
         });
         let filtered = []
         filtered = sorted.filter((value) => {
-            return value[1] > 3 && value[0].match(/\p{L}/gu);
+            return value[1] > 2 && value[0].match(/\p{L}/gu);
         });
         console.log(filtered);
         // setUsedWords(allWords)

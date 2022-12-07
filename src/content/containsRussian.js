@@ -90,6 +90,7 @@ export const checkIsVideoDataRu = async (title, channelName, id) => {
             reasonDetails: null,
         };
     }
+
     // TODO maby not handle 'MIX' items
     if (channelName) {
         isRu = checkStringForRuChars(channelName, false);
@@ -102,6 +103,7 @@ export const checkIsVideoDataRu = async (title, channelName, id) => {
             };
         }
     }
+
 
     isRu = checkStringForCyrillic(title);
     if (isRu !== null) {
