@@ -105,8 +105,14 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
     clickedStore.add(videoId);
 };
 const checkVideoItem = async (videoItem) => {
-    if (!videoItem) return false;
-    if (getComputedStyle(videoItem).display === 'none') return false;
+    if (!videoItem) {
+        console.log('no video item', videoItem);
+        return false;
+    };
+    if (getComputedStyle(videoItem).display === 'none') {
+        console.log('video item display is none', videoItem);
+        return false;
+    };
     let videoTitle;
     let channelName;
     let videoLink;
@@ -172,10 +178,8 @@ const handleVideos = async (container, settings, isAuthorized) => {
 };
 
 export const handleWatchPage = async () => {
-    console.clear()
     try {
-        console.log('getting container');
-        await waitForNodeLoad(SELECTOR.IS_AUTH_BUTTONS + ' #button');
+        await waitForNodeLoad('#masthead-container #buttons' + ' #button');
     } catch (e) {
         console.log(e);
         return;
@@ -185,7 +189,7 @@ export const handleWatchPage = async () => {
     const isAuthorized = authButtonsNumber === 3;
     // sometimes containers are different so i get parent
     const videoItemsContainer = document.body.querySelector('ytd-compact-video-renderer').parentElement
-    console.log(videoItemsContainer);
+    console.log('video items container', videoItemsContainer);
     let settings = await getSettings();
     if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer || !isAuthorized) {
         console.warn('could not handle home page', {settings, videoItemsContainer, authButtonsNumber, isAuthButtonsContainer, isAuthorized});

@@ -130,8 +130,14 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
 
 const checkVideoItem = async (videoItem) => {
     // TODO return false if 'dismissed' video
-    if (!videoItem) return false;
-    if (getComputedStyle(videoItem).display === 'none') return false;
+    if (!videoItem) {
+        console.log('no video item', videoItem);
+        return false;
+    };
+    if (getComputedStyle(videoItem).display === 'none') {
+        console.log('video item display is none', videoItem);
+        return false;
+    };
     let titleNode;
     let videoLink;
     let videoId;
@@ -217,7 +223,7 @@ export const handleHomePage = async () => {
     console.log('handling home page');
     try {
         await waitForNodeLoad(SELECTOR.CONTAINER_HOME);
-        await waitForNodeLoad(SELECTOR.IS_AUTH_BUTTONS + ' #button');
+        await waitForNodeLoad('#masthead-container #buttons' + ' #button');
     } catch (e) {
         console.log(e);
         return;
