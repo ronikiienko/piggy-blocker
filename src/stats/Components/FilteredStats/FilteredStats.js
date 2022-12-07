@@ -69,7 +69,9 @@ export const FilteredStats = () => {
             .between(
                 new Date(dateRange.fromDate)?.getTime() || 0,
                 new Date(dateRange.toDate)?.getTime() || Infinity,
+
             )
+            .reverse()
             .toArray(),
         [dateRange.fromDate, dateRange.toDate, languageFilter],
         []
@@ -87,7 +89,7 @@ export const FilteredStats = () => {
                     )
                 )
             );
-        }).reverse());
+        }));
     }, [blockedInRange, reasonFilter, searchFilter, languageFilter]);
     const listContainerRef = React.useRef(null);
     if (!blockedInRange) return null;

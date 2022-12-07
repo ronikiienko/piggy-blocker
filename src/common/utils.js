@@ -10,6 +10,16 @@ export const countPercentage = (number, from) => {
     return Math.round(number / from * 100);
 };
 
+export const getHoursFromDate = (date) => {
+    if (!date) return false;
+    let dateObj;
+    try {
+        dateObj = new Date(date);
+    } catch (e) {
+        return false;
+    }
+    return `${('0' + dateObj.getHours()).slice(-2)}:${('0' + dateObj.getMinutes()).slice(-2)}`
+}
 export const getReadableDate = (date) => {
     if (!date) return false;
     let dateObj;

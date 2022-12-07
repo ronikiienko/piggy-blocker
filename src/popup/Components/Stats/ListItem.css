@@ -1,0 +1,26 @@
+.list-item-container {
+    font-size: 12px;
+    margin: auto;
+    background-color: var(--splitters-gray);
+    border-block: 1px solid var(--bg-color);
+    margin-block: 3px;
+    padding-block: 5px;
+    border-radius: 4px;
+
+}
+.list-item-channel-name {
+    /*border-left: 1px solid var(--bg-color);*/
+    margin-left: 15px;
+    color: var(--text-secondary);
+}
+.list-item-block-details {
+    width: fit-content;
+    margin-bottom: 2px;
+}
+.list-item-block-reason {
+    margin-left: 10px;
+    color: var(--text-secondary)
+}
+.list-item-title-link {
+
+}

@@ -25,7 +25,7 @@ const checkStringForMarkerWords = (stringToCheck) => {
     let foundMarker = null;
     let wordFound;
     for (let word of words) {
-        word = word.toLowerCase().replace(/[.,()!]/g, '')
+        word = word.toLowerCase().replace(/[.,()!:"']/g, '')
         if (ruWords.has(word)) {
             // console.error('FOUND', stringToCheck,'7777777777777', word);
             foundMarker = true;
