@@ -154,7 +154,6 @@ const handleVideos = async (container, settings, isAuthorized) => {
         console.log('could find videos', container);
     }
     for (const videoItem of videoItems) {
-        console.log('videoItem:', videoItem)
         if (!settings[SETTINGS_KEYS.blockOnWatch]) {
             removeFilter(videoItem);
             continue;
@@ -178,7 +177,10 @@ const handleVideos = async (container, settings, isAuthorized) => {
 };
 
 export const handleWatchPage = async () => {
+    console.clear()
+    console.log('handling watch page')
     try {
+        await waitForNodeLoad('ytd-compact-video-renderer')
         await waitForNodeLoad('#masthead-container #buttons' + ' #button');
     } catch (e) {
         console.log(e);
@@ -189,7 +191,6 @@ export const handleWatchPage = async () => {
     const isAuthorized = authButtonsNumber === 3;
     // sometimes containers are different so i get parent
     const videoItemsContainer = document.body.querySelector('ytd-compact-video-renderer').parentElement
-    console.log('video items container', videoItemsContainer);
     let settings = await getSettings();
     if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer || !isAuthorized) {
         console.warn('could not handle home page', {settings, videoItemsContainer, authButtonsNumber, isAuthButtonsContainer, isAuthorized});

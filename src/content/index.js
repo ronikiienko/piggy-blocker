@@ -15,7 +15,6 @@ const handlePage = async (url, init) => {
     const pathname = new URL(url).pathname;
     if (pathname === '/') {
         if (!init) await wait(2000)
-        console.log('handling watch page');
         disconnectAllHome()
         await handleHomePage();
     } else {
@@ -23,7 +22,7 @@ const handlePage = async (url, init) => {
         disconnectAllHome()
     }
     if (pathname.startsWith('/watch') && url !== prevUrl) {
-        console.log('handling watch page');
+        if (!init) await wait(2000)
         disconnectAllWatch()
         await handleWatchPage()
     } else {
