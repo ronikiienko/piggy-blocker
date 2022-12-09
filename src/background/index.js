@@ -1,19 +1,14 @@
-import {CMD_ADD_TO_NOT_RU_LIST, CMD_ADD_TO_RU_LIST, CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
+import {CMD_ADD_TO_NOT_RU_LIST, CMD_ADD_TO_RU_LIST, CMD_TAB_UPDATE} from '../common/consts';
 import {addToNotRuList, addToRuList} from '../commonBackground/db';
 
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
     switch (message.cmd) {
-        case CMD_GET_CURRENT_TAB:
-            chrome.tabs.query({active: true, currentWindow: true})
-                .then(tabs => sendResponse(tabs[0]))
-                .catch(e => console.log(e));
-            return true;
         case CMD_ADD_TO_RU_LIST:
-            addToRuList(message?.data)
+            addToRuList(message?.data);
             break;
         case CMD_ADD_TO_NOT_RU_LIST:
-            addToNotRuList(message?.data)
+            addToNotRuList(message?.data);
             break;
     }
 });

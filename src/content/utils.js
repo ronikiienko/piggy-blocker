@@ -4,8 +4,8 @@ import {BLUR_INTENSITY_MAP, SETTINGS_KEYS} from '../common/consts';
 /**
  *
  * @param nodeSelector
- * @param containerToSearchIn
- * @param maxWaitingTime
+ * @param [containerToSearchIn]
+ * @param [maxWaitingTime]
  * @returns {Promise<unknown>}
  */
 export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTime) => {
@@ -13,7 +13,7 @@ export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTim
     const whereToSearch = containerToSearchIn ? containerToSearchIn : document.body;
 
     return new Promise((resolve, reject) => {
-        const observer = new MutationObserver(function (mutation, observer) {
+        const observer = new MutationObserver(function () {
             // console.log(whereToSearch.querySelector(nodeSelector), nodeSelector);
             // console.log(mutation, 'MUTATION MUTATION', nodeSelector, whereToSearch);
             if (whereToSearch.querySelector(nodeSelector)) {

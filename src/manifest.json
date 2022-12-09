@@ -34,8 +34,6 @@
     ],
     "permissions": [
         "storage",
-        "tabs",
-        "activeTab",
         "webNavigation",
         "unlimitedStorage"
     ]

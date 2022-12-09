@@ -1,35 +1,35 @@
-import {CMD_GET_CURRENT_TAB, CMD_TAB_UPDATE} from '../common/consts';
+import {CMD_TAB_UPDATE} from '../common/consts';
 import {wait} from '../common/utils';
 import {disconnectAllHome, handleHomePage} from './home';
 import {disconnectAllWatch, handleWatchPage} from './watch';
 // TODO sometimes videos arent being analyzed
 // TODO possibly handle hashtag pages
 
-let isObservingShorts = false;
+// let isObservingShorts = false;
 
 let prevUrl;
 // setInterval(() => console.log(prevUrl), 100)
 const handlePage = async (url, init) => {
-    if (prevUrl === url) return
+    if (prevUrl === url) return;
     // console.log('url changed', 'prevUrl', prevUrl, 'newUrl', url);
     const pathname = new URL(url).pathname;
     if (pathname === '/') {
-        if (!init) await wait(2000)
-        disconnectAllHome()
+        if (!init) await wait(2000);
+        disconnectAllHome();
         await handleHomePage();
     } else {
         // console.log('home queue killed');
-        disconnectAllHome()
+        disconnectAllHome();
     }
     if (pathname.startsWith('/watch') && url !== prevUrl) {
-        if (!init) await wait(2000)
-        disconnectAllWatch()
-        await handleWatchPage()
+        if (!init) await wait(2000);
+        disconnectAllWatch();
+        await handleWatchPage();
     } else {
         // console.log('watch queue killed',)
-        disconnectAllWatch()
+        disconnectAllWatch();
     }
-    prevUrl = url
+    prevUrl = url;
     // if (pathname.startsWith('/shorts') && !isObservingShorts && settings[SETTINGS_KEYS.blockOnShorts]) {
     //     isObservingShorts = true;
     //     await handleShortsPage();
@@ -50,12 +50,8 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 });
 
-chrome.runtime.sendMessage({cmd: CMD_GET_CURRENT_TAB}, (tab) => {
-    if (tab.url) {
-        handlePage(tab.url, true)
-            .catch(e => console.log(e));
-    }
-});
+handlePage(location.href, true)
+    .catch(e => console.log(e));
 
 // setInterval(() => {
 //     const keydown = new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true});
