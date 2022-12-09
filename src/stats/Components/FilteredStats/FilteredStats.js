@@ -55,7 +55,7 @@ const reasonSelectOptions = [
     },
 ];
 export const FilteredStats = () => {
-    console.log('rerender');
+    // console.log('rerender');
     const [dateRange, setDateRange] = React.useState(DEFAULT_FILTERS.dateRange);
     const [reasonFilter, setReasonFilter] = React.useState(DEFAULT_FILTERS.reasonFilter);
     const [searchFilter, setSearchFilter] = React.useState(DEFAULT_FILTERS.searchFilter);

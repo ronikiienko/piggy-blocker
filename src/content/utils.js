@@ -14,7 +14,7 @@ export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTim
 
     return new Promise((resolve, reject) => {
         const observer = new MutationObserver(function (mutation, observer) {
-            console.log(whereToSearch.querySelector(nodeSelector), nodeSelector);
+            // console.log(whereToSearch.querySelector(nodeSelector), nodeSelector);
             // console.log(mutation, 'MUTATION MUTATION', nodeSelector, whereToSearch);
             if (whereToSearch.querySelector(nodeSelector)) {
                 this.disconnect();

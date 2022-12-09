@@ -84,7 +84,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
         return;
     }
     let menuItems = document.querySelectorAll('ytd-menu-service-item-renderer');
-    console.log('blocking.....', videoItem, menuItems.length);
+    // console.log('blocking.....', videoItem, menuItems.length);
 
     const clickEvent = new Event('click', {bubbles: false});
     // let menuItemsInnerText = [];
@@ -120,7 +120,7 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
         return;
     }
     if (clickedStore.check(videoId)) {
-        console.log('element checked');
+        // console.log('element checked');
         return;
     }
     // sometimes when popup is being closed and immediately opened there can be many elements,
@@ -142,7 +142,7 @@ const checkVideoItem = async (videoItem) => {
         return false;
     };
     if (getComputedStyle(videoItem).display === 'none') {
-        console.log('video item display is none', videoItem);
+        // console.log('video item display is none', videoItem);
         return false;
     };
     let titleNode;
@@ -224,7 +224,7 @@ const handleVideos = async (container, settings, isAuthorized) => {
     }
 };
 export const handleHomePage = async () => {
-    console.log('handling home page');
+    // console.log('handling home page');
     try {
         await waitForNodeLoad(SELECTOR.CONTAINER_HOME);
         await waitForNodeLoad('#masthead-container #buttons' + ' #button');
@@ -253,7 +253,7 @@ export const handleHomePage = async () => {
     });
     let timeout;
     videoItemsObserver = new MutationObserver(async function (mutations) {
-        console.log('mutation!!!!!!!!!!!!!!1');
+        // console.log('mutation!!!!!!!!!!!!!!1');
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             handleVideos(videoItemsContainer, settings, isAuthorized);

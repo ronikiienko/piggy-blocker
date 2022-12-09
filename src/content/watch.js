@@ -34,7 +34,7 @@ const blockVideoQueue = new Queue(async ({videoItem, settings, videoId}) => {
 
 let videoItemsObserver;
 export const disconnectAllWatch = () => {
-    console.log('disconnecting from watch')
+    // console.log('disconnecting from watch')
     videoItemsObserver?.disconnect();
     blockVideoQueue.clear();
     clickedStore.clear();
@@ -77,7 +77,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     }
     let menuItems = document.querySelectorAll('ytd-menu-service-item-renderer');
 
-    console.log('blocking.....', videoItem, menuItems.length, 'listeners:');
+    // console.log('blocking.....', videoItem, menuItems.length, 'listeners:');
     const clickEvent = new Event('click', {bubbles: false});
     if (menuItems?.length <= actionItemMenuNumber) {
         popupOpenButton.dispatchEvent(clickEvent);
@@ -114,7 +114,7 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
         return;
     }
     if (clickedStore.check(videoId)) {
-        console.log('element clicked');
+        // console.log('element clicked');
         return;
     }
     let actionItemMenuNumber;
@@ -132,7 +132,7 @@ const checkVideoItem = async (videoItem) => {
         return false;
     };
     if (getComputedStyle(videoItem).display === 'none') {
-        console.log('video item display is none', videoItem);
+        // console.log('video item display is none', videoItem);
         return false;
     };
     let videoTitle;
@@ -168,7 +168,7 @@ const checkVideoItem = async (videoItem) => {
     return {isRu: checkResult.isRu, id: videoId, title: videoTitle, link: videoLink};
 };
 const handleVideos = async (container, settings, isAuthorized) => {
-    console.log('handling videos watch', {container, settings, isAuthorized});
+    // console.log('handling videos watch', {container, settings, isAuthorized});
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
     // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-compact-video-renderer');
@@ -200,8 +200,8 @@ const handleVideos = async (container, settings, isAuthorized) => {
 // TODO when opening video while videos are being blocked, problems occure
 export const handleWatchPage = async () => {
 
-    console.clear()
-    console.log('handling watch page')
+    // console.clear()
+    // console.log('handling watch page')
     try {
         await waitForNodeLoad('ytd-compact-video-renderer')
         await waitForNodeLoad('#masthead-container #buttons' + ' #button');
@@ -230,7 +230,7 @@ export const handleWatchPage = async () => {
     });
     let timeout;
     videoItemsObserver = new MutationObserver(async function (mutation) {
-        console.log('mutation, watch page!!!!!!!!!!!!!!1', mutation);
+        // console.log('mutation, watch page!!!!!!!!!!!!!!1', mutation);
         clearTimeout(timeout);
         // TODO possibly make wait time less
         timeout = setTimeout(() => {

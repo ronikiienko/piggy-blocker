@@ -11,14 +11,14 @@ let prevUrl;
 // setInterval(() => console.log(prevUrl), 100)
 const handlePage = async (url, init) => {
     if (prevUrl === url) return
-    console.log('url changed', 'prevUrl', prevUrl, 'newUrl', url);
+    // console.log('url changed', 'prevUrl', prevUrl, 'newUrl', url);
     const pathname = new URL(url).pathname;
     if (pathname === '/') {
         if (!init) await wait(2000)
         disconnectAllHome()
         await handleHomePage();
     } else {
-        console.log('home queue killed');
+        // console.log('home queue killed');
         disconnectAllHome()
     }
     if (pathname.startsWith('/watch') && url !== prevUrl) {
@@ -26,7 +26,7 @@ const handlePage = async (url, init) => {
         disconnectAllWatch()
         await handleWatchPage()
     } else {
-        console.log('watch queue killed',)
+        // console.log('watch queue killed',)
         disconnectAllWatch()
     }
     prevUrl = url

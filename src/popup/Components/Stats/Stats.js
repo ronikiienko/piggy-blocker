@@ -8,7 +8,7 @@ import "./Stats.css"
 import {ListItem} from './ListItem';
 
 export const Stats = () => {
-    console.log('stats rerender');
+    // console.log('stats rerender');
     const recentRuList = useLiveQuery(() =>
             db[RU_LIST_DB_NAME]
                 .where(VIDEOS_DB_KEYS.timeWhenBlocked)
