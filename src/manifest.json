@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Youtube no russian",
+    "name": "Piggy blocker",
     "description": "Clears out russian content from Youtube",
     "version": "0.0.1",
     "background": {

@@ -22,3 +22,4 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
     chrome.tabs.sendMessage(details.tabId, {details, cmd: CMD_TAB_UPDATE})
         .catch(e => console.log(e));
 });
+
