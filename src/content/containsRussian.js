@@ -91,7 +91,7 @@ export const checkIsVideoDataRu = async (title, channelName, id) => {
         };
     }
 
-    // TODO maby not handle 'MIX' items
+
     if (channelName) {
         isRu = checkStringForRuChars(channelName, false);
         if (isRu !== null) {

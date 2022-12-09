@@ -9,7 +9,6 @@ import {BLUR_INTENSITY_MAP, SETTINGS_KEYS} from '../common/consts';
  * @returns {Promise<unknown>}
  */
 export const waitForNodeLoad = (nodeSelector, containerToSearchIn, maxWaitingTime) => {
-    // TODO stop if could not find anything for a long time
     const waitTime = maxWaitingTime ? maxWaitingTime : 10000;
     const whereToSearch = containerToSearchIn ? containerToSearchIn : document.body;
 
@@ -85,8 +84,6 @@ export const applyFilter = (node, context, settings) => {
             filter = 'blur(4px) opacity(30%)';
     }
     node.style.filter = filter;
-
-    // TODO try to find way to hide videos
     // node.style.visibility = 'hidden',
     //     node.style.borderCollapse = 'collapse'
 };

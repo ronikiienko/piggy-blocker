@@ -22,6 +22,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // different content scripts for different urls for same reason (need to update page to change script)
 // popstate in content script not fires
 chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
+    // console.log('fskadjfkasldjfkasjdfkasjdkfjsdaf');
     if (!details.url.startsWith('https://www.youtube.com/')) return;
     chrome.tabs.sendMessage(details.tabId, {details, cmd: CMD_TAB_UPDATE})
         .catch(e => console.log(e));

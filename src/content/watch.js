@@ -1,6 +1,5 @@
 import {
     BLOCK_REASONS_MAP,
-    SELECTOR,
     SETTINGS_KEYS,
     SETTINGS_STORAGE_KEY,
     VIDEOS_DB_KEYS,
@@ -14,10 +13,24 @@ import {addToDb} from './containsRussianStats';
 import {applyFilter, removeFilter, waitForNodeLoad} from './utils';
 import {clickedStore} from './videoStore';
 
-
 const blockVideoQueue = new Queue(async ({videoItem, settings, videoId}) => {
     await blockVideoItem(videoItem, settings, videoId);
 });
+// TODO ekkekekekekek
+// let scrollPosition = null;
+// blockVideoQueue.onQueueStart(() => {
+//     document.body.style.overflow = 'hidden'
+//     if (!scrollPosition) scrollPosition = document.documentElement.scrollTop;
+// })
+// let scrollTimeout;
+// blockVideoQueue.onQueueFinish(() => {
+//     clearTimeout(scrollTimeout);
+//     scrollTimeout = setTimeout(() => {
+//         document.body.style.overflow = 'auto'
+//         window.scrollTo(0, scrollPosition)
+//     }, 2000);
+// })
+
 
 let videoItemsObserver;
 export const disconnectAllWatch = () => {
@@ -64,17 +77,26 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     }
     let menuItems = document.querySelectorAll('ytd-menu-service-item-renderer');
 
-    console.log('blocking.....', videoItem, menuItems.length);
+    console.log('blocking.....', videoItem, menuItems.length, 'listeners:');
     const clickEvent = new Event('click', {bubbles: false});
-    const prevScrollPosition = document.documentElement.scrollTop;
     if (menuItems?.length <= actionItemMenuNumber) {
         popupOpenButton.dispatchEvent(clickEvent);
         popup.style.opacity = 1;
         return;
     }
+    const prevScrollPosition = document.documentElement.scrollTop;
+
+    const container = document.body
+
+    container.style.overflow = 'hidden'
+    // container.style.position = 'fixed'
     menuItems[actionItemMenuNumber].dispatchEvent(clickEvent);
+    container.style.overflow = 'auto'
+    // container.style.position = 'static'
+
     popup.style.opacity = 1;
     wait(50).then(() => window.scrollTo(0, prevScrollPosition));
+    // window.scrollTo(0, prevScrollPosition)
 };
 
 const blockVideoItem = async (videoItem, settings, videoId) => {
@@ -96,8 +118,8 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
         return;
     }
     let actionItemMenuNumber;
-    if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 4;
-    if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 5;
+    if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 3;
+    if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 4;
     if (!actionItemMenuNumber) return;
     const popupOpenButton = await openPopup(videoItem);
     if (!popupOpenButton) return;
@@ -160,7 +182,7 @@ const handleVideos = async (container, settings, isAuthorized) => {
         }
         checkVideoItem(videoItem)
             .then(result => {
-                console.log('videoItemResult....', videoItem,result);
+                // console.log('videoItemResult....', videoItem,result);
                 if (result.isRu) {
                     applyFilter(videoItem, 'home', settings);
                     if (isAuthorized && whatToDo !== WHAT_TO_DO_MAP.blur) blockVideoQueue.push({
@@ -175,8 +197,9 @@ const handleVideos = async (container, settings, isAuthorized) => {
             .catch(console.log);
     }
 };
-
+// TODO when opening video while videos are being blocked, problems occure
 export const handleWatchPage = async () => {
+
     console.clear()
     console.log('handling watch page')
     try {

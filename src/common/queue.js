@@ -2,9 +2,10 @@ import {wait} from './utils';
 
 
 export class Queue {
-    // TODO eslint doesnt like queue declare
     queue = [];
     inProcess = false;
+
+    eventHandlers = {};
 
     constructor(callback) {
         this.callback = callback;
@@ -12,6 +13,7 @@ export class Queue {
 
     async #launchQueue() {
         if (!this.queue.length) {
+            if (typeof this.eventHandlers?.onQueueFinish === 'function') this?.eventHandlers?.onQueueFinish()
             this.inProcess = false;
             return;
         }
@@ -24,6 +26,7 @@ export class Queue {
     push(queueItem) {
         this.queue.push(queueItem);
         if (!this.inProcess) {
+            if (typeof this.eventHandlers?.onQueueStart === 'function') this.eventHandlers.onQueueStart()
             this.#launchQueue().catch(console.log);
         }
     }
@@ -34,6 +37,14 @@ export class Queue {
     }
     getQueue() {
         return this.queue
+    }
+
+
+    onQueueFinish(handler) {
+        this.eventHandlers.onQueueFinish = handler
+    }
+    onQueueStart(handler) {
+        this.eventHandlers.onQueueStart = handler
     }
 }
 

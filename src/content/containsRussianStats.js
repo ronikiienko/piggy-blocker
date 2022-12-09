@@ -63,7 +63,6 @@ const stats = {
 
 
 export const addToDb = (data, isRu) => {
-    // TODO add reason to notru
     if (isRu) {
         chrome.runtime.sendMessage({
             cmd: CMD_ADD_TO_RU_LIST,

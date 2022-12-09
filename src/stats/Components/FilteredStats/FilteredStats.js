@@ -42,7 +42,7 @@ const reasonSelectOptions = [
         value: REASON_FILTER_KEYS.byCharsChannelName,
     },
     {
-        label: 'Бо гугл так вирішив',
+        label: 'Google translate',
         value: REASON_FILTER_KEYS.google,
     },
     {

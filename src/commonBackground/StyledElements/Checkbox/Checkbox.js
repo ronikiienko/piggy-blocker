@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import './Checkbox.css';
 
-// TODO find way to paint select time on input
-
 export const Checkbox = ({onChange, id, checked, label, disabled}) => {
     return (
         <div className="checkbox-container">

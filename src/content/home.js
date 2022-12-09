@@ -22,6 +22,14 @@ const blockVideoQueue = new Queue(async ({videoItem, settings, videoId}) => {
     await blockVideoItem(videoItem, settings, videoId);
 });
 
+// blockVideoQueue.onQueueEmpty((asdfasdf) => {
+//
+// })
+//
+// blockVideoQueue.on('finish', () => {
+//
+// })
+
 export const getQueueHome = () => {
     return blockVideoQueue.getQueue();
 };
@@ -129,7 +137,6 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
 };
 
 const checkVideoItem = async (videoItem) => {
-    // TODO return false if 'dismissed' video
     if (!videoItem) {
         console.log('no video item', videoItem);
         return false;
@@ -163,7 +170,6 @@ const checkVideoItem = async (videoItem) => {
     }
     const titleText = titleNode?.innerText;
     if (!titleText || !videoLink || !videoId/* || !channelName*/) {
-        // TODO when change mode from "transparent" to blur, cant get some video data
         console.warn('could not get video data', videoItem, {titleNode, channelName, videoLink, videoId});
         return false;
     }
@@ -192,7 +198,6 @@ const checkVideoItem = async (videoItem) => {
 
 const handleVideos = async (container, settings, isAuthorized) => {
     let whatToDo = settings[SETTINGS_KEYS.whatToDo];
-    // TODO maby change to more efficient selector
     const videoItems = container.getElementsByTagName('ytd-rich-item-renderer');
     if (!videoItems || !whatToDo) {
         console.log('could not handle videos', container);
@@ -218,7 +223,6 @@ const handleVideos = async (container, settings, isAuthorized) => {
             .catch(e => console.log(e));
     }
 };
-// TODO when resizing screen everything breaks
 export const handleHomePage = async () => {
     console.log('handling home page');
     try {
