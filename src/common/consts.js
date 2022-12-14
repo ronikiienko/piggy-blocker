@@ -44,11 +44,6 @@ export const SELECTOR = {
     CONTAINER_SHORTS: '#shorts-inner-container',
 };
 
-
-export const CMD_ADD_TO_BLOCKED_STATS = 'CMD_ADD_TO_BLOCKED_STATS';
-
-export const BLOCKED_VIDEOS_DB_NAME = 'blockedVideos';
-
 export const VIDEOS_DB_KEYS = {
     ytId: 'ytId',
     title: 'title',
@@ -104,7 +99,7 @@ export const DEFAULT_FILTERS = {
 export const ALARM_SEND_TO_BACKEND = {
     name: 'ALARM_SEND_TO_BACKEND',
     alarmCreateInfo: {
-        delayInMinutes: 20,
+        delayInMinutes: 0.1,
         periodInMinutes: 60 * 4,
     },
 };

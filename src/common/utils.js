@@ -28,13 +28,7 @@ export const getReadableDate = (date) => {
     } catch (e) {
         return false;
     }
-
     return `${('0' + dateObj.getHours()).slice(-2)}:${('0' + dateObj.getMinutes()).slice(-2)}, ${monthNames[dateObj?.getMonth()]} ${dateObj?.getDate()}`;
-};
-
-export const isToday = (dateUnix) => {
-    const date = new Date(dateUnix);
-    return date.toDateString() === (new Date()).toDateString();
 };
 
 export const generateId = () => {

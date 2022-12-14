@@ -13,6 +13,7 @@ import {addToDb} from './containsRussianStats';
 import {applyFilter, removeFilter, waitForNodeLoad} from './utils';
 import {clickedStore} from './videoStore';
 
+
 const blockVideoQueue = new Queue(async ({videoItem, settings, videoId}) => {
     await blockVideoItem(videoItem, settings, videoId);
 });
@@ -76,7 +77,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
         return;
     }
     let menuItems = document.querySelectorAll('ytd-menu-service-item-renderer');
-
+    console.log(menuItems.length, menuItems);
     // console.log('blocking.....', videoItem, menuItems.length, 'listeners:');
     const clickEvent = new Event('click', {bubbles: false});
     if (menuItems?.length <= actionItemMenuNumber) {
@@ -86,16 +87,18 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     }
     const prevScrollPosition = document.documentElement.scrollTop;
 
-    const container = document.body
+    const container = document.body;
 
-    container.style.overflow = 'hidden'
+    container.style.overflow = 'hidden';
     // container.style.position = 'fixed'
     menuItems[actionItemMenuNumber].dispatchEvent(clickEvent);
-    container.style.overflow = 'auto'
     // container.style.position = 'static'
 
     popup.style.opacity = 1;
-    wait(50).then(() => window.scrollTo(0, prevScrollPosition));
+    wait(200).then(() => {
+        window.scrollTo(0, prevScrollPosition);
+    });
+    wait(2000).then(() => container.style.overflow = 'auto');
     // window.scrollTo(0, prevScrollPosition)
 };
 
@@ -118,6 +121,7 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
         return;
     }
     let actionItemMenuNumber;
+    //sometimes numbers are 1 and 2 (when video has something turned off)
     if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 3;
     if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 4;
     if (!actionItemMenuNumber) return;

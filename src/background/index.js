@@ -8,7 +8,7 @@ import {
     UID_STORAGE_KEY,
     VIDEOS_DB_KEYS,
 } from '../common/consts';
-import {generateId} from '../common/utils';
+import {generateId, getReadableDate} from '../common/utils';
 import {addToNotRuList, addToRuList, db} from '../commonBackground/db';
 
 
@@ -27,18 +27,19 @@ chrome.runtime.onMessage.addListener((message) => {
 // different content scripts for different urls for same reason (need to update page to change script)
 // popstate in content script not fires
 chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
-    // console.log('fskadjfkasldjfkasjdfkasjdkfjsdaf');
     if (!details.url.startsWith('https://www.youtube.com/')) return;
     chrome.tabs.sendMessage(details.tabId, {details, cmd: CMD_TAB_UPDATE})
         .catch(e => console.log(e));
 });
 const sendStatsToBackend = (videosArray, ru) => {
+    // console.log('videos:', videosArray, ru);
     return fetch(`http://localhost:5000/${ru ? 'addruvideos' : 'addnotruvideos'}`,
         {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
+            // mode: 'no-cors',
             method: 'POST',
             body: JSON.stringify({
                 videos: videosArray,
@@ -94,7 +95,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                 .catch((e) => console.log('could not send :/', e));
     }
 });
-
+chrome.alarms.get(ALARM_SEND_TO_BACKEND.name, async (alarm) => {
+    const date = getReadableDate(alarm.scheduledTime);
+    console.log(alarm, date);
+});
 
 
 

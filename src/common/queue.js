@@ -1,6 +1,3 @@
-import {wait} from './utils';
-
-
 export class Queue {
     queue = [];
     inProcess = false;
@@ -13,7 +10,7 @@ export class Queue {
 
     async #launchQueue() {
         if (!this.queue.length) {
-            if (typeof this.eventHandlers?.onQueueFinish === 'function') this?.eventHandlers?.onQueueFinish()
+            // if (typeof this.eventHandlers?.onQueueFinish === 'function') this?.eventHandlers?.onQueueFinish()
             this.inProcess = false;
             return;
         }
@@ -26,7 +23,7 @@ export class Queue {
     push(queueItem) {
         this.queue.push(queueItem);
         if (!this.inProcess) {
-            if (typeof this.eventHandlers?.onQueueStart === 'function') this.eventHandlers.onQueueStart()
+            // if (typeof this.eventHandlers?.onQueueStart === 'function') this.eventHandlers.onQueueStart()
             this.#launchQueue().catch(console.log);
         }
     }
@@ -35,17 +32,18 @@ export class Queue {
         this.queue = [];
         this.inProcess = false;
     }
+
     getQueue() {
-        return this.queue
+        return this.queue;
     }
 
 
-    onQueueFinish(handler) {
-        this.eventHandlers.onQueueFinish = handler
-    }
-    onQueueStart(handler) {
-        this.eventHandlers.onQueueStart = handler
-    }
+    // onQueueFinish(handler) {
+    //     this.eventHandlers.onQueueFinish = handler
+    // }
+    // onQueueStart(handler) {
+    //     this.eventHandlers.onQueueStart = handler
+    // }
 }
 
 // const queueCallback = async (params) => {

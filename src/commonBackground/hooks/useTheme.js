@@ -22,7 +22,7 @@ export const useTheme = () => {
             const userTheme = prevSettings[SETTINGS_KEYS.theme] === 'dark' ? 'light' : 'dark';
             return {...prevSettings, [SETTINGS_KEYS.theme]: userTheme};
         });
-    }, []);
+    }, [updateSettings]);
 
     return [theme, toggleTheme];
 };

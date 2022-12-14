@@ -1,10 +1,10 @@
 import {
-    VIDEOS_DB_KEYS,
+    BLOCK_REASONS_MAP,
     SELECTOR,
     SETTINGS_KEYS,
     SETTINGS_STORAGE_KEY,
+    VIDEOS_DB_KEYS,
     WHAT_TO_DO_MAP,
-    BLOCK_REASONS_MAP,
 } from '../common/consts';
 import {getSettings} from '../common/getSettings';
 import {Queue} from '../common/queue';
@@ -12,7 +12,7 @@ import {wait} from '../common/utils';
 import {checkIsVideoDataRu} from './containsRussian';
 import {addToDb} from './containsRussianStats';
 import {applyFilter, removeFilter, waitForNodeLoad} from './utils';
-import {clickedStore, isRuStore} from './videoStore';
+import {clickedStore} from './videoStore';
 
 
 // const blockVideoQueue = queue(async ({videoItem, settings}) => {
@@ -45,7 +45,7 @@ export const disconnectAllHome = () => {
 const openPopup = async (videoItem) => {
     if (!videoItem) {
         console.log('no video item provided, could not open popup');
-        return false
+        return false;
     }
     try {
         await waitForNodeLoad('#details #button', videoItem);
@@ -62,7 +62,7 @@ const openPopup = async (videoItem) => {
 const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton) => {
     if (!videoItem || !actionItemMenuNumber || !popupOpenButton) {
         console.log('could not click popup option');
-        return
+        return;
     }
     try {
         await waitForNodeLoad('tp-yt-iron-dropdown');
@@ -73,7 +73,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     let popup = document.querySelector('tp-yt-iron-dropdown');
     if (!popup) {
         console.log('could not click popup option (could not find popup)');
-        return
+        return;
     }
     popup.style.opacity = 0;
     try {
@@ -102,13 +102,12 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     popup.style.opacity = 1;
     // console.log('CLICKINGGGGGGG', videoItem, menuItems.length, menuItems, menuItemsInnerText, prevScrollPosition);
     wait(50).then(() => window.scrollTo(0, prevScrollPosition));
-    // popupOpenButton.dispatchEvent(clickEvent)
 };
 //  TODO channel name in shorts is huge with /n /n /n /n /n
 const blockVideoItem = async (videoItem, settings, videoId) => {
     if (!videoItem || !settings || !videoId) {
         console.log('could not block video item');
-        return
+        return;
     }
     if (videoItem.classList.contains('ytd-rich-shelf-renderer')) return;
     const whatToDo = settings?.[SETTINGS_KEYS.whatToDo];
@@ -140,11 +139,13 @@ const checkVideoItem = async (videoItem) => {
     if (!videoItem) {
         console.log('no video item', videoItem);
         return false;
-    };
+    }
+    ;
     if (getComputedStyle(videoItem).display === 'none') {
         // console.log('video item display is none', videoItem);
         return false;
-    };
+    }
+    ;
     let titleNode;
     let videoLink;
     let videoId;
@@ -239,7 +240,7 @@ export const handleHomePage = async () => {
     let settings = await getSettings();
     if (!settings || !videoItemsContainer || !authButtonsNumber || !isAuthButtonsContainer || !isAuthorized) {
         console.log('could not handle home page');
-        return
+        return;
     }
     await handleVideos(videoItemsContainer, settings, isAuthorized);
     chrome.storage.onChanged.addListener(async (changes) => {
