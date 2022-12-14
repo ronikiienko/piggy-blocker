@@ -11,6 +11,8 @@ export const SETTINGS_KEYS = {
     theme: 'theme',
 };
 
+export const UID_STORAGE_KEY = 'uid';
+
 export const WHAT_TO_DO_MAP = {
     blur: 'blur',
     notInterested: 'notInterested',
@@ -55,6 +57,7 @@ export const VIDEOS_DB_KEYS = {
     reason: 'reason',
     reasonDetails: 'reasonDetails',
     timeWhenBlocked: 'timeWhenBlocked',
+    synced: 'synced',
 };
 
 export const BLOCK_REASONS_MAP = {
@@ -88,7 +91,7 @@ export const REASON_FILTER_KEYS = {
     byCharsChannelName: 'byCharsChannelName',
     markerWords: 'markerWords',
     google: 'google',
-    noCyrillic: 'noCyrillic'
+    noCyrillic: 'noCyrillic',
 };
 
 export const DEFAULT_FILTERS = {
@@ -96,5 +99,13 @@ export const DEFAULT_FILTERS = {
     reasonFilter: REASON_FILTER_KEYS.any,
     searchFilter: '',
     languageFilter: RU_LIST_DB_NAME,
-}
+};
+
+export const ALARM_SEND_TO_BACKEND = {
+    name: 'ALARM_SEND_TO_BACKEND',
+    alarmCreateInfo: {
+        delayInMinutes: 20,
+        periodInMinutes: 60 * 4,
+    },
+};
 

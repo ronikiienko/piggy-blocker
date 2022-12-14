@@ -35,6 +35,7 @@
     "permissions": [
         "storage",
         "webNavigation",
-        "unlimitedStorage"
+        "unlimitedStorage",
+        "alarms"
     ]
 }

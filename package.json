@@ -4,18 +4,19 @@
   "description": "",
   "scripts": {
     "start": "parcel watch src/manifest.json src/stats/index.html --host localhost --config @parcel/config-webextension",
-    "build": "parcel build src/manifest.json src/stats/index.html --config @parcel/config-webextension"
+    "build": "parcel build src/manifest.json src/stats/index.html --config @parcel/config-webextension --reporter @parcel/reporter-bundle-analyzer --no-source-maps"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@parcel/config-webextension": "^2.7.0",
+    "@parcel/config-webextension": "^2.8.1",
+    "@parcel/reporter-bundle-analyzer": "^2.8.1",
     "@types/chrome": "^0.0.200",
     "eslint": "^8.28.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "parcel": "^2.7.0",
+    "parcel": "^2.8.1",
     "process": "^0.11.10"
   },
   "dependencies": {
@@ -24,7 +25,6 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-viewport-list": "^6.2.0",
-    "react-window": "^1.8.8"
+    "react-viewport-list": "^6.2.0"
   }
 }
