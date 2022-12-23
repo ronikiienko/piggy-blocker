@@ -1,16 +1,16 @@
 import {
     BLOCK_REASONS_MAP,
+    CHECKED_VIDEOS_DB_KEYS,
     SELECTOR,
     SETTINGS_KEYS,
     SETTINGS_STORAGE_KEY,
-    VIDEOS_DB_KEYS,
     WHAT_TO_DO_MAP,
 } from '../common/consts';
 import {getSettings} from '../common/getSettings';
 import {Queue} from '../common/queue';
 import {wait} from '../common/utils';
 import {checkIsVideoDataRu} from './containsRussian';
-import {addToDb} from './containsRussianStats';
+import {addToCheckedVideosDb} from './containsRussianStats';
 import {applyFilter, removeFilter, waitForNodeLoad} from './utils';
 import {clickedStore} from './videoStore';
 
@@ -176,15 +176,16 @@ const checkVideoItem = async (videoItem) => {
     }
     const checkResult = await checkIsVideoDataRu(titleText, channelName, videoId);
     if (checkResult?.reason && checkResult?.reason !== BLOCK_REASONS_MAP.inSessStorage && videoId) {
-        addToDb({
-            [VIDEOS_DB_KEYS.ytId]: videoId || null,
-            [VIDEOS_DB_KEYS.title]: titleText || null,
-            [VIDEOS_DB_KEYS.channelName]: channelName || null,
-            [VIDEOS_DB_KEYS.link]: videoLink || null,
-            [VIDEOS_DB_KEYS.reason]: checkResult.reason || null,
-            [VIDEOS_DB_KEYS.reasonDetails]: checkResult.reasonDetails || null,
-            [VIDEOS_DB_KEYS.timeWhenBlocked]: Date.now() || null,
-        }, checkResult.isRu);
+        addToCheckedVideosDb({
+            [CHECKED_VIDEOS_DB_KEYS.isRu]: checkResult.isRu * 1,
+            [CHECKED_VIDEOS_DB_KEYS.ytId]: videoId || null,
+            [CHECKED_VIDEOS_DB_KEYS.title]: titleText || null,
+            [CHECKED_VIDEOS_DB_KEYS.channelName]: channelName || null,
+            [CHECKED_VIDEOS_DB_KEYS.link]: videoLink || null,
+            [CHECKED_VIDEOS_DB_KEYS.reason]: checkResult.reason || null,
+            [CHECKED_VIDEOS_DB_KEYS.reasonDetails]: checkResult.reasonDetails || null,
+            [CHECKED_VIDEOS_DB_KEYS.timeWhenBlocked]: Date.now() || null,
+        });
     }
     return {isRu: checkResult.isRu, id: videoId, title: titleText, link: videoLink};
 };

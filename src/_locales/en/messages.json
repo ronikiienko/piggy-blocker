@@ -141,7 +141,7 @@
         "message": "Chars in channel name"
     },
     "stats_filter_reason_google_option": {
-        "message": "Chars in channel name"
+        "message": "Google"
     },
     "stats_filter_reason_words_option": {
         "message": "By marker words"

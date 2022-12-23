@@ -1,15 +1,13 @@
 import React from 'react';
 import {countPercentage} from '../../../common/utils';
-import {useNotRuList} from '../../../commonBackground/hooks/useNotRuList';
-import {useRuList} from '../../../commonBackground/hooks/useRuList';
+import {useCheckedVideosList} from '../../../commonBackground/hooks/useCheckedVideosList';
 // import PropTypes from 'prop-types';
 import './OverallStats.css';
 
 
 export const OverallStats = () => {
-    const notRuList = useNotRuList();
-    const ruList = useRuList();
-    const totalAnalyzedNumber = ruList.all.length + notRuList.all.length;
+    const checkedVideosList = useCheckedVideosList();
+    const totalAnalyzedNumber = checkedVideosList.all.length;
     return (
         <div className="overall-stats-container">
             <div className="ru-not-ru-container">
@@ -17,7 +15,7 @@ export const OverallStats = () => {
                     <div
                         className="language-overall"
                     >
-                        {chrome.i18n.getMessage('stats_page_ru_total')} {ruList.all.length} / {totalAnalyzedNumber} ({countPercentage(ruList.all.length, totalAnalyzedNumber)}%)
+                        {chrome.i18n.getMessage('stats_page_ru_total')} {checkedVideosList.ru.length} / {totalAnalyzedNumber} ({countPercentage(checkedVideosList.ru.length, totalAnalyzedNumber)}%)
                     </div>
                     <div>
                         <div

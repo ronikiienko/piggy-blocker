@@ -2,11 +2,11 @@ import {useLiveQuery} from 'dexie-react-hooks';
 import React from 'react';
 import ViewportList from 'react-viewport-list';
 import {
+    CHECKED_VIDEOS_DB_KEYS,
+    CHECKED_VIDEOS_DB_NAME,
     DEFAULT_FILTERS,
-    NOT_RU_LIST_DB_NAME,
+    LANGUAGE_FILTER_KEYS,
     REASON_FILTER_KEYS,
-    RU_LIST_DB_NAME,
-    VIDEOS_DB_KEYS,
 } from '../../../common/consts';
 import {db} from '../../../commonBackground/db';
 import {Button} from '../../../commonBackground/StyledElements/Button/Button';
@@ -20,11 +20,15 @@ import {ListItem} from './ListItem';
 const languageSelectOptions = [
     {
         label: chrome.i18n.getMessage('stats_filter_result_ru_option'),
-        value: RU_LIST_DB_NAME,
+        value: LANGUAGE_FILTER_KEYS['1'],
     },
     {
         label: chrome.i18n.getMessage('stats_filter_result_not_ru_option'),
-        value: NOT_RU_LIST_DB_NAME,
+        value: LANGUAGE_FILTER_KEYS['0'],
+    },
+    {
+        label: 'any',
+        value: LANGUAGE_FILTER_KEYS.any,
     },
 ];
 
@@ -60,45 +64,46 @@ export const FilteredStats = () => {
     const [reasonFilter, setReasonFilter] = React.useState(DEFAULT_FILTERS.reasonFilter);
     const [searchFilter, setSearchFilter] = React.useState(DEFAULT_FILTERS.searchFilter);
     const [languageFilter, setLanguageFilter] = React.useState(DEFAULT_FILTERS.languageFilter);
-    const [filteredList, setFilteredList] = React.useState([]);
-
+    // console.log(languageFilter);
     // TODO sometimes new day records come with old. probably problem with gmt+2:00
-    const blockedInRange = useLiveQuery(
-        () => db[languageFilter]
-            .where(VIDEOS_DB_KEYS.timeWhenBlocked)
+    const filteredList = useLiveQuery(
+        () => db[CHECKED_VIDEOS_DB_NAME]
+            .where(CHECKED_VIDEOS_DB_KEYS.timeWhenBlocked)
             .between(
                 new Date(dateRange.fromDate)?.getTime() || 0,
                 new Date(dateRange.toDate)?.getTime() || Infinity,
-
             )
+            .and(listItem => (listItem[CHECKED_VIDEOS_DB_KEYS.title]?.toLowerCase()?.includes(searchFilter.toLowerCase()) || listItem[CHECKED_VIDEOS_DB_KEYS.channelName]?.toLowerCase()?.includes(searchFilter.toLowerCase())))
+            .and(listItem => (listItem[CHECKED_VIDEOS_DB_KEYS.isRu] === Number(languageFilter) || languageFilter === LANGUAGE_FILTER_KEYS.any))
+            .and(listItem => (listItem[CHECKED_VIDEOS_DB_KEYS.reason] === reasonFilter || reasonFilter === REASON_FILTER_KEYS.any))
             .reverse()
             .toArray(),
-        [dateRange.fromDate, dateRange.toDate, languageFilter],
-        []
+        [dateRange.fromDate, dateRange.toDate, languageFilter, reasonFilter, searchFilter],
+        [],
     );
     // TODO +1 rerender happens somehow
-    React.useEffect(() => {
-        setFilteredList(blockedInRange.filter(listItem => {
-            return (
-                (reasonFilter &&
-                    (listItem[VIDEOS_DB_KEYS.reason] === reasonFilter ||
-                        reasonFilter === REASON_FILTER_KEYS.any)) &&
-                (
-                    (listItem[VIDEOS_DB_KEYS.title]?.toLowerCase()?.includes(searchFilter.toLowerCase()) ||
-                        listItem[VIDEOS_DB_KEYS.channelName]?.toLowerCase()?.includes(searchFilter.toLowerCase())
-                    )
-                )
-            );
-        }));
-    }, [blockedInRange, reasonFilter, searchFilter, languageFilter]);
+    // React.useEffect(() => {
+    //     setFilteredList(blockedInRange.filter(listItem => {
+    //         return (
+    //             (reasonFilter &&
+    //                 (listItem[CHECKED_VIDEOS_DB_KEYS.reason] === reasonFilter ||
+    //                     reasonFilter === REASON_FILTER_KEYS.any)) &&
+    //             (
+    //                 (listItem[CHECKED_VIDEOS_DB_KEYS.title]?.toLowerCase()?.includes(searchFilter.toLowerCase()) ||
+    //                     listItem[CHECKED_VIDEOS_DB_KEYS.channelName]?.toLowerCase()?.includes(searchFilter.toLowerCase())
+    //                 )) &&
+    //             (listItem[CHECKED_VIDEOS_DB_KEYS.isRu] === Number(languageFilter) || languageFilter === LANGUAGE_FILTER_KEYS.any)
+    //         );
+    //     }));
+    // }, [blockedInRange, reasonFilter, searchFilter, languageFilter]);
     const listContainerRef = React.useRef(null);
-    if (!blockedInRange) return null;
+    if (!filteredList) return null;
 
     const detectWords = () => {
         const allWords = [];
         let analyzedTitles = [];
         for (let ruItem of filteredList) {
-            const title = ruItem[VIDEOS_DB_KEYS.title];
+            const title = ruItem[CHECKED_VIDEOS_DB_KEYS.title];
             if (analyzedTitles.includes(title)) {
                 // console.log('title already analyzed', title);
                 continue;
@@ -124,7 +129,7 @@ export const FilteredStats = () => {
         filtered = sorted.filter((value) => {
             return value[1] > 2 && value[0].match(/\p{L}/gu);
         });
-        console.log(filtered);
+        // console.log(filtered);
         // setUsedWords(allWords)
     };
     return (
@@ -162,11 +167,11 @@ export const FilteredStats = () => {
                     items={filteredList}
                 >
                     {((listItem, index) => {
-                        return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index} />
+                        return <ListItem key={listItem[CHECKED_VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index}/>;
                     })}
                 </ViewportList>
                 {/*{filteredList.map((listItem, index) => {*/}
-                {/*    return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index} />*/}
+                {/*    return <ListItem key={listItem[CHECKED_VIDEOS_DB_KEYS.ytId]} listItem={listItem} index={index} />*/}
                 {/*})}*/}
             </div>
         </div>

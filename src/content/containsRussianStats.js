@@ -1,4 +1,4 @@
-import {CMD_ADD_TO_NOT_RU_LIST, CMD_ADD_TO_RU_LIST} from '../common/consts';
+import {CMD_ADD_TO_CHECKED_VIDEOS_DB} from '../common/consts';
 
 
 // setTimeout(() => {
@@ -62,20 +62,12 @@ import {CMD_ADD_TO_NOT_RU_LIST, CMD_ADD_TO_RU_LIST} from '../common/consts';
 // };
 
 
-export const addToDb = (data, isRu) => {
-    if (isRu) {
-        chrome.runtime.sendMessage({
-            cmd: CMD_ADD_TO_RU_LIST,
-            data
-        })
-            .catch(console.log)
-    } else {
-        chrome.runtime.sendMessage({
-            cmd: CMD_ADD_TO_NOT_RU_LIST,
-            data
-        })
-            .catch(console.log)
-    }
+export const addToCheckedVideosDb = (data) => {
+    chrome.runtime.sendMessage({
+        cmd: CMD_ADD_TO_CHECKED_VIDEOS_DB,
+        data,
+    })
+        .catch(console.log);
     // console.log(reason, ':', '\n',
     //     'title: ',allDataObject.title, '\n',
     //     'channelName: ', allDataObject.channelName, '\n',
@@ -108,4 +100,4 @@ export const addToDb = (data, isRu) => {
     //     reasonDetails,
     //     isRu: ru
     // })
-}
+};

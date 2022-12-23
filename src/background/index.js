@@ -1,24 +1,19 @@
 import {
     ALARM_SEND_TO_BACKEND,
-    CMD_ADD_TO_NOT_RU_LIST,
-    CMD_ADD_TO_RU_LIST,
+    CHECKED_VIDEOS_DB_KEYS,
+    CHECKED_VIDEOS_DB_NAME,
+    CMD_ADD_TO_CHECKED_VIDEOS_DB,
     CMD_TAB_UPDATE,
-    NOT_RU_LIST_DB_NAME,
-    RU_LIST_DB_NAME,
     UID_STORAGE_KEY,
-    VIDEOS_DB_KEYS,
 } from '../common/consts';
 import {generateId, getReadableDate} from '../common/utils';
-import {addToNotRuList, addToRuList, db} from '../commonBackground/db';
+import {addToCheckedVideosDb, db} from '../commonBackground/db';
 
 
 chrome.runtime.onMessage.addListener((message) => {
     switch (message.cmd) {
-        case CMD_ADD_TO_RU_LIST:
-            addToRuList(message?.data);
-            break;
-        case CMD_ADD_TO_NOT_RU_LIST:
-            addToNotRuList(message?.data);
+        case CMD_ADD_TO_CHECKED_VIDEOS_DB:
+            addToCheckedVideosDb(message?.data);
             break;
     }
 });
@@ -31,15 +26,14 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
     chrome.tabs.sendMessage(details.tabId, {details, cmd: CMD_TAB_UPDATE})
         .catch(e => console.log(e));
 });
-const sendStatsToBackend = (videosArray, ru) => {
+const sendStatsToBackend = (videosArray) => {
     // console.log('videos:', videosArray, ru);
-    return fetch(`http://localhost:5000/${ru ? 'addruvideos' : 'addnotruvideos'}`,
+    return fetch('http://localhost:5000/addvideos',
         {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            // mode: 'no-cors',
             method: 'POST',
             body: JSON.stringify({
                 videos: videosArray,
@@ -54,27 +48,19 @@ const prepareStatsForBackend = async (videosArray) => {
     let storage = await chrome.storage.local.get({[UID_STORAGE_KEY]: null});
     for (let i = 0; i < videosArray.length; i++) {
         videosArray[i].uid = storage.uid;
-        delete videosArray?.[i]?.[VIDEOS_DB_KEYS.synced];
-        delete videosArray?.[i]?.[VIDEOS_DB_KEYS.ytId];
+        delete videosArray?.[i]?.[CHECKED_VIDEOS_DB_KEYS.synced];
+        delete videosArray?.[i]?.[CHECKED_VIDEOS_DB_KEYS.ytId];
     }
     return videosArray;
 };
 const prepareAndSendStatsToBackend = async () => {
-    const ruVideos = await db[RU_LIST_DB_NAME].where(VIDEOS_DB_KEYS.synced).equals(0);
-    const notRuVideos = await db[NOT_RU_LIST_DB_NAME].where(VIDEOS_DB_KEYS.synced).equals(0);
+    const videos = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0);
     // console.log('not synced array...', await ruVideos.toArray());
-    const ruVideosArray = await prepareStatsForBackend(await ruVideos.toArray());
-    const notRuVideosArray = await prepareStatsForBackend(await notRuVideos.toArray());
+    const videosArray = await prepareStatsForBackend(await videos.toArray());
     // console.log('prepared array...', ruVideosArray);
-
-    if (ruVideosArray.length) {
-        await sendStatsToBackend(ruVideosArray, true);
-        await ruVideos.modify({[VIDEOS_DB_KEYS.synced]: 1});
-    }
-
-    if (notRuVideosArray.length) {
-        await sendStatsToBackend(notRuVideosArray, false);
-        await notRuVideos.modify({[VIDEOS_DB_KEYS.synced]: 1});
+    if (videosArray.length) {
+        await sendStatsToBackend(videosArray);
+        await videos.modify({[CHECKED_VIDEOS_DB_KEYS.synced]: 1});
     }
 };
 

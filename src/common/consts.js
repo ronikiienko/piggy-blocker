@@ -44,7 +44,8 @@ export const SELECTOR = {
     CONTAINER_SHORTS: '#shorts-inner-container',
 };
 
-export const VIDEOS_DB_KEYS = {
+export const CHECKED_VIDEOS_DB_KEYS = {
+    isRu: 'isRu',
     ytId: 'ytId',
     title: 'title',
     link: 'link',
@@ -55,22 +56,22 @@ export const VIDEOS_DB_KEYS = {
     synced: 'synced',
 };
 
+export const IS_RU_MAP = {
+    ru: 1,
+    notRu: 0,
+};
+
 export const BLOCK_REASONS_MAP = {
     byCharsTitle: 'byCharsTitle',
     byCharsChannelName: 'byCharsChannelName',
     noCyrillic: 'noCyrillic',
     markerWords: 'markerWords',
     google: 'google',
-    inSessStorage: 'inSessStorage'
+    inSessStorage: 'inSessStorage',
 };
+export const CMD_ADD_TO_CHECKED_VIDEOS_DB = 'CMD_ADD_TO_CHECKED_VIDEOS_LIST';
 
-
-export const CMD_ADD_TO_RU_LIST = 'CMD_ADD_TO_RU_LIST';
-export const CMD_ADD_TO_NOT_RU_LIST = 'CMD_ADD_TO_NOT_RU_LIST';
-
-export const RU_LIST_DB_NAME = 'ruList';
-
-export const NOT_RU_LIST_DB_NAME = 'notRuList';
+export const CHECKED_VIDEOS_DB_NAME = 'RU_CHECKED_VIDEOS';
 
 export const monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
     'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень',
@@ -88,12 +89,16 @@ export const REASON_FILTER_KEYS = {
     google: 'google',
     noCyrillic: 'noCyrillic',
 };
-
+export const LANGUAGE_FILTER_KEYS = {
+    1: '1',
+    0: '0',
+    any: 'any',
+};
 export const DEFAULT_FILTERS = {
     dateRange: {fromDate: '', toDate: ''},
     reasonFilter: REASON_FILTER_KEYS.any,
     searchFilter: '',
-    languageFilter: RU_LIST_DB_NAME,
+    languageFilter: LANGUAGE_FILTER_KEYS.any,
 };
 
 export const ALARM_SEND_TO_BACKEND = {

@@ -1,7 +1,7 @@
 import {useLiveQuery} from 'dexie-react-hooks';
 import React from 'react';
 import ViewportList from 'react-viewport-list';
-import {RU_LIST_DB_NAME, VIDEOS_DB_KEYS} from '../../../common/consts';
+import {CHECKED_VIDEOS_DB_KEYS, CHECKED_VIDEOS_DB_NAME, IS_RU_MAP} from '../../../common/consts';
 import {db} from '../../../commonBackground/db';
 import {Button} from '../../../commonBackground/StyledElements/Button/Button';
 import {ListItem} from './ListItem';
@@ -11,25 +11,29 @@ import './Stats.css';
 export const Stats = () => {
     // console.log('stats rerender');
     const recentRuList = useLiveQuery(() =>
-            db[RU_LIST_DB_NAME]
-                .where(VIDEOS_DB_KEYS.timeWhenBlocked)
+            db[CHECKED_VIDEOS_DB_NAME]
+                .where(CHECKED_VIDEOS_DB_KEYS.timeWhenBlocked)
                 .above(Date.now() - 1000 * 60 * 60)
+                .and(item => item[CHECKED_VIDEOS_DB_KEYS.isRu] === IS_RU_MAP.ru)
                 .reverse()
                 .toArray(),
         [],
         []
     )
     const dayRuList = useLiveQuery(() =>
-            db[RU_LIST_DB_NAME]
-                .where(VIDEOS_DB_KEYS.timeWhenBlocked)
+            db[CHECKED_VIDEOS_DB_NAME]
+                .where(CHECKED_VIDEOS_DB_KEYS.timeWhenBlocked)
                 .above(Date.now() - 1000 * 60 * 60 * 24)
+                .and(item => item[CHECKED_VIDEOS_DB_KEYS.isRu] === IS_RU_MAP.ru)
                 .reverse()
                 .toArray(),
         [],
         []
     )
     const totalRuList = useLiveQuery(() =>
-            db[RU_LIST_DB_NAME]
+            db[CHECKED_VIDEOS_DB_NAME]
+                .where(CHECKED_VIDEOS_DB_KEYS.isRu)
+                .equals(IS_RU_MAP.ru)
                 .reverse()
                 .toArray(),
         [],
@@ -61,7 +65,7 @@ export const Stats = () => {
                     items={recentRuList}
                 >
                     {((listItem) => {
-                        return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem}/>;
+                        return <ListItem key={listItem[CHECKED_VIDEOS_DB_KEYS.ytId]} listItem={listItem}/>;
                     })}
                 </ViewportList>
             </div>
