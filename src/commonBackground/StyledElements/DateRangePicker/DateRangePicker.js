@@ -12,8 +12,10 @@ export const DateRangePicker = ({dateRange, setDateRange, withHours}) => {
 
     return (
         <>
-            <DatePicker value={dateRange.fromDate} withHours={withHours} label="Від:" id="fromDate" onChange={changeHandler}/>
-            <DatePicker value={dateRange.toDate} withHours={withHours} label="До:" id="toDate" onChange={changeHandler}/>
+            <DatePicker value={dateRange.fromDate} withHours={withHours}
+                        label={chrome.i18n.getMessage('stats_filter_from')} id="fromDate" onChange={changeHandler}/>
+            <DatePicker value={dateRange.toDate} withHours={withHours} label={chrome.i18n.getMessage('stats_filter_to')}
+                        id="toDate" onChange={changeHandler}/>
         </>
     );
 };

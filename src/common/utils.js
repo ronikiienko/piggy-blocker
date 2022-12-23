@@ -1,6 +1,3 @@
-import {monthNames} from './consts';
-
-
 export const wait = (msec) => {
     return new Promise(resolve => setTimeout(() => resolve(), msec));
 };
@@ -28,7 +25,8 @@ export const getReadableDate = (date) => {
     } catch (e) {
         return false;
     }
-    return `${('0' + dateObj.getHours()).slice(-2)}:${('0' + dateObj.getMinutes()).slice(-2)}, ${monthNames[dateObj?.getMonth()]} ${dateObj?.getDate()}`;
+    console.log(dateObj.getMonth());
+    return `${('0' + dateObj.getHours()).slice(-2)}:${('0' + dateObj.getMinutes()).slice(-2)}, ${chrome.i18n.getMessage(`month_name_${dateObj?.getMonth()}`)} ${dateObj?.getDate()}`;
 };
 
 export const generateId = () => {

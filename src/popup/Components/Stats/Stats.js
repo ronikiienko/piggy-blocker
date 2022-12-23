@@ -4,8 +4,9 @@ import ViewportList from 'react-viewport-list';
 import {RU_LIST_DB_NAME, VIDEOS_DB_KEYS} from '../../../common/consts';
 import {db} from '../../../commonBackground/db';
 import {Button} from '../../../commonBackground/StyledElements/Button/Button';
-import "./Stats.css"
 import {ListItem} from './ListItem';
+import './Stats.css';
+
 
 export const Stats = () => {
     // console.log('stats rerender');
@@ -39,15 +40,20 @@ export const Stats = () => {
         <div>
             <Button
                 style={{width: '100%', margin: 'auto', marginTop: '10px'}}
-                onClick={() => {open(chrome.runtime.getURL('stats/index.html'), "_blank")}}
+                onClick={() => {
+                    open(chrome.runtime.getURL('stats/index.html'), '_blank');
+                }}
             >
-                Детальна статистика тут
+                {chrome.i18n.getMessage('detailed_stats_link_text')}
             </Button>
             <div className="overall-stats-container">
-                <h2 className="main-title">Знайдено рос. відео:</h2>
-                <div className="recent-found-total">За останню годину: {recentRuList.length}</div>
-                <div className="recent-found-total">За останню добу: {dayRuList.length}</div>
-                <div className="recent-found-total">За весь час: {totalRuList.length}</div>
+                <h2 className="main-title">{chrome.i18n.getMessage('popup_detected_videos_header')}</h2>
+                <div
+                    className="recent-found-total">{chrome.i18n.getMessage('popup_detected_videos_last_hour')} {recentRuList.length}</div>
+                <div
+                    className="recent-found-total">{chrome.i18n.getMessage('popup_detected_videos_last_day')} {dayRuList.length}</div>
+                <div
+                    className="recent-found-total">{chrome.i18n.getMessage('popup_detected_videos_all_time')} {totalRuList.length}</div>
             </div>
             <div ref={listContainerRef} className="recent-list-container">
                 <ViewportList
@@ -55,7 +61,7 @@ export const Stats = () => {
                     items={recentRuList}
                 >
                     {((listItem) => {
-                        return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem}/>
+                        return <ListItem key={listItem[VIDEOS_DB_KEYS.ytId]} listItem={listItem}/>;
                     })}
                 </ViewportList>
             </div>

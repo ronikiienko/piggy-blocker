@@ -23,39 +23,39 @@ export const Options = () => {
 
     return (
         <div>
-            <h1>Налаштування:</h1>
+            <h1>{chrome.i18n.getMessage('options_header')}</h1>
             <div className="where-to-block options-part">
-                <h2>Де блокувати:</h2>
+                <h2>{chrome.i18n.getMessage('where_to_block_settings_header')}</h2>
                 <Checkbox
                     id={SETTINGS_KEYS.blockOnHome}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blockOnHome]}
-                    label="На головній сторінці"
+                    label={chrome.i18n.getMessage('where_to_block_home_option')}
                 />
                 <br/>
                 <Checkbox
                     id={SETTINGS_KEYS.blockOnWatch}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blockOnWatch]}
-                    label="На сторінці перегляду відео збоку"
+                    label={chrome.i18n.getMessage('where_to_block_watch_option')}
                 />
                 <br/>
                 <Checkbox
                     id={SETTINGS_KEYS.blockOnShorts}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blockOnShorts]}
-                    label="На сторінці коротких відео"
+                    label={chrome.i18n.getMessage('where_to_block_shorts_option')}
                 />
                 <br/>
             </div>
             <div className="how-to-block options-part">
-                <h2>Як блокувати:</h2>
+                <h2>{chrome.i18n.getMessage('how_to_block_settings_header')}</h2>
                 <Radio
                     id={WHAT_TO_DO_MAP.blur}
                     name={SETTINGS_KEYS.whatToDo}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.whatToDo] === WHAT_TO_DO_MAP.blur}
-                    label={"Тільки блюрити"}
+                    label={chrome.i18n.getMessage('how_to_block_blur_option')}
                 />
                 <br/>
                 <Radio
@@ -63,7 +63,7 @@ export const Options = () => {
                     name={SETTINGS_KEYS.whatToDo}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.whatToDo] === WHAT_TO_DO_MAP.notInterested}
-                    label={"Натискати \"Не цікавить\""}
+                    label={chrome.i18n.getMessage('how_to_block_not_interested_option')}
                 />
                 <br/>
                 <Radio
@@ -71,18 +71,18 @@ export const Options = () => {
                     name={SETTINGS_KEYS.whatToDo}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.whatToDo] === WHAT_TO_DO_MAP.blockChannel}
-                    label={"Натискати \"Не рекомендувати канал\""}
+                    label={chrome.i18n.getMessage('how_to_block_dont_recommend_channel_option')}
                 />
                 <br/>
             </div>
             <div className="how-to-blur options-part">
-                <h2>Як блюрити:</h2>
+                <h2>{chrome.i18n.getMessage('how_to_blur_settings_header')}</h2>
                 <Radio
                     id={BLUR_INTENSITY_MAP.weak}
                     name={SETTINGS_KEYS.blurIntensity}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.weak}
-                    label={"Слабко"}
+                    label={chrome.i18n.getMessage('how_to_blur_weak_option')}
                 />
                 <br/>
                 <Radio
@@ -90,7 +90,7 @@ export const Options = () => {
                     name={SETTINGS_KEYS.blurIntensity}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.normal}
-                    label={"Середньо"}
+                    label={chrome.i18n.getMessage('how_to_blur_normal_option')}
                 />
                 <br/>
                 <Radio
@@ -98,7 +98,7 @@ export const Options = () => {
                     name={SETTINGS_KEYS.blurIntensity}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.strong}
-                    label={"Максимально"}
+                    label={chrome.i18n.getMessage('how_to_blur_strong_option')}
                 />
                 <br/>
                 <Radio
@@ -106,7 +106,7 @@ export const Options = () => {
                     name={SETTINGS_KEYS.blurIntensity}
                     onChange={handleInputChange}
                     checked={formData[SETTINGS_KEYS.blurIntensity] === BLUR_INTENSITY_MAP.transparent}
-                    label={"Прозорість"}
+                    label={chrome.i18n.getMessage('how_to_blur_transparent_option')}
                 />
             </div>
         </div>

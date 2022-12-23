@@ -7,7 +7,6 @@ import {useSettings} from './useSettings';
 export const useTheme = () => {
     const [settings, updateSettings] = useSettings();
     const [theme, setTheme] = React.useState(DEFAULT_SETTINGS.theme);
-
     React.useEffect(() => {
         document.documentElement.dataset.theme = theme;
     }, [theme]);

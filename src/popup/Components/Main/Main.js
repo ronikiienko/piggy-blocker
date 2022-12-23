@@ -13,8 +13,9 @@ export const Main = () => {
         <div className="main-container">
             <div className="sub-main-container options-container">
                 <Options/>
-                <Button style={{width: '100%', margin: 'auto', marginTop: '10px'}} onClick={toggleTheme}>Темна/Світла
-                    тема</Button>
+                <Button style={{width: '100%', margin: 'auto', marginTop: '10px'}} onClick={toggleTheme}>
+                    {chrome.i18n.getMessage('theme_change_button_text')}
+                </Button>
             </div>
             <div className="sub-main-container options-container">
                 <Stats/>

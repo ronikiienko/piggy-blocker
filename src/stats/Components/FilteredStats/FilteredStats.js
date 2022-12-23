@@ -19,38 +19,38 @@ import {ListItem} from './ListItem';
 
 const languageSelectOptions = [
     {
-        label: 'Російське',
+        label: chrome.i18n.getMessage('stats_filter_result_ru_option'),
         value: RU_LIST_DB_NAME,
     },
     {
-        label: 'Не російське',
+        label: chrome.i18n.getMessage('stats_filter_result_not_ru_option'),
         value: NOT_RU_LIST_DB_NAME,
     },
 ];
 
 const reasonSelectOptions = [
     {
-        label: 'Будь-які',
+        label: chrome.i18n.getMessage('stats_filter_reason_any_option'),
         value: REASON_FILTER_KEYS.any,
     },
     {
-        label: 'По літерам в назві відео',
+        label: chrome.i18n.getMessage('stats_filter_reason_chars_title_option'),
         value: REASON_FILTER_KEYS.byCharsTitle,
     },
     {
-        label: 'По літерам в назві каналу',
+        label: chrome.i18n.getMessage('stats_filter_reason_chars_channel_name_option'),
         value: REASON_FILTER_KEYS.byCharsChannelName,
     },
     {
-        label: 'Google translate',
+        label: chrome.i18n.getMessage('stats_filter_reason_google_option'),
         value: REASON_FILTER_KEYS.google,
     },
     {
-        label: 'По словам-маркерам',
+        label: chrome.i18n.getMessage('stats_filter_reason_words_option'),
         value: REASON_FILTER_KEYS.markerWords,
     },
     {
-        label: 'Не знайдено кирилиці',
+        label: chrome.i18n.getMessage('stats_filter_reason_no_cyrillic_option'),
         value: REASON_FILTER_KEYS.noCyrillic,
     },
 ];
@@ -135,22 +135,23 @@ export const FilteredStats = () => {
                     setDateRange={setDateRange}
                     withHours={true}
                 />
-                <Button onClick={detectWords} title="Перераховує кожне слово, яке було знайдене серед назв відфільтрованих відео, та скільки разів зустрічається. Виводиться в консоль (F12)">Порахувати статистику слів</Button>
-                <br />
+                <Button onClick={detectWords}
+                        title={chrome.i18n.getMessage('stats_filter_count_word_stats_help')}>{chrome.i18n.getMessage('stats_filter_count_word_stats')}</Button>
+                <br/>
                 <Select
-                    label="Причина:"
+                    label={chrome.i18n.getMessage('stats_filter_reason')}
                     options={reasonSelectOptions}
                     value={reasonFilter}
                     onChange={(event) => setReasonFilter(event.target.value)}
                 />
                 <Select
-                    label="Результат:"
+                    label={chrome.i18n.getMessage('stats_filter_result')}
                     options={languageSelectOptions}
                     value={languageFilter}
                     onChange={(event) => setLanguageFilter(event.target.value)}
                 />
                 <Input
-                    label="Пошук:"
+                    label={chrome.i18n.getMessage('stats_filter_search')}
                     value={searchFilter}
                     onChange={(event) => setSearchFilter(event.target.value)}
                 />

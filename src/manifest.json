@@ -2,6 +2,7 @@
     "manifest_version": 3,
     "name": "Piggy blocker",
     "description": "Clears out russian content from Youtube",
+    "default_locale": "uk",
     "version": "0.0.1",
     "background": {
         "service_worker": "background/index.js",
