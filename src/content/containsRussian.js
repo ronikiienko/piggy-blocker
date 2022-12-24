@@ -1,11 +1,13 @@
 import {BLOCK_REASONS_MAP} from '../common/consts';
 import {cyrillicPattern, ruCharsPattern, ruWords, ukrCharsPattern, ukrWords} from './containsRussianConsts';
 import {isRuStore} from './videoStore';
+
+
 const checkStringForRuChars = (stringToCheck, searchForUkr = true) => {
-    if (ruCharsPattern.test(stringToCheck)) return true;
     if (searchForUkr) {
         if (ukrCharsPattern.test(stringToCheck)) return false;
     }
+    if (ruCharsPattern.test(stringToCheck)) return true;
     return null;
 };
 

@@ -1,4 +1,5 @@
 import {
+    ADD_VIDEOS_ROUTE_HREF,
     ALARM_SEND_TO_BACKEND,
     CHECKED_VIDEOS_DB_KEYS,
     CHECKED_VIDEOS_DB_NAME,
@@ -28,7 +29,7 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
 });
 const sendStatsToBackend = (videosArray) => {
     // console.log('videos:', videosArray, ru);
-    return fetch('http://localhost:5000/addvideos',
+    return fetch(ADD_VIDEOS_ROUTE_HREF,
         {
             headers: {
                 'Accept': 'application/json',
@@ -55,9 +56,9 @@ const prepareStatsForBackend = async (videosArray) => {
 };
 const prepareAndSendStatsToBackend = async () => {
     const videos = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0);
-    // console.log('not synced array...', await ruVideos.toArray());
+    // console.log('not synced array...', await videos.toArray());
     const videosArray = await prepareStatsForBackend(await videos.toArray());
-    // console.log('prepared array...', ruVideosArray);
+    // console.log('prepared array...', videosArray);
     if (videosArray.length) {
         await sendStatsToBackend(videosArray);
         await videos.modify({[CHECKED_VIDEOS_DB_KEYS.synced]: 1});
