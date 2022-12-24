@@ -62,59 +62,32 @@
     "popup_detected_videos_all_time": {
         "message": "All time:"
     },
-    "stats_page_ru_total": {
-        "message": "Ru:"
+    "stats_page_total": {
+        "message": "Total in selection:"
     },
-    "stats_page_ru_ru_chars_title": {
-        "message": "Ru chars in title:"
+    "stats_page_chars_title": {
+        "message": "Chars in title:"
     },
-    "stats_page_ru_ru_chars_title_help": {
-        "message": "Counts if video title contains russian-specific letters"
+    "stats_page_chars_title_help": {
+        "message": "Counts if video title contains russian or ukrainian specific letters"
     },
-    "stats_page_ru_google": {
+    "stats_page_google": {
         "message": "Google translate api:"
     },
-    "stats_page_ru_google_help": {
+    "stats_page_google_help": {
         "message": "If video language was not detected by any of previous checks, video is being checked using google translate api"
     },
-    "stats_page_ru_ru_words": {
-        "message": "Ru words:"
+    "stats_page_marker_words": {
+        "message": "Marker words:"
     },
-    "stats_page_ru_ru_words_help": {
+    "stats_page_marker_words_help": {
         "message": "Counts if video title contains russian words (from small list of most popular ones)"
     },
-    "stats_page_ru_ru_chars_channel_name": {
-        "message": "Ru chars in channel name:"
+    "stats_page_chars_channel_name": {
+        "message": "Chars in channel name:"
     },
-    "stats_page_ru_ru_chars_channel_name_help": {
-        "message": "Counts if channel name contains ru-specific letters"
-    },
-    "stats_page_not_ru_total": {
-        "message": "Not ru:"
-    },
-    "stats_page_not_ru_no_cyrillic": {
-        "message": "No cyrillic in video title:"
-    },
-    "stats_page_not_ru_no_cyrillic_help": {
-        "message": "Counts if video title doesn't contain any cyrillic letter"
-    },
-    "stats_page_not_ru_ukr_chars_title": {
-        "message": "Ukr. chars in video title:"
-    },
-    "stats_page_not_ru_ukr_chars_title_help": {
-        "message": "Counts if video title contains ukrainian-specific letters"
-    },
-    "stats_page_not_ru_google": {
-        "message": "Google translate api:"
-    },
-    "stats_page_not_ru_google_help": {
-        "message": "If video language was not detected by any of previous checks, video is being checked using google translate api"
-    },
-    "stats_page_not_ru_ukr_chars_channel_name": {
-        "message": "Ukr. chars in channel name:"
-    },
-    "stats_page_not_ru_ukr_chars_channel_name_help": {
-        "message": "Counts if channel name contains ukrainian-specific letters"
+    "stats_page_chars_channel_name_help": {
+        "message": "Counts if channel name contains russian or ukrainian specific letters"
     },
     "stats_filter_from": {
         "message": "From:"

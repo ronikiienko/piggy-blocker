@@ -1,13 +1,15 @@
 import {useLiveQuery} from 'dexie-react-hooks';
-import React from 'react';
+import React, {useState} from 'react';
 import ViewportList from 'react-viewport-list';
 import {
+    BLOCK_REASONS_MAP,
     CHECKED_VIDEOS_DB_KEYS,
     CHECKED_VIDEOS_DB_NAME,
     DEFAULT_FILTERS,
     LANGUAGE_FILTER_KEYS,
     REASON_FILTER_KEYS,
 } from '../../../common/consts';
+import {countPercentage} from '../../../common/utils';
 import {db} from '../../../commonBackground/db';
 import {Button} from '../../../commonBackground/StyledElements/Button/Button';
 import {DateRangePicker} from '../../../commonBackground/StyledElements/DateRangePicker/DateRangePicker';
@@ -81,21 +83,54 @@ export const FilteredStats = () => {
         [dateRange.fromDate, dateRange.toDate, languageFilter, reasonFilter, searchFilter],
         [],
     );
+    const [overallNumbers, setOverallNumbers] = useState({
+        [BLOCK_REASONS_MAP.byCharsTitle]: 0,
+        [BLOCK_REASONS_MAP.byCharsChannelName]: 0,
+        [BLOCK_REASONS_MAP.noCyrillic]: 0,
+        [BLOCK_REASONS_MAP.markerWords]: 0,
+        [BLOCK_REASONS_MAP.google]: 0,
+    });
     // TODO +1 rerender happens somehow
-    // React.useEffect(() => {
-    //     setFilteredList(blockedInRange.filter(listItem => {
-    //         return (
-    //             (reasonFilter &&
-    //                 (listItem[CHECKED_VIDEOS_DB_KEYS.reason] === reasonFilter ||
-    //                     reasonFilter === REASON_FILTER_KEYS.any)) &&
-    //             (
-    //                 (listItem[CHECKED_VIDEOS_DB_KEYS.title]?.toLowerCase()?.includes(searchFilter.toLowerCase()) ||
-    //                     listItem[CHECKED_VIDEOS_DB_KEYS.channelName]?.toLowerCase()?.includes(searchFilter.toLowerCase())
-    //                 )) &&
-    //             (listItem[CHECKED_VIDEOS_DB_KEYS.isRu] === Number(languageFilter) || languageFilter === LANGUAGE_FILTER_KEYS.any)
-    //         );
-    //     }));
-    // }, [blockedInRange, reasonFilter, searchFilter, languageFilter]);
+    React.useEffect(() => {
+        let byCharsTitle = 0;
+        let noCyrillic = 0;
+        let markerWords = 0;
+        let google = 0;
+        let byCharsChannelName = 0;
+        for (let videoItem of filteredList) {
+            switch (videoItem[CHECKED_VIDEOS_DB_KEYS.reason]) {
+                case BLOCK_REASONS_MAP.byCharsTitle:
+                    byCharsTitle++;
+                    break;
+                case BLOCK_REASONS_MAP.noCyrillic:
+                    noCyrillic++;
+                    break;
+                case BLOCK_REASONS_MAP.markerWords:
+                    markerWords++;
+                    break;
+                case BLOCK_REASONS_MAP.google:
+                    google++;
+                    break;
+                case BLOCK_REASONS_MAP.byCharsChannelName:
+                    byCharsChannelName++;
+                    break;
+            }
+        }
+        console.log({
+            [BLOCK_REASONS_MAP.byCharsTitle]: byCharsTitle,
+            [BLOCK_REASONS_MAP.byCharsChannelName]: byCharsChannelName,
+            [BLOCK_REASONS_MAP.noCyrillic]: noCyrillic,
+            [BLOCK_REASONS_MAP.markerWords]: markerWords,
+            [BLOCK_REASONS_MAP.google]: google,
+        });
+        setOverallNumbers({
+            [BLOCK_REASONS_MAP.byCharsTitle]: byCharsTitle,
+            [BLOCK_REASONS_MAP.byCharsChannelName]: byCharsChannelName,
+            [BLOCK_REASONS_MAP.noCyrillic]: noCyrillic,
+            [BLOCK_REASONS_MAP.markerWords]: markerWords,
+            [BLOCK_REASONS_MAP.google]: google,
+        });
+    }, [filteredList]);
     const listContainerRef = React.useRef(null);
     if (!filteredList) return null;
 
@@ -129,11 +164,44 @@ export const FilteredStats = () => {
         filtered = sorted.filter((value) => {
             return value[1] > 2 && value[0].match(/\p{L}/gu);
         });
-        // console.log(filtered);
+        console.log(filtered);
         // setUsedWords(allWords)
     };
     return (
         <div>
+            <div className="overall-stats-container">
+                <div
+                    className="overall"
+                >
+                    {chrome.i18n.getMessage('stats_page_total')} {filteredList.length}
+                </div>
+                <div>
+                    <div
+                        title={chrome.i18n.getMessage('stats_page_chars_title_help')}
+                        className="block-reason"
+                    >
+                        {chrome.i18n.getMessage('stats_page_chars_title')} {overallNumbers[BLOCK_REASONS_MAP.byCharsTitle]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.byCharsTitle], filteredList.length)}%)
+                    </div>
+                    <div
+                        title={chrome.i18n.getMessage('stats_page_google_help')}
+                        className="block-reason"
+                    >
+                        {chrome.i18n.getMessage('stats_page_google')} {overallNumbers[BLOCK_REASONS_MAP.google]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.google], filteredList.length)}%)
+                    </div>
+                    <div
+                        title={chrome.i18n.getMessage('stats_page_marker_words_help')}
+                        className="block-reason"
+                    >
+                        {chrome.i18n.getMessage('stats_page_marker_words')} {overallNumbers[BLOCK_REASONS_MAP.markerWords]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.markerWords], filteredList.length)}%)
+                    </div>
+                    <div
+                        title={chrome.i18n.getMessage('stats_page_marker_words_help')}
+                        className="block-reason"
+                    >
+                        {chrome.i18n.getMessage('stats_page_chars_channel_name')} {overallNumbers[BLOCK_REASONS_MAP.byCharsChannelName]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.byCharsChannelName], filteredList.length)}%)
+                    </div>
+                </div>
+            </div>
             <div className="search-container">
                 <DateRangePicker
                     dateRange={dateRange}

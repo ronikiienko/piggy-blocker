@@ -59,59 +59,32 @@
     "popup_detected_videos_all_time": {
         "message": "За весь час:"
     },
-    "stats_page_ru_total": {
-        "message": "Ru:"
+    "stats_page_total": {
+        "message": "Всього відфільтрованих відео:"
     },
-    "stats_page_ru_ru_chars_title": {
-        "message": "Рос. літери в назві:"
+    "stats_page_chars_title": {
+        "message": "Літери в назві відео:"
     },
-    "stats_page_ru_ru_chars_title_help": {
-        "message": "Зараховується, якщо в назві відео знайдено специфічно російські літери"
+    "stats_page_chars_title_help": {
+        "message": "Зараховується, якщо в назві відео знайдено специфічно російські чи українські літери"
     },
-    "stats_page_ru_google": {
+    "stats_page_google": {
         "message": "Google translate api:"
     },
-    "stats_page_ru_google_help": {
+    "stats_page_google_help": {
         "message": "Якщо відео не пройшло по ніяким з попередніх пунктів, та містить хоч одну кириличну літеру, воно тоді, і тільки тоді відправляється до google translate, бо це досить довга задача, тому її використання треба мінімізувати"
     },
-    "stats_page_ru_ru_words": {
-        "message": "Знайдено російські слова:"
+    "stats_page_marker_words": {
+        "message": "Знайдено маркерні слова:"
     },
-    "stats_page_ru_ru_words_help": {
+    "stats_page_marker_words_help": {
         "message": "Зараховується, якщо назва відео містить хоч одне з невеликого списку найрозповсюдженіших російських слів"
     },
-    "stats_page_ru_ru_chars_channel_name": {
-        "message": "Рос. літери в назві каналу:"
+    "stats_page_chars_channel_name": {
+        "message": "Літери в назві каналу:"
     },
-    "stats_page_ru_ru_chars_channel_name_help": {
-        "message": "Зараховується, якщо в назві каналу знайдено специфічно російські літери"
-    },
-    "stats_page_not_ru_total": {
-        "message": "Не ru:"
-    },
-    "stats_page_not_ru_no_cyrillic": {
-        "message": "Нема кирилиці в назві відео:"
-    },
-    "stats_page_not_ru_no_cyrillic_help": {
-        "message": "Зараховується, якщо в назві відео не знайдено кириличних літер"
-    },
-    "stats_page_not_ru_ukr_chars_title": {
-        "message": "Укр. літери в назві:"
-    },
-    "stats_page_not_ru_ukr_chars_title_help": {
-        "message": "Зараховується, якщо в назві відео знайдено специфічно українські літери"
-    },
-    "stats_page_not_ru_google": {
-        "message": "Google translate api:"
-    },
-    "stats_page_not_ru_google_help": {
-        "message": "Якщо відео не пройшло по ніяким з попередніх пунктів, та містить хоч одну кириличну літеру, воно тоді, і тільки тоді відправляється до google translate, бо це досить довга задача, тому її використання треба мінімізувати"
-    },
-    "stats_page_not_ru_ukr_chars_channel_name": {
-        "message": "Укр. літери в назві каналу:"
-    },
-    "stats_page_not_ru_ukr_chars_channel_name_help": {
-        "message": "Зараховується, якщо в назві каналу знайдено специфічно українські літери"
+    "stats_page_chars_channel_name_help": {
+        "message": "Зараховується, якщо в назві каналу знайдено специфічно російські чи українські літери"
     },
     "stats_filter_from": {
         "message": "Від:"
