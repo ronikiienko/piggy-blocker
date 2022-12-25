@@ -29,7 +29,7 @@ const languageSelectOptions = [
         value: LANGUAGE_FILTER_KEYS['0'],
     },
     {
-        label: 'any',
+        label: chrome.i18n.getMessage('stats_filter_result_any_option'),
         value: LANGUAGE_FILTER_KEYS.any,
     },
 ];
@@ -195,7 +195,7 @@ export const FilteredStats = () => {
                         {chrome.i18n.getMessage('stats_page_marker_words')} {overallNumbers[BLOCK_REASONS_MAP.markerWords]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.markerWords], filteredList.length)}%)
                     </div>
                     <div
-                        title={chrome.i18n.getMessage('stats_page_marker_words_help')}
+                        title={chrome.i18n.getMessage('stats_page_chars_channel_name_help')}
                         className="block-reason"
                     >
                         {chrome.i18n.getMessage('stats_page_chars_channel_name')} {overallNumbers[BLOCK_REASONS_MAP.byCharsChannelName]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.byCharsChannelName], filteredList.length)}%)

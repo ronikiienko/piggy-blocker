@@ -1,6 +1,6 @@
 {
-    "extName": {
-        "message": "Piggy blocker"
+    "extDescription": {
+        "message": "Clears out russian content from youtube"
     },
     "options_header": {
         "message": "Settings:"
@@ -130,6 +130,9 @@
     },
     "stats_filter_result_not_ru_option": {
         "message": "Not russian"
+    },
+    "stats_filter_result_any_option": {
+        "message": "Any"
     },
     "stats_filter_search": {
         "message": "Search:"

@@ -7,7 +7,7 @@ import {
     CMD_TAB_UPDATE,
     UID_STORAGE_KEY,
 } from '../common/consts';
-import {generateId, getReadableDate} from '../common/utils';
+import {generateId} from '../common/utils';
 import {addToCheckedVideosDb, db} from '../commonBackground/db';
 
 
@@ -56,7 +56,7 @@ const prepareStatsForBackend = async (videosArray) => {
 };
 const prepareAndSendStatsToBackend = async () => {
     const videos = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0);
-    // console.log('not synced array...', await videos.toArray());
+    console.log('not synced array...', await videos.toArray());
     const videosArray = await prepareStatsForBackend(await videos.toArray());
     // console.log('prepared array...', videosArray);
     if (videosArray.length) {
@@ -82,10 +82,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                 .catch((e) => console.log('could not send :/', e));
     }
 });
-chrome.alarms.get(ALARM_SEND_TO_BACKEND.name, async (alarm) => {
-    const date = getReadableDate(alarm.scheduledTime);
-    console.log(alarm, date);
-});
+// chrome.alarms.get(ALARM_SEND_TO_BACKEND.name, async (alarm) => {
+//     const date = getReadableDate(alarm.scheduledTime);
+//     console.log(alarm, date);
+// });
 
 
 

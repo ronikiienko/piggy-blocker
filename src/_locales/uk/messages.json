@@ -1,4 +1,7 @@
 {
+    "extDescription": {
+        "message": "Вичищає російськомовний контент з ютубу"
+    },
     "options_header": {
         "message": "Налаштування:"
     },
@@ -127,6 +130,9 @@
     },
     "stats_filter_result_not_ru_option": {
         "message": "Не російське"
+    },
+    "stats_filter_result_any_option": {
+        "message": "Будь-які"
     },
     "stats_filter_search": {
         "message": "Пошук:"
