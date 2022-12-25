@@ -1,6 +1,6 @@
 {
     "extDescription": {
-        "message": "Вичищає російськомовний контент з ютубу"
+        "message": "Очищає ютуб від російськомовного контенту"
     },
     "options_header": {
         "message": "Налаштування:"
@@ -136,6 +136,18 @@
     },
     "stats_filter_search": {
         "message": "Пошук:"
+    },
+    "list_item_time_analyzed_help": {
+        "message": "Коли відео було аналізовано"
+    },
+    "list_item_detect_reason_help": {
+        "message": "Причина та деталі детекту (якщо результат гугл то буде написано мову яку гугл задетектив, якщо слова, то слово яке було знайдено)"
+    },
+    "list_item_video_id_help": {
+        "message": "ID відео (іноді може здатися що відео однакові, насправді користувачі можуть додавати декілька однакових відео)"
+    },
+    "list_item_short_video": {
+        "message": "Short video"
     },
     "month_name_0": {
         "message": "Січень"

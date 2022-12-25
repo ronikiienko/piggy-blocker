@@ -137,6 +137,18 @@
     "stats_filter_search": {
         "message": "Search:"
     },
+    "list_item_time_analyzed_help": {
+        "message": "Time when video item was analyzed"
+    },
+    "list_item_detect_reason_help": {
+        "message": "Reason and details of detect (if reason is google - details is language detected by google etc.)"
+    },
+    "list_item_video_id_help": {
+        "message": "Video ID (sometimes video titles are same. In fact users sometimes post same videos several times)"
+    },
+    "list_item_short_video": {
+        "message": "Short video"
+    },
     "month_name_0": {
         "message": "January"
     },
