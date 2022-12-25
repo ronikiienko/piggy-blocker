@@ -105,7 +105,7 @@ export const ALARM_SEND_TO_BACKEND = {
     name: 'ALARM_SEND_TO_BACKEND',
     alarmCreateInfo: {
         delayInMinutes: 0.1,
-        periodInMinutes: 60 * 3,
+        periodInMinutes: 0.5,
     },
 };
 
