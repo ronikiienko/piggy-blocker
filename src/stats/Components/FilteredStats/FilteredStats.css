@@ -4,7 +4,7 @@
 }
 
 .blocked-items-container {
-    height: calc(100vh - 240px);
+    height: calc(100vh - 230px);
     overflow-y: auto;
     padding-right: 5px;
 }
