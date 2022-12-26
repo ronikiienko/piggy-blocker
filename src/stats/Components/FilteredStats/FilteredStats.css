@@ -5,12 +5,13 @@
 }
 
 .blocked-items-container {
-    height: calc(100vh - 290px);
+    height: calc(100vh - 265px);
     overflow-y: auto;
     padding-right: 5px;
 }
 
 .overall-stats-container {
+    max-width: 700px;
     margin-bottom: 5px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--splitters-gray);
@@ -22,6 +23,8 @@
 }
 
 .block-reason {
+    display: inline-block;
+    padding-inline: 10px;
     margin: 2px;
     font-size: 1rem;
 }
