@@ -89,6 +89,12 @@
     "stats_page_chars_channel_name_help": {
         "message": "Зараховується, якщо в назві каналу знайдено специфічно російські чи українські літери"
     },
+    "stats_page_no_cyrillic": {
+        "message": "Не знайдено кирилиці:"
+    },
+    "stats_page_no_cyrillic_help": {
+        "message": "Зараховується, якщо в назві відео не знайдено ніяких кириличних літер"
+    },
     "stats_filter_from": {
         "message": "Від:"
     },

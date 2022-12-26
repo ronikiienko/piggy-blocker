@@ -89,6 +89,12 @@
     "stats_page_chars_channel_name_help": {
         "message": "Counts if channel name contains russian or ukrainian specific letters"
     },
+    "stats_page_no_cyrillic": {
+        "message": "No cyrillic"
+    },
+    "stats_page_no_cyrillic_help": {
+        "message": "Counts if video title not contains any cyrillic letters"
+    },
     "stats_filter_from": {
         "message": "From:"
     },

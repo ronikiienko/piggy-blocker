@@ -117,6 +117,8 @@ export const FilteredStats = () => {
                 case BLOCK_REASONS_MAP.byCharsChannelName:
                     byCharsChannelName++;
                     break;
+                default:
+                    console.log('SUZUKI');
             }
         }
         console.log({
@@ -202,6 +204,12 @@ export const FilteredStats = () => {
                         className="block-reason"
                     >
                         {chrome.i18n.getMessage('stats_page_chars_channel_name')} {overallNumbers[BLOCK_REASONS_MAP.byCharsChannelName]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.byCharsChannelName], filteredList.length)}%)
+                    </div>
+                    <div
+                        title={chrome.i18n.getMessage('stats_page_no_cyrillic_help')}
+                        className="block-reason"
+                    >
+                        {chrome.i18n.getMessage('stats_page_no_cyrillic')} {overallNumbers[BLOCK_REASONS_MAP.noCyrillic]} ({countPercentage(overallNumbers[BLOCK_REASONS_MAP.noCyrillic], filteredList.length)}%)
                     </div>
                 </div>
             </div>
