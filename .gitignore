@@ -3,3 +3,4 @@
 /.parcel-cache/
 /parcel-bundle-reports/
 /releases/
+.env
