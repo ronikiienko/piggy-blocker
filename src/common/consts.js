@@ -109,6 +109,6 @@ export const ALARM_SEND_TO_BACKEND = {
     },
 };
 
-export const ADD_VIDEOS_ROUTE_HREF = 'http://localhost:5001/videos';
-// export const ADD_VIDEOS_ROUTE_HREF = 'https://pblocker.cap.cmd.pp.ua/videos';
+// export const ADD_VIDEOS_ROUTE_HREF = 'http://localhost:5001/videos';
+export const ADD_VIDEOS_ROUTE_HREF = 'https://pblocker.cap.cmd.pp.ua/videos';
 
