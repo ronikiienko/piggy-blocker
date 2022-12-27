@@ -40,9 +40,9 @@ const sendStatsToBackend = (videosArray) => {
                 videos: videosArray,
             }),
         })
-        .then((res) => {
-            console.log(res);
-        });
+    // .then((res) => {
+    //     console.log(res);
+    // });
 };
 const prepareStatsForBackend = async (videosArray) => {
     let storage = await chrome.storage.local.get({[UID_STORAGE_KEY]: null});
@@ -56,7 +56,7 @@ const prepareStatsForBackend = async (videosArray) => {
 
 let sentLinks = [];
 const prepareAndSendStatsToBackend = async () => {
-    console.log('Sending videos....', await db[CHECKED_VIDEOS_DB_NAME].toArray());
+    // console.log('Sending videos....', await db[CHECKED_VIDEOS_DB_NAME].toArray());
     const videos = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0);
     const videos1 = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(1);
 

@@ -11,13 +11,11 @@ db.version(1).stores({
 export const addToCheckedVideosDb = async (data) => {
     const existingItemArray = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.link).equals(data[CHECKED_VIDEOS_DB_KEYS.link]).toArray();
     if (existingItemArray.length) {
-        console.log('hi');
         db[CHECKED_VIDEOS_DB_NAME].put({
             ...data,
             [CHECKED_VIDEOS_DB_KEYS.synced]: 1,
         });
     } else {
-        console.log('hid');
         db[CHECKED_VIDEOS_DB_NAME].put({
             ...data,
             [CHECKED_VIDEOS_DB_KEYS.synced]: 0,
