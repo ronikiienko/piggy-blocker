@@ -1,11 +1,9 @@
-mv3-parcel-template
+Piggy blocker
 ===================
 
-Template for Chrome Extensions manifest v3.
+Extension that blocks russian videos on YouTube
 
-Uses [@parcel/config-webextension](https://parceljs.org/recipes/web-extension/)
-
-Usage
+Development
 -----
 
 ```shell
