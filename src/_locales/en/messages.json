@@ -105,7 +105,7 @@
         "message": "Count word stats"
     },
     "stats_filter_count_word_stats_help": {
-        "message": "Lists every found word (and how many times found) and prints results to console (F12)"
+        "message": "Lists every found word (and how many times found) and prints results to console (press F12)"
     },
     "stats_filter_reason": {
         "message": "Reason:"

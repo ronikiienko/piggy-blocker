@@ -33,10 +33,9 @@ export const DEFAULT_SETTINGS = {
     blockOnHome: true,
     blockOnWatch: true,
     blockOnShorts: true,
-    blurIntensity: 'normal',
-    whatToDo: 'blur',
-    // TODO use browser theme as default
-    theme: 'light',
+    blurIntensity: BLUR_INTENSITY_MAP.normal,
+    whatToDo: WHAT_TO_DO_MAP.blur,
+    theme: window.matchMedia('(prefers-color-scheme: dark)')?.matches ? THEME_MAP.dark : THEME_MAP.light,
 };
 export const SELECTOR = {
     CONTAINER_HOME: '#contents.ytd-rich-grid-renderer',
