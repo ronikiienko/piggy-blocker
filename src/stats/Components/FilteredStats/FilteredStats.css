@@ -10,7 +10,7 @@
 }
 
 .overall-stats-container {
-    max-width: 700px;
+    max-width: 750px;
     margin-bottom: 5px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--splitters-gray);
