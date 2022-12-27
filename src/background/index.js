@@ -14,7 +14,8 @@ import {addToCheckedVideosDb, db} from '../commonBackground/db';
 chrome.runtime.onMessage.addListener((message) => {
     switch (message.cmd) {
         case CMD_ADD_TO_CHECKED_VIDEOS_DB:
-            addToCheckedVideosDb(message?.data);
+            addToCheckedVideosDb(message?.data)
+                .catch(console.log);
             break;
     }
 });
@@ -28,7 +29,6 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(async (details) => {
         .catch(e => console.log(e));
 });
 const sendStatsToBackend = (videosArray) => {
-    // console.log('videos:', videosArray, ru);
     return fetch(ADD_VIDEOS_ROUTE_HREF,
         {
             headers: {
@@ -45,20 +45,26 @@ const sendStatsToBackend = (videosArray) => {
         });
 };
 const prepareStatsForBackend = async (videosArray) => {
-    // console.log('array to prepare....', videosArray)
     let storage = await chrome.storage.local.get({[UID_STORAGE_KEY]: null});
     for (let i = 0; i < videosArray.length; i++) {
         videosArray[i].uid = storage.uid;
-        delete videosArray?.[i]?.[CHECKED_VIDEOS_DB_KEYS.synced];
-        delete videosArray?.[i]?.[CHECKED_VIDEOS_DB_KEYS.ytId];
+        delete videosArray[i][CHECKED_VIDEOS_DB_KEYS.synced];
+        delete videosArray[i][CHECKED_VIDEOS_DB_KEYS.ytId];
     }
     return videosArray;
 };
+
+let sentLinks = [];
 const prepareAndSendStatsToBackend = async () => {
+    console.log('Sending videos....', await db[CHECKED_VIDEOS_DB_NAME].toArray());
     const videos = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0);
-    console.log('not synced array...', await videos.toArray());
+    const videos1 = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(1);
+
+    // console.log('NOT SYNCED', await videos.toArray());
+    // console.log('SYNCED', await videos1.toArray());
+    // console.log('ALL', await db[CHECKED_VIDEOS_DB_NAME].toArray());
+
     const videosArray = await prepareStatsForBackend(await videos.toArray());
-    // console.log('prepared array...', videosArray);
     if (videosArray.length) {
         await sendStatsToBackend(videosArray);
         await videos.modify({[CHECKED_VIDEOS_DB_KEYS.synced]: 1});

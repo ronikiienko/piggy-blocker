@@ -98,7 +98,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     wait(200).then(() => {
         window.scrollTo(0, prevScrollPosition);
     });
-    wait(2000).then(() => container.style.overflow = 'auto');
+    wait(700).then(() => container.style.overflow = 'auto');
     // window.scrollTo(0, prevScrollPosition)
 };
 

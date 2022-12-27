@@ -121,13 +121,6 @@ export const FilteredStats = () => {
                     console.log('SUZUKI');
             }
         }
-        console.log({
-            [BLOCK_REASONS_MAP.byCharsTitle]: byCharsTitle,
-            [BLOCK_REASONS_MAP.byCharsChannelName]: byCharsChannelName,
-            [BLOCK_REASONS_MAP.noCyrillic]: noCyrillic,
-            [BLOCK_REASONS_MAP.markerWords]: markerWords,
-            [BLOCK_REASONS_MAP.google]: google,
-        });
         setOverallNumbers({
             [BLOCK_REASONS_MAP.byCharsTitle]: byCharsTitle,
             [BLOCK_REASONS_MAP.byCharsChannelName]: byCharsChannelName,

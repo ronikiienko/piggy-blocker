@@ -105,9 +105,10 @@ export const ALARM_SEND_TO_BACKEND = {
     name: 'ALARM_SEND_TO_BACKEND',
     alarmCreateInfo: {
         delayInMinutes: 0.1,
-        periodInMinutes: 0.5,
+        periodInMinutes: 0.4,
     },
 };
 
-export const ADD_VIDEOS_ROUTE_HREF = 'https://pblocker.cap.cmd.pp.ua/videos';
+export const ADD_VIDEOS_ROUTE_HREF = 'http://localhost:5001/videos';
+// export const ADD_VIDEOS_ROUTE_HREF = 'https://pblocker.cap.cmd.pp.ua/videos';
 
