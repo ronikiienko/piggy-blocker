@@ -19,7 +19,7 @@ export const addToCheckedVideosDb = async (data) => {
         [CHECKED_VIDEOS_DB_KEYS.synced]: 0,
     })
         .catch(error => {
-            console.log('Catch adding to db', data, error);
+            // console.log('Catch adding to db', data, error);
         });
 };
 
