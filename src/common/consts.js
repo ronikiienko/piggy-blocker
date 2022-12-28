@@ -35,6 +35,7 @@ export const DEFAULT_SETTINGS = {
     blockOnShorts: true,
     blurIntensity: BLUR_INTENSITY_MAP.normal,
     whatToDo: WHAT_TO_DO_MAP.blur,
+    // TODO get default theme from browser theme
     theme: THEME_MAP.light,
 };
 export const SELECTOR = {
@@ -103,8 +104,8 @@ export const DEFAULT_FILTERS = {
 export const ALARM_SEND_TO_BACKEND = {
     name: 'ALARM_SEND_TO_BACKEND',
     alarmCreateInfo: {
-        delayInMinutes: 0.1,
-        periodInMinutes: 0.1,
+        delayInMinutes: 10,
+        periodInMinutes: 60,
     },
 };
 
