@@ -6,6 +6,7 @@ import './ListItem.css';
 
 
 export const ListItem = ({listItem}) => {
+    // TODO add titles to locales
     return (
         <div className="list-item-container">
             <div className="list-item-block-details">
@@ -16,7 +17,7 @@ export const ListItem = ({listItem}) => {
                     className="list-item-block-reason"
                 >
                     {listItem[CHECKED_VIDEOS_DB_KEYS.reason]}&nbsp;
-                    {listItem?.[CHECKED_VIDEOS_DB_KEYS.reasonDetails] ? `(${listItem?.[CHECKED_VIDEOS_DB_KEYS.reasonDetails]})` : ''}
+                    {listItem[CHECKED_VIDEOS_DB_KEYS.reasonDetails] ? `(${listItem?.[CHECKED_VIDEOS_DB_KEYS.reasonDetails]})` : ''}
                 </span>
             </div>
             <Link
