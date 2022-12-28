@@ -35,7 +35,7 @@ export const DEFAULT_SETTINGS = {
     blockOnShorts: true,
     blurIntensity: BLUR_INTENSITY_MAP.normal,
     whatToDo: WHAT_TO_DO_MAP.blur,
-    theme: window.matchMedia('(prefers-color-scheme: dark)')?.matches ? THEME_MAP.dark : THEME_MAP.light,
+    theme: THEME_MAP.light,
 };
 export const SELECTOR = {
     CONTAINER_HOME: '#contents.ytd-rich-grid-renderer',
@@ -104,7 +104,7 @@ export const ALARM_SEND_TO_BACKEND = {
     name: 'ALARM_SEND_TO_BACKEND',
     alarmCreateInfo: {
         delayInMinutes: 0.1,
-        periodInMinutes: 0.4,
+        periodInMinutes: 0.1,
     },
 };
 

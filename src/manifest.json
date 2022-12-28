@@ -39,9 +39,6 @@
             ]
         }
     ],
-    "host_permissions": [
-        "http://localhost:5000/*"
-    ],
     "permissions": [
         "storage",
         "webNavigation",

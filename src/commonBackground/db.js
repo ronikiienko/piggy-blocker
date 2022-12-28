@@ -9,18 +9,18 @@ db.version(1).stores({
 });
 
 export const addToCheckedVideosDb = async (data) => {
-    const existingItemArray = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.link).equals(data[CHECKED_VIDEOS_DB_KEYS.link]).toArray();
-    if (existingItemArray.length) {
-        db[CHECKED_VIDEOS_DB_NAME].put({
-            ...data,
-            [CHECKED_VIDEOS_DB_KEYS.synced]: 1,
+    // const existingItemArray = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.link).equals(data[CHECKED_VIDEOS_DB_KEYS.link]).toArray();
+    // if (existingItemArray.length) {
+    //     console.log('exists,', existingItemArray);
+    //     return;
+    // }
+    db[CHECKED_VIDEOS_DB_NAME].add({
+        ...data,
+        [CHECKED_VIDEOS_DB_KEYS.synced]: 0,
+    })
+        .catch(error => {
+            console.log('Catch adding to db', data, error);
         });
-    } else {
-        db[CHECKED_VIDEOS_DB_NAME].put({
-            ...data,
-            [CHECKED_VIDEOS_DB_KEYS.synced]: 0,
-        });
-    }
 };
 
 export const clearDb = () => {

@@ -44,30 +44,43 @@ const sendStatsToBackend = (videosArray) => {
     //     console.log(res);
     // });
 };
-const prepareStatsForBackend = async (videosArray) => {
+
+const prepareStats = async (videosArray) => {
     let storage = await chrome.storage.local.get({[UID_STORAGE_KEY]: null});
-    for (let i = 0; i < videosArray.length; i++) {
-        videosArray[i].uid = storage.uid;
-        delete videosArray[i][CHECKED_VIDEOS_DB_KEYS.synced];
-        delete videosArray[i][CHECKED_VIDEOS_DB_KEYS.ytId];
-    }
-    return videosArray;
+
+    const videosToBackand = [];
+    const videosToUpdate = [];
+
+    videosArray.forEach(video => {
+        const videoForBackand = {
+            ...video,
+            uid: storage.uid,
+        };
+        delete videoForBackand[CHECKED_VIDEOS_DB_KEYS.synced];
+        delete videoForBackand[CHECKED_VIDEOS_DB_KEYS.ytId];
+        videosToBackand.push(videoForBackand);
+
+        videosToUpdate.push({
+            ...video,
+            [CHECKED_VIDEOS_DB_KEYS.synced]: 1,
+        });
+    });
+
+    return {videosToBackand, videosToUpdate};
 };
 
-let sentLinks = [];
 const prepareAndSendStatsToBackend = async () => {
-    // console.log('Sending videos....', await db[CHECKED_VIDEOS_DB_NAME].toArray());
-    const videos = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0);
-    const videos1 = await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(1);
+    console.log('NOT SYNCED', await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0).toArray());
+    console.log('SYNCED', await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(1).toArray());
+    console.log('ALL', await db[CHECKED_VIDEOS_DB_NAME].toArray());
 
-    // console.log('NOT SYNCED', await videos.toArray());
-    // console.log('SYNCED', await videos1.toArray());
-    // console.log('ALL', await db[CHECKED_VIDEOS_DB_NAME].toArray());
-
-    const videosArray = await prepareStatsForBackend(await videos.toArray());
-    if (videosArray.length) {
-        await sendStatsToBackend(videosArray);
-        await videos.modify({[CHECKED_VIDEOS_DB_KEYS.synced]: 1});
+    const {
+        videosToUpdate,
+        videosToBackand,
+    } = await prepareStats(await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0).toArray());
+    if (videosToUpdate?.[0] && videosToUpdate?.[0]) {
+        const response = await sendStatsToBackend(videosToBackand);
+        if (response.status === 200) await db[CHECKED_VIDEOS_DB_NAME].bulkPut(videosToUpdate);
     }
 };
 

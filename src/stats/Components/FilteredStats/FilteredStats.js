@@ -91,8 +91,6 @@ export const FilteredStats = () => {
         [BLOCK_REASONS_MAP.google]: 0,
     });
     // TODO +1 rerender happens somehow
-    // TODO percents wrong
-    // TODO sometimes videos are sent twice to backend
     // TODO reverse list
     React.useEffect(() => {
         let byCharsTitle = 0;
