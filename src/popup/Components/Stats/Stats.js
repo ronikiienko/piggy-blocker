@@ -9,6 +9,7 @@ import './Stats.css';
 
 
 export const Stats = () => {
+    // TODO use count dexie method instead of toArray
     // console.log('stats rerender');
     const recentRuList = useLiveQuery(() =>
             db[CHECKED_VIDEOS_DB_NAME]
