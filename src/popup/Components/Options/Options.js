@@ -40,13 +40,13 @@ export const Options = () => {
                     label={chrome.i18n.getMessage('where_to_block_watch_option')}
                 />
                 <br/>
-                <Checkbox
-                    id={SETTINGS_KEYS.blockOnShorts}
-                    onChange={handleInputChange}
-                    checked={formData[SETTINGS_KEYS.blockOnShorts]}
-                    label={chrome.i18n.getMessage('where_to_block_shorts_option')}
-                />
-                <br/>
+                {/*<Checkbox*/}
+                {/*    id={SETTINGS_KEYS.blockOnShorts}*/}
+                {/*    onChange={handleInputChange}*/}
+                {/*    checked={formData[SETTINGS_KEYS.blockOnShorts]}*/}
+                {/*    label={chrome.i18n.getMessage('where_to_block_shorts_option')}*/}
+                {/*/>*/}
+                {/*<br/>*/}
             </div>
             <div className="how-to-block options-part">
                 <h2>{chrome.i18n.getMessage('how_to_block_settings_header')}</h2>
