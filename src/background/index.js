@@ -70,9 +70,9 @@ const prepareStats = async (videosArray) => {
 };
 
 const prepareAndSendStatsToBackend = async () => {
-    console.log('NOT SYNCED', await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0).toArray());
-    console.log('SYNCED', await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(1).toArray());
-    console.log('ALL', await db[CHECKED_VIDEOS_DB_NAME].toArray());
+    // console.log('NOT SYNCED', await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0).toArray());
+    // console.log('SYNCED', await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(1).toArray());
+    // console.log('ALL', await db[CHECKED_VIDEOS_DB_NAME].toArray());
 
     const {
         videosToUpdate,
