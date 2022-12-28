@@ -1,0 +1,20 @@
+► Currently works on:
+    ✓ Home page
+    ✓ Sidebar recommendations (when watching video).
+
+► Has different ways to block russian videos:
+  ✓ Just blur (intensity is configurable)
+  ✓ Click "Not interested" and blur
+  ✓ Click "Not recommend this channel"
+
+► Has local stats about analyzed videos
+
+► Has dark and light theme
+
+☀️ Tips:
+    ● Popup has short stats, with list of ru videos blocked during last hour, there are also "Detailed stats" button, which opens stats page that has search, filters etc.
+    ● In some places (especially on detailed stats page), hover to get help.
+    ● On detailed stats page, there is "Count word stats" button, that logs words and how many times they are found in selection to console (press F12).
+
+If you find some problems, i would appreciate any reviews. YouTube sometimes changes it's layout, so, unfortunately, problems may occur.
+
