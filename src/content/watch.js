@@ -87,9 +87,9 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     }
     const prevScrollPosition = document.documentElement.scrollTop;
 
-    const container = document.body;
+    // const container = document.body;
 
-    container.style.overflow = 'hidden';
+    // container.style.overflow = 'hidden';
     // container.style.position = 'fixed'
     menuItems[actionItemMenuNumber].dispatchEvent(clickEvent);
     // container.style.position = 'static'
@@ -98,7 +98,7 @@ const clickPopupOption = async (videoItem, actionItemMenuNumber, popupOpenButton
     wait(200).then(() => {
         window.scrollTo(0, prevScrollPosition);
     });
-    wait(700).then(() => container.style.overflow = 'auto');
+    // wait(700).then(() => container.style.overflow = 'auto');
     // window.scrollTo(0, prevScrollPosition)
 };
 
