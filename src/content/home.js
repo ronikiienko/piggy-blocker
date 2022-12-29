@@ -140,12 +140,10 @@ const checkVideoItem = async (videoItem) => {
         console.log('no video item', videoItem);
         return false;
     }
-    ;
     if (getComputedStyle(videoItem).display === 'none') {
         // console.log('video item display is none', videoItem);
         return false;
     }
-    ;
     let titleNode;
     let videoLink;
     let videoId;
