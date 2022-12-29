@@ -1,6 +1,6 @@
 {
   "name": "piggy-blocker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "scripts": {
     "start": "parcel watch src/manifest.json src/stats/index.html --host localhost",
