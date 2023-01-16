@@ -1,7 +1,9 @@
 Piggy blocker
 ===================
 
-Extension that blocks russian videos on YouTube
+Chrome Extension that blocks russian videos on YouTube.
+
+Avaialble on the Chrome Web Store - https://chrome.google.com/webstore/detail/digcomifdnffdmojdbogbcpngpickdgo
 
 Development
 -----
