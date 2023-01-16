@@ -78,7 +78,7 @@ const prepareAndSendStatsToBackend = async () => {
         videosToUpdate,
         videosToBackand,
     } = await prepareStats(await db[CHECKED_VIDEOS_DB_NAME].where(CHECKED_VIDEOS_DB_KEYS.synced).equals(0).toArray());
-    if (videosToUpdate?.[0] && videosToUpdate?.[0]) {
+    if (videosToUpdate?.[0] && videosToBackand?.[0]) {
         const response = await sendStatsToBackend(videosToBackand);
         if (response.status === 200) await db[CHECKED_VIDEOS_DB_NAME].bulkPut(videosToUpdate);
     }
