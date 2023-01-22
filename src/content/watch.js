@@ -122,8 +122,8 @@ const blockVideoItem = async (videoItem, settings, videoId) => {
     }
     let actionItemMenuNumber;
     //sometimes numbers are 1 and 2 (when video has something turned off)
-    if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 3;
-    if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 4;
+    if (whatToDo === WHAT_TO_DO_MAP.notInterested) actionItemMenuNumber = 4;
+    if (whatToDo === WHAT_TO_DO_MAP.blockChannel) actionItemMenuNumber = 5;
     if (!actionItemMenuNumber) return;
     const popupOpenButton = await openPopup(videoItem);
     if (!popupOpenButton) return;
