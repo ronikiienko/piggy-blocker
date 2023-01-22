@@ -98,7 +98,7 @@ export const DEFAULT_FILTERS = {
     dateRange: {fromDate: '', toDate: ''},
     reasonFilter: REASON_FILTER_KEYS.any,
     searchFilter: '',
-    languageFilter: LANGUAGE_FILTER_KEYS.any,
+    languageFilter: LANGUAGE_FILTER_KEYS['1'],
 };
 
 export const ALARM_SEND_TO_BACKEND = {
