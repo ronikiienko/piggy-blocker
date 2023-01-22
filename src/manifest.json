@@ -3,7 +3,7 @@
     "name": "Piggy blocker",
     "description": "__MSG_extDescription__",
     "default_locale": "uk",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "background": {
         "service_worker": "background/index.js",
         "type": "module"
